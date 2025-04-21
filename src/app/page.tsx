@@ -23,15 +23,15 @@ const uri = `wss://${host}/ws/google.ai.generativelanguage.v1alpha.GenerativeSer
 
 // Define the tool declaration
 const updateCanvasDeclaration: FunctionDeclaration = {
-    name: 'update_canvas',
+    name: 'update_editor_content',
     description:
-        'The canvas is a workplace for the user to work with text. Everything concerning any kind of text document should be displayed to the user by calling the function.',
+        'Displays or updates the primary text content area shown to the user. Use this ONLY for showing the final text results of writing, editing, drafting, or summarizing tasks requested by the user. Do NOT use this for conversational replies or explanations.',
     parameters: {
         type: SchemaType.OBJECT,
         properties: {
             text: {
                 type: SchemaType.STRING,
-                description: 'The text content to display in the canvas. Can be plain text or markdown.'
+                description: 'The complete text content (plain text or markdown) to display.'
             }
         },
         required: ['text']
@@ -53,7 +53,7 @@ function MainContent() {
         if (optionalCanvasPart) {
             client.send([optionalCanvasPart, ...partsArray]);
         } else {
-            client.send(partsArray, true); // Send as a complete turn if no canvas context
+            client.send(partsArray, true);
         }
     };
 
@@ -61,33 +61,27 @@ function MainContent() {
     const sendRealtimeInput = (chunks: GenerativeContentBlob[]) => {
         const optionalCanvasPart = getOptionalCanvasPart();
 
-        // Send canvas context only once at the beginning of a stream segment if needed
         if (optionalCanvasPart) {
-            // Check if the client has a mechanism to know if context was already sent for this segment
-            // For simplicity here, we might send it with the first chunk, but a more robust solution is needed.
-            // Let's assume the client handles sending context appropriately or we send it once.
-            // A simple flag could work:
-            // if (!client.contextSentThisSegment && optionalCanvasPart) {
-            //    client.send([optionalCanvasPart], false); // Send context without ending turn
-            //    client.contextSentThisSegment = true; // Mark context as sent
-            // }
-            // For now, let's just send the chunks. The hook logic might need adjustment.
+            client.send([optionalCanvasPart], false);
         }
 
         client.sendRealtimeInput(chunks);
     };
 
-    // Effect for setting up API configuration and listeners
     useEffect(() => {
         setConfig({
-            model: 'models/gemini-2.0-flash-exp', // Or your desired model
+            model: 'models/gemini-2.0-flash-exp',
             generationConfig: {
-                responseModalities: 'text' // Expect text responses
+                responseModalities: 'text'
             },
             systemInstruction: {
                 parts: [
                     {
-                        text: 'You are a writing and editing assistant whose primary workspace is the canvas. Always deliver your drafts, revisions, and feedback there.'
+                        text: [
+                            'You are a writing and editing assistant. Your primary goal is to help users create and refine text documents.',
+                            '**CRITICAL:**',
+                            "When you generate, draft, revise, or provide feedback *directly on the text*, you MUST use the 'editor' throught its functions to show the result in the user's main text area.\n*   For ALL other responses (e.g., answering questions, explanations, conversation), reply directly in the chat WITHOUT making use of the editor."
+                        ].join('\n')
                     }
                 ]
             },
@@ -100,7 +94,7 @@ function MainContent() {
             const fc = toolCall.functionCalls.find((fc) => fc.name === updateCanvasDeclaration.name);
 
             if (fc && typeof (fc.args as { text?: string })?.text === 'string') {
-                updateCanvasText((fc.args as { text: string }).text, false); // AI update
+                updateCanvasText((fc.args as { text: string }).text, false);
             }
 
             // Respond to *all* function calls received
