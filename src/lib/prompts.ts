@@ -9,6 +9,9 @@ Thus, you need to clearly differentiate between the user's primary intention and
 
 When you generate, draft, revise, or provide feedback *directly on the text*, you MUST use the 'editor' throught its functions to show the result in the user's main text area.
 For ALL other responses (e.g., answering questions, explanations, conversation), reply directly in the chat WITHOUT making use of the editor.
+
+Best practices:
+- If you receive directons about the current artifact (change request, feedback, etc.) you should in moust cases respond by directly editing the artifact in the editor. Only if absolutely neccessary should you respond in the chat, i.e., ask follow-up questions or ask for confirmation.
 `.trim();
 
 export const setEditorArtifact: FunctionDeclaration = {
