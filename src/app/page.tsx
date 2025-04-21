@@ -7,6 +7,7 @@ import ControlTray from '@/components/live-api/ControlTray';
 import SidePanel from '@/components/live-api/SidePanel';
 import { LiveAPIProvider, useLiveAPIContext } from '@/contexts/LiveAPIContext';
 import { useManagedCanvas } from '@/hooks/useManagedCanvas';
+import { SYSTEM_PROMPT, setEditorArtifact } from '@/lib/prompts';
 import { cn } from '@/lib/utils';
 import type { ToolCall } from '@/types/multimodal-live-types';
 import { type FunctionDeclaration, type GenerativeContentBlob, type Part, SchemaType } from '@google/generative-ai';
@@ -20,23 +21,6 @@ if (typeof API_KEY !== 'string') {
 
 const host = 'generativelanguage.googleapis.com';
 const uri = `wss://${host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent`;
-
-// Define the tool declaration
-const updateCanvasDeclaration: FunctionDeclaration = {
-    name: 'update_editor_content',
-    description:
-        'Displays or updates the primary text content area shown to the user. Use this ONLY for showing the final text results of writing, editing, drafting, or summarizing tasks requested by the user. Do NOT use this for conversational replies or explanations.',
-    parameters: {
-        type: SchemaType.OBJECT,
-        properties: {
-            text: {
-                type: SchemaType.STRING,
-                description: 'The complete text content (plain text or markdown) to display.'
-            }
-        },
-        required: ['text']
-    }
-};
 
 // --- Main Content Component (Handles API interaction and state) ---
 function MainContent() {
@@ -77,21 +61,17 @@ function MainContent() {
             systemInstruction: {
                 parts: [
                     {
-                        text: [
-                            'You are a writing and editing assistant. Your primary goal is to help users create and refine text documents.',
-                            '**CRITICAL:**',
-                            "When you generate, draft, revise, or provide feedback *directly on the text*, you MUST use the 'editor' throught its functions to show the result in the user's main text area.\n*   For ALL other responses (e.g., answering questions, explanations, conversation), reply directly in the chat WITHOUT making use of the editor."
-                        ].join('\n')
+                        text: SYSTEM_PROMPT
                     }
                 ]
             },
-            tools: [{ functionDeclarations: [updateCanvasDeclaration] }]
+            tools: [{ functionDeclarations: [setEditorArtifact] }]
         });
 
         // Listener for incoming tool calls
         const onToolCall = (toolCall: ToolCall) => {
             console.log(`[Page] Received toolcall:`, toolCall);
-            const fc = toolCall.functionCalls.find((fc) => fc.name === updateCanvasDeclaration.name);
+            const fc = toolCall.functionCalls.find((fc) => fc.name === setEditorArtifact.name);
 
             if (fc && typeof (fc.args as { text?: string })?.text === 'string') {
                 updateCanvasText((fc.args as { text: string }).text, false);
@@ -163,9 +143,7 @@ function MainContent() {
     );
 }
 
-// --- Page Component (Sets up Provider) ---
 export default function Page() {
-    // No need for video state here anymore, moved to MainContent
     return (
         <LiveAPIProvider url={uri} apiKey={API_KEY}>
             <MainContent />
