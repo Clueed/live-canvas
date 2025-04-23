@@ -6,8 +6,9 @@ import { Canvas } from '@/components/live-api/Canvas';
 import ControlTray from '@/components/live-api/ControlTray';
 import SidePanel from '@/components/live-api/SidePanel';
 import { LiveAPIProvider, useLiveAPIContext } from '@/contexts/LiveAPIContext';
+import { useToolCallHandler } from '@/hooks/use-tool-call-handler';
 import { useManagedCanvas } from '@/hooks/useManagedCanvas';
-import { SYSTEM_PROMPT, setEditorArtifact } from '@/lib/prompts';
+import { SYSTEM_PROMPT, getEditorArtifact, setEditorArtifact } from '@/lib/prompts';
 import { cn } from '@/lib/utils';
 import type { ToolCall } from '@/types/multimodal-live-types';
 import { type FunctionDeclaration, type GenerativeContentBlob, type Part, SchemaType } from '@google/generative-ai';
@@ -28,6 +29,25 @@ function MainContent() {
     const { canvasText, updateCanvasText, getOptionalCanvasPart } = useManagedCanvas();
     const videoRef = useRef<HTMLVideoElement>(null);
     const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
+
+    useEffect(() => {
+        setConfig({
+            model: 'models/gemini-2.0-flash-exp',
+            generationConfig: {
+                responseModalities: 'text'
+            },
+            systemInstruction: {
+                parts: [
+                    {
+                        text: SYSTEM_PROMPT
+                    }
+                ]
+            },
+            tools: [{ functionDeclarations: [setEditorArtifact, getEditorArtifact] }]
+        });
+    }, [setConfig]);
+
+    useToolCallHandler({ client, updateCanvasText, canvasText });
 
     // Function to send text/parts to the API
     const send = (inputParts: Part | Part[]) => {
@@ -51,57 +71,6 @@ function MainContent() {
 
         client.sendRealtimeInput(chunks);
     };
-
-    useEffect(() => {
-        setConfig({
-            model: 'models/gemini-2.0-flash-exp',
-            generationConfig: {
-                responseModalities: 'text'
-            },
-            systemInstruction: {
-                parts: [
-                    {
-                        text: SYSTEM_PROMPT
-                    }
-                ]
-            },
-            tools: [{ functionDeclarations: [setEditorArtifact] }]
-        });
-
-        // Listener for incoming tool calls
-        const onToolCall = (toolCall: ToolCall) => {
-            console.log(`[Page] Received toolcall:`, toolCall);
-            const fc = toolCall.functionCalls.find((fc) => fc.name === setEditorArtifact.name);
-
-            if (fc && typeof (fc.args as { text?: string })?.text === 'string') {
-                updateCanvasText((fc.args as { text: string }).text, false);
-            }
-
-            // Respond to *all* function calls received
-            if (toolCall.functionCalls.length) {
-                // Use a small delay like in the original example
-                setTimeout(
-                    () =>
-                        client.sendToolResponse({
-                            functionResponses: toolCall.functionCalls.map((f) => ({
-                                response: { output: { success: true } }, // Assume success for canvas update
-                                id: f.id
-                            }))
-                        }),
-                    100 // Reduced delay slightly
-                );
-            }
-        };
-
-        // Register the listener
-        // Note: The TS errors for .on/.off might still appear here but should work at runtime
-        client.on('toolcall', onToolCall);
-
-        // Cleanup function
-        return () => {
-            client.off('toolcall', onToolCall);
-        };
-    }, [client, setConfig, updateCanvasText]); // Dependencies
 
     return (
         <div className='flex h-screen w-screen overflow-hidden'>

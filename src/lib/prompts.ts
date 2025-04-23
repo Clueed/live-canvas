@@ -28,3 +28,13 @@ export const setEditorArtifact: FunctionDeclaration = {
         required: ['text']
     }
 };
+
+export const getEditorArtifact: FunctionDeclaration = {
+    name: 'get_editor_artifact',
+    description: 'Retrieves the current content of the editor artifact.',
+    parameters: {
+        type: SchemaType.OBJECT,
+        properties: {},
+        required: []
+    }
+};
