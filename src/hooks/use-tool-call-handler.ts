@@ -8,7 +8,7 @@ import { type ToolCall } from '@/types/multimodal-live-types';
 interface UseToolCallHandlerProps {
     client: MultimodalLiveClient;
     updateCanvasText: (text: string, isUserUpdate: boolean) => void;
-    canvasText: string;
+    canvasText: () => string;
     undo: () => void;
     redo: () => void;
 }

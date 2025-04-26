@@ -8,7 +8,8 @@ function hashString(str: string): string {
     for (let i = 0; i < str.length; i++) {
         hash = (hash * 33) ^ str.charCodeAt(i);
     }
-    return String(hash >>> 0);
+    
+return String(hash >>> 0);
 }
 
 const formatCanvas = (canvasText: string): Part => {
@@ -56,7 +57,8 @@ export function useManagedCanvas(): UseManagedCanvasResult {
 
         console.log(`Canvas text changed by user (new hash: ${currentHash}). Preparing part.`);
         lastSentHashSentToServer.current = currentHash;
-        return formatCanvas(canvasText);
+        
+return formatCanvas(canvasText);
     }, [canvasText]);
 
     return {

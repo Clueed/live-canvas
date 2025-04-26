@@ -30,7 +30,7 @@ function MainContent() {
     const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
     const editor = useCreateEditor();
 
-    const canvasText = editor.api.markdown.serialize();
+    const canvasText = () => editor.api.markdown.serialize();
     const updateCanvasText = (newText: string) => {
         const newMarkdown = editor.api.markdown.deserialize(newText);
         if (!newMarkdown) {

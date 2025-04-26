@@ -2,7 +2,7 @@ import { getEditorArtifact, redoLastArtifactUndo, setEditorArtifact, undoLastArt
 import { LiveFunctionCall } from '@/types/multimodal-live-types';
 
 interface FunctionCallHandlerParams {
-    canvasText: string;
+    canvasText: () => string;
     updateCanvasText: (text: string, isUserUpdate: boolean) => void;
     undo?: () => void;
     redo?: () => void;
@@ -29,14 +29,15 @@ export function createFunctionCallHandler({ canvasText, updateCanvasText, undo, 
             }
             case getEditorArtifact.name: {
                 return {
-                    response: { success: true, artifact: canvasText },
+                    response: { success: true, artifact: canvasText() },
                     id: fc.id
                 };
             }
             case undoLastArtifactChange.name: {
                 if (undo) {
                     undo();
-                    return {
+                    
+return {
                         response: { success: true },
                         id: fc.id
                     };
@@ -50,7 +51,8 @@ export function createFunctionCallHandler({ canvasText, updateCanvasText, undo, 
             case redoLastArtifactUndo.name: {
                 if (redo) {
                     redo();
-                    return {
+                    
+return {
                         response: { success: true },
                         id: fc.id
                     };

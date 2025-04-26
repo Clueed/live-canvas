@@ -12,8 +12,10 @@ const mockClient = {
 };
 
 // Prepare test data
-const mockCanvasText = 'Initial canvas text';
+const mockCanvasText = () => 'Initial canvas text';
 const mockUpdateCanvasText = vi.fn();
+const mockUndo = vi.fn();
+const mockRedo = vi.fn();
 
 describe('useToolCallHandler', () => {
     beforeEach(() => {
@@ -25,7 +27,9 @@ describe('useToolCallHandler', () => {
             useToolCallHandler({
                 client: mockClient as any,
                 updateCanvasText: mockUpdateCanvasText,
-                canvasText: mockCanvasText
+                canvasText: mockCanvasText,
+                undo: mockUndo,
+                redo: mockRedo
             })
         );
 
@@ -42,7 +46,9 @@ describe('useToolCallHandler', () => {
                 useToolCallHandler({
                     client: mockClient as any,
                     updateCanvasText: mockUpdateCanvasText,
-                    canvasText: mockCanvasText
+                    canvasText: mockCanvasText,
+                    undo: mockUndo,
+                    redo: mockRedo
                 })
             );
 
@@ -82,7 +88,9 @@ describe('useToolCallHandler', () => {
                 useToolCallHandler({
                     client: mockClient as any,
                     updateCanvasText: mockUpdateCanvasText,
-                    canvasText: mockCanvasText
+                    canvasText: mockCanvasText,
+                    undo: mockUndo,
+                    redo: mockRedo
                 })
             );
 
@@ -119,7 +127,9 @@ describe('useToolCallHandler', () => {
                 useToolCallHandler({
                     client: mockClient as any,
                     updateCanvasText: mockUpdateCanvasText,
-                    canvasText: mockCanvasText
+                    canvasText: mockCanvasText,
+                    undo: mockUndo,
+                    redo: mockRedo
                 })
             );
 
@@ -141,7 +151,7 @@ describe('useToolCallHandler', () => {
             expect(mockClient.sendToolResponse).toHaveBeenCalledWith({
                 functionResponses: [
                     {
-                        response: { success: true, artifact: mockCanvasText },
+                        response: { success: true, artifact: mockCanvasText() },
                         id: 'func-call-3'
                     }
                 ]
@@ -155,7 +165,9 @@ describe('useToolCallHandler', () => {
                 useToolCallHandler({
                     client: mockClient as any,
                     updateCanvasText: mockUpdateCanvasText,
-                    canvasText: mockCanvasText
+                    canvasText: mockCanvasText,
+                    undo: mockUndo,
+                    redo: mockRedo
                 })
             );
 
