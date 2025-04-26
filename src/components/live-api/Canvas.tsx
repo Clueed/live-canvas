@@ -1,31 +1,31 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 
-import { Textarea } from '@/components/ui/textarea';
+import { Descendant, createEditor } from 'slate';
+import { Editable, RenderElementProps, Slate, withReact } from 'slate-react';
 
-// Import shadcn Textarea
+const initialValue: Descendant[] = [
+    {
+        type: 'paragraph',
+        children: [{ text: 'A line of text in a paragraph.' }]
+    }
+];
 
 interface CanvasProps {
     text: string;
     onChange: (newText: string) => void;
 }
 
-// Using a functional component directly with memo
 const CanvasComponent = React.memo(function CanvasComponent({ text, onChange }: CanvasProps) {
-    const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        onChange(event.target.value);
-    };
+    const [editor] = useState(() => withReact(createEditor()));
 
     return (
-        // Assuming the parent container will manage the sizing.
-        // Added flex-1 to make it fill available space in a flex container.
-        // Added min-h-0 to prevent textarea from overflowing flex container.
-        <Textarea
-            className='h-full min-h-0 w-full flex-1 resize-none rounded-md border p-4' // Added basic styling and flex behavior
-            value={text}
-            onChange={handleChange}
-            placeholder='AI output will appear here...' // Added placeholder
-        />
+        <Slate editor={editor} initialValue={initialValue}>
+            <Editable
+                className='h-full min-h-0 w-full flex-1 rounded-md border p-4'
+                placeholder='AI output will appear here...'
+            />
+        </Slate>
     );
 });
 
-export const Canvas = CanvasComponent; // Exporting the memoized component
+export const Canvas = CanvasComponent;
