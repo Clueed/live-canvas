@@ -13,12 +13,7 @@ import { cn } from '@/lib/utils';
 import type { ToolCall } from '@/types/multimodal-live-types';
 import { type FunctionDeclaration, type GenerativeContentBlob, type Part, SchemaType } from '@google/generative-ai';
 
-// --- Configuration ---
 const API_KEY = process.env.NEXT_PUBLIC_GCP_API_KEY as string;
-if (typeof API_KEY !== 'string') {
-    // Consider a more user-friendly error display in a real app
-    throw new Error('NEXT_PUBLIC_GCP_API_KEY environment variable not set!');
-}
 
 const host = 'generativelanguage.googleapis.com';
 const uri = `wss://${host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent`;
