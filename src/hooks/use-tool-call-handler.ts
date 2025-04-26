@@ -1,7 +1,13 @@
 import { use, useCallback, useEffect } from 'react';
 
 import { type MultimodalLiveClient } from '@/lib/multimodal-live-client';
-import { SYSTEM_PROMPT, getEditorArtifact, setEditorArtifact } from '@/lib/prompts';
+import {
+    SYSTEM_PROMPT,
+    getEditorArtifact,
+    redoLastArtifactUndo,
+    setEditorArtifact,
+    undoLastArtifactChange
+} from '@/lib/prompts';
 import { type LiveFunctionCall, type ToolCall, type ToolResponseMessage } from '@/types/multimodal-live-types';
 import type { FunctionCall } from '@google/generative-ai';
 
@@ -9,9 +15,11 @@ interface UseToolCallHandlerProps {
     client: MultimodalLiveClient;
     updateCanvasText: (text: string, isUserUpdate: boolean) => void;
     canvasText: string;
+    undo: () => void;
+    redo: () => void;
 }
 
-export function useToolCallHandler({ client, updateCanvasText, canvasText }: UseToolCallHandlerProps) {
+export function useToolCallHandler({ client, updateCanvasText, canvasText, undo, redo }: UseToolCallHandlerProps) {
     const functionCallHandler = useCallback(
         (fc: LiveFunctionCall) => {
             switch (fc.name) {
@@ -37,7 +45,20 @@ export function useToolCallHandler({ client, updateCanvasText, canvasText }: Use
                         id: fc.id
                     };
                 }
-
+                case undoLastArtifactChange.name: {
+                    undo();
+                    return {
+                        response: { success: true },
+                        id: fc.id
+                    };
+                }
+                case redoLastArtifactUndo.name: {
+                    redo();
+                    return {
+                        response: { success: true },
+                        id: fc.id
+                    };
+                }
                 default: {
                     console.warn(`Unknown function call: ${fc.name}`);
 

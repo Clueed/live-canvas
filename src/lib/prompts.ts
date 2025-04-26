@@ -42,7 +42,7 @@ export const getEditorArtifact: FunctionDeclaration = {
     name: 'get_editor_artifact',
     description: `
 Fetches the current text of the artifact in the editor, including any Markdown syntax.  
-Use this to read or reference what’s already displayed before deciding edits.  
+Use this to read or reference what's already displayed before deciding edits.  
 Returns a single string with the full artifact content (Markdown intact)
 `.trim(),
     parameters: {
@@ -52,4 +52,33 @@ Returns a single string with the full artifact content (Markdown intact)
     }
 };
 
-export const FUNCTION_DECLARATIONS = [setEditorArtifact, getEditorArtifact];
+export const undoLastArtifactChange: FunctionDeclaration = {
+    name: 'undo_last_artifact_change',
+    description: `
+Reverts the most recent modification made to the artifact in the editor, typically when the user explicitly asks to undo.
+`.trim(),
+    parameters: {
+        type: SchemaType.OBJECT,
+        properties: {},
+        required: []
+    }
+};
+
+export const redoLastArtifactUndo: FunctionDeclaration = {
+    name: 'redo_last_artifact_undo',
+    description: `
+Reapplies the last artifact change that was undone, typically when the user explicitly asks to redo.
+`.trim(),
+    parameters: {
+        type: SchemaType.OBJECT,
+        properties: {},
+        required: []
+    }
+};
+
+export const FUNCTION_DECLARATIONS = [
+    setEditorArtifact,
+    getEditorArtifact,
+    undoLastArtifactChange,
+    redoLastArtifactUndo
+];

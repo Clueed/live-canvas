@@ -33,6 +33,9 @@ function MainContent() {
     const canvasText = editor.api.markdown.serialize();
     const updateCanvasText = (newText: string) => {
         const newMarkdown = editor.api.markdown.deserialize(newText);
+        if (!newMarkdown) {
+            return;
+        }
         editor.children = newMarkdown;
         editor.api.onChange();
     };
@@ -54,7 +57,7 @@ function MainContent() {
         });
     }, [setConfig]);
 
-    useToolCallHandler({ client, updateCanvasText, canvasText });
+    useToolCallHandler({ client, updateCanvasText, canvasText, undo: editor.undo, redo: editor.redo });
 
     // Function to send text/parts to the API
     const send = (inputParts: Part | Part[]) => {
