@@ -36,8 +36,7 @@ function MainContent() {
         if (!newMarkdown) {
             return;
         }
-        editor.children = newMarkdown;
-        editor.api.onChange();
+        editor.tf.setValue(newMarkdown);
     };
 
     useEffect(() => {
@@ -57,7 +56,7 @@ function MainContent() {
         });
     }, [setConfig]);
 
-    useToolCallHandler({ client, updateCanvasText, canvasText, undo: editor.undo, redo: editor.redo });
+    useToolCallHandler({ client, updateCanvasText, canvasText, undo: editor.tf.undo, redo: editor.tf.redo });
 
     // Function to send text/parts to the API
     const send = (inputParts: Part | Part[]) => {
@@ -88,10 +87,18 @@ function MainContent() {
                 send={send}
                 canvasText={canvasText}
                 updateCanvasText={updateCanvasText}
-                undo={editor.undo}
-                redo={editor.redo}
+                undo={editor.tf.undo}
+                redo={editor.tf.redo}
             />
             <main className='flex flex-1 flex-col'>
+                <div className='absolute top-2 right-2 z-10'>
+                    <Link
+                        href='/editor-history'
+                        className='rounded bg-blue-500 px-4 py-2 text-white shadow transition-colors hover:bg-blue-600'>
+                        Try Editor History Demo
+                    </Link>
+                </div>
+
                 <div className='relative flex flex-1 overflow-hidden p-4'>
                     <Canvas editor={editor} />
 
