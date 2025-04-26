@@ -1,22 +1,31 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useLiveAPIContext } from '@/contexts/LiveAPIContext';
 import { getEditorArtifact, setEditorArtifact } from '@/lib/prompts';
+import { createFunctionCallHandler } from '@/lib/tool-call-handlers';
 import { LiveFunctionCall } from '@/types/multimodal-live-types';
 
 interface ToolCallTestPanelProps {
     canvasText: string;
     updateCanvasText: (text: string, isUserUpdate: boolean) => void;
+    undo?: () => void;
+    redo?: () => void;
 }
 
-export function ToolCallTestPanel({ canvasText, updateCanvasText }: ToolCallTestPanelProps) {
+export function ToolCallTestPanel({ canvasText, updateCanvasText, undo, redo }: ToolCallTestPanelProps) {
     const [newCanvasText, setNewCanvasText] = useState('');
+
+    const functionCallHandler = useCallback(createFunctionCallHandler({ canvasText, updateCanvasText, undo, redo }), [
+        canvasText,
+        updateCanvasText,
+        undo,
+        redo
+    ]);
 
     // Handler for testing setEditorArtifact
     const handleTestSetEditorArtifact = () => {
@@ -33,9 +42,12 @@ export function ToolCallTestPanel({ canvasText, updateCanvasText }: ToolCallTest
         };
 
         // Simulate the tool call
-        const response = handleToolCall(setEditorCall);
+        const response = functionCallHandler(setEditorCall);
 
-        console.log(response.success ? 'Set Editor Success:' : 'Set Editor Failed:', response.message);
+        console.log(
+            response.response.output?.success ? 'Set Editor Success:' : 'Set Editor Failed:',
+            response.response.output?.error || 'Canvas text updated successfully'
+        );
     };
 
     // Handler for testing getEditorArtifact
@@ -48,59 +60,16 @@ export function ToolCallTestPanel({ canvasText, updateCanvasText }: ToolCallTest
         };
 
         // Simulate the tool call
-        const response = handleToolCall(getEditorCall);
+        const response = functionCallHandler(getEditorCall);
 
-        if (response.success) {
-            setNewCanvasText(response.data || '');
+        if (response.response.success) {
+            setNewCanvasText(response.response.artifact || '');
         }
 
-        console.log(response.success ? 'Get Editor Success:' : 'Get Editor Failed:', response.message);
-    };
-
-    // Function to handle the tool calls
-    const handleToolCall = (functionCall: LiveFunctionCall) => {
-        try {
-            switch (functionCall.name) {
-                case setEditorArtifact.name: {
-                    const args = functionCall.args as { text?: string };
-                    if (typeof args?.text === 'string') {
-                        updateCanvasText(args.text, false);
-                        return {
-                            success: true,
-                            message: 'Canvas text updated successfully',
-                            data: null
-                        };
-                    } else {
-                        return {
-                            success: false,
-                            message: 'Invalid arguments: text is required',
-                            data: null
-                        };
-                    }
-                }
-                case getEditorArtifact.name: {
-                    return {
-                        success: true,
-                        message: 'Retrieved current canvas text',
-                        data: canvasText
-                    };
-                }
-                default: {
-                    return {
-                        success: false,
-                        message: `Unknown function call: ${functionCall.name}`,
-                        data: null
-                    };
-                }
-            }
-        } catch (error) {
-            console.error('Error handling tool call:', error);
-            return {
-                success: false,
-                message: `Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
-                data: null
-            };
-        }
+        console.log(
+            response.response.success ? 'Get Editor Success:' : 'Get Editor Failed:',
+            response.response.success ? 'Retrieved current canvas text' : 'Failed to retrieve canvas text'
+        );
     };
 
     return (

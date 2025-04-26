@@ -84,7 +84,13 @@ function MainContent() {
 
     return (
         <div className='flex h-screen w-screen overflow-hidden'>
-            <SidePanel send={send} canvasText={canvasText} updateCanvasText={updateCanvasText} />
+            <SidePanel
+                send={send}
+                canvasText={canvasText}
+                updateCanvasText={updateCanvasText}
+                undo={editor.undo}
+                redo={editor.redo}
+            />
             <main className='flex flex-1 flex-col'>
                 <div className='relative flex flex-1 overflow-hidden p-4'>
                     <Canvas editor={editor} />

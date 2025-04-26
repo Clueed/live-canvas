@@ -29,6 +29,8 @@ interface SidePanelProps {
     send: (parts: Part | Part[]) => void;
     canvasText: string;
     updateCanvasText: (text: string, isUserUpdate: boolean) => void;
+    undo: () => void;
+    redo: () => void;
 }
 
 export default function SidePanel({ send, canvasText, updateCanvasText }: SidePanelProps) {
