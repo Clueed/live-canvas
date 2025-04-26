@@ -12,6 +12,8 @@ import {
 import { MarkdownPlugin } from '@udecode/plate-markdown';
 import { ParagraphPlugin, PlateElement, PlateLeaf, usePlateEditor } from '@udecode/plate/react';
 
+import remarkGfm from 'remark-gfm';
+
 export const useCreateEditor = () => {
     return usePlateEditor({
         override: {
@@ -42,7 +44,16 @@ export const useCreateEditor = () => {
                 [UnderlinePlugin.key]: withProps(PlateLeaf, { as: 'u' })
             }
         },
-        plugins: [BasicElementsPlugin, BasicMarksPlugin, MarkdownPlugin],
+        plugins: [
+            BasicElementsPlugin,
+            BasicMarksPlugin,
+            {
+                ...MarkdownPlugin,
+                options: {
+                    remarkPlugins: [remarkGfm]
+                }
+            }
+        ],
         value: [
             {
                 children: [{ text: 'Basic Editor' }],

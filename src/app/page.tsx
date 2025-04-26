@@ -2,13 +2,15 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 
+import Link from 'next/link';
+
 import { Canvas } from '@/components/live-api/Canvas';
 import ControlTray from '@/components/live-api/ControlTray';
 import SidePanel from '@/components/live-api/SidePanel';
 import { LiveAPIProvider, useLiveAPIContext } from '@/contexts/LiveAPIContext';
 import { useToolCallHandler } from '@/hooks/use-tool-call-handler';
 import { useManagedCanvas } from '@/hooks/useManagedCanvas';
-import { SYSTEM_PROMPT, getEditorArtifact, setEditorArtifact } from '@/lib/prompts';
+import { FUNCTION_DECLARATIONS, SYSTEM_PROMPT, getEditorArtifact, setEditorArtifact } from '@/lib/prompts';
 import { cn } from '@/lib/utils';
 import type { ToolCall } from '@/types/multimodal-live-types';
 import { type FunctionDeclaration, type GenerativeContentBlob, type Part, SchemaType } from '@google/generative-ai';
@@ -38,7 +40,7 @@ function MainContent() {
                     }
                 ]
             },
-            tools: [{ functionDeclarations: [setEditorArtifact, getEditorArtifact] }]
+            tools: [{ functionDeclarations: FUNCTION_DECLARATIONS }]
         });
     }, [setConfig]);
 

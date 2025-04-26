@@ -1,5 +1,9 @@
 import { FunctionDeclaration, SchemaType } from '@google/generative-ai';
 
+
+
+
+
 export const SYSTEM_PROMPT = `
 You're the core logic agent of a web application where users have a chat window and an editor to display an artifact.
 Artifacts can be any sort of writing content, emails, code, or other creative writing work. Think of artifacts as content, or writing you might find on you might find on a blog, Google doc, or other writing platform.
@@ -38,3 +42,5 @@ export const getEditorArtifact: FunctionDeclaration = {
         required: []
     }
 };
+
+export const FUNCTION_DECLARATIONS = [setEditorArtifact, getEditorArtifact];
