@@ -23,6 +23,11 @@
         "@radix-ui/react-slot": "^1.2.0",
         "@radix-ui/react-tooltip": "^1.2.3",
         "@types/react-syntax-highlighter": "^15.5.13",
+        "@udecode/cn": "^46.0.9",
+        "@udecode/plate": "^47.1.1",
+        "@udecode/plate-basic-elements": "^47.0.0",
+        "@udecode/plate-basic-marks": "^46.0.5",
+        "@udecode/plate-markdown": "^47.2.2",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "eventemitter3": "^5.0.1",
@@ -36,6 +41,7 @@
         "slate": "^0.112.0",
         "slate-react": "^0.112.1",
         "tailwind-merge": "^3.2.0",
+        "tailwind-scrollbar-hide": "^2.0.0",
         "zustand": "^5.0.3"
     },
     "devDependencies": {

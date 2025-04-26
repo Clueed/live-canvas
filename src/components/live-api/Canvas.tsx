@@ -1,7 +1,11 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
-import { Descendant, createEditor } from 'slate';
-import { Editable, RenderElementProps, Slate, withReact } from 'slate-react';
+import { useCreateEditor } from '@/components/editor/use-create-editor';
+import { Editor, EditorContainer } from '@/components/plate-ui/editor';
+import { MarkdownPlugin } from '@udecode/plate-markdown';
+import { Plate } from '@udecode/plate/react';
+
+import { Descendant } from 'slate';
 
 const initialValue: Descendant[] = [
     {
@@ -16,15 +20,32 @@ interface CanvasProps {
 }
 
 const CanvasComponent = React.memo(function CanvasComponent({ text, onChange }: CanvasProps) {
-    const [editor] = useState(() => withReact(createEditor()));
+    const editor = useCreateEditor();
+
+    useEffect(() => {
+        // Serialize the current editor value to compare
+        const currentSerializedValue = editor.getApi(MarkdownPlugin).markdown.serialize();
+
+        // Only deserialize and reset if the incoming text is different
+        if (text !== currentSerializedValue) {
+            const deserializedValue = editor.getApi(MarkdownPlugin).markdown.deserialize(text);
+            // @ts-expect-error -- editor.reset is not correctly typed by default Plate hooks,
+            // but it exists and is the recommended way to replace content.
+            editor.reset({ nodes: deserializedValue });
+        }
+    }, [text, editor]); // Rerun when text prop or editor instance changes
 
     return (
-        <Slate editor={editor} initialValue={initialValue}>
-            <Editable
-                className='h-full min-h-0 w-full flex-1 rounded-md border p-4'
-                placeholder='AI output will appear here...'
-            />
-        </Slate>
+        <Plate
+            editor={editor}
+            onChange={() => {
+                const markdown = editor.getApi(MarkdownPlugin).markdown.serialize();
+                onChange(markdown);
+            }}>
+            <EditorContainer>
+                <Editor variant='demo' placeholder='Type...' />
+            </EditorContainer>
+        </Plate>
     );
 });
 
