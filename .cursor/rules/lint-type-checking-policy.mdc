@@ -1,0 +1,41 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Lint and Type Error Check Policy
+
+## Introduction / Problem
+
+Maintaining code quality and preventing runtime issues requires diligent checking of TypeScript type errors and ESLint linting errors. Completing a task without addressing these errors can lead to bugs, inconsistencies, and technical debt. This rule outlines the mandatory process for checking and resolving these errors before marking a task as complete.
+
+## Implementation Steps / Policy
+
+1.  **Check for Errors:** After making code changes and before using `attempt_completion`, always review the problems reported by the TypeScript compiler (TSC) and ESLint. These are typically displayed in the editor's "Problems" panel or terminal output.
+2.  **Prioritize Direct Fixes:** The primary goal is to **fix** the underlying cause of each error or warning. Understand the error message and modify the code to comply with type safety rules and linting conventions.
+3.  **Avoid Suppression by Default:** Do **not** immediately resort to suppression comments like `// eslint-disable-next-line ...`, `// @ts-ignore`, or `// @ts-expect-error`. These should be considered a last resort.
+4.  **Justify Suppression (If Absolutely Necessary):** Suppression comments may only be used if:
+    *   A direct fix is genuinely not feasible or introduces significant unwanted complexity (e.g., dealing with poorly typed third-party libraries where types cannot be easily augmented).
+    *   The rule being violated is intentionally overridden for a specific, justifiable reason in this context.
+    *   **Crucially:** A clear comment **must** accompany the suppression, explaining *why* it's necessary and why a direct fix wasn't applied. Example: `// eslint-disable-next-line no-console -- Allow console logging in this specific CLI utility script.` or `// @ts-expect-error -- Third-party library 'xyz' incorrectly types this return value as 'string' when it can be 'null'.`
+5.  **Verify Fixes:** After applying fixes (or justified suppressions), re-check for errors to ensure the issues are resolved and no new ones have been introduced.
+6.  **Proceed to Completion:** Only use the `attempt_completion` tool once all reported TypeScript and ESLint errors have been addressed according to this policy.
+
+## Real-World Example (Learning)
+
+During our recent task involving live transcription implementation (`packages/api/src/router/transcribe.ts`), several ESLint errors arose due to placeholder types (`any`) and mock implementations. Instead of using `eslint-disable` comments, we successfully resolved these by:
+
+*   Defining more specific (though still basic) interfaces for mock objects (`MockLiveResponse`, `MockServerContent`).
+*   Adjusting mock function implementations (`receive`, `close`) to satisfy linter rules (e.g., adding `yield`, `await Promise.resolve()`).
+*   Using type assertions (`as AsyncGenerator<MockLiveResponse>`) where necessary due to the mock setup, which is preferable to broad suppression.
+*   Refining conditional logic (`if (sessionToClean?.close)`) to be inherently safer.
+
+This demonstrates the principle of attempting direct, type-safe fixes before considering suppression.
+
+## Common Pitfalls / Anti-Patterns
+
+*   Ignoring errors reported in the "Problems" panel or terminal.
+*   Using suppression comments (`eslint-disable`, `@ts-ignore`) without attempting a fix first.
+*   Using suppression comments without a clear justification explaining *why* it's needed.
+*   Completing a task while known type or lint errors persist.
