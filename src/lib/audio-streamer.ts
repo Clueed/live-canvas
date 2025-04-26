@@ -52,7 +52,8 @@ export class AudioStreamer {
       // the worklet already exists on this context
       // add the new handler to it
       workletsRecord[workletName].handlers.push(handler);
-      return Promise.resolve(this);
+      
+return Promise.resolve(this);
       //throw new Error(`Worklet ${workletName} already exists on context`);
     }
 
@@ -118,7 +119,8 @@ export class AudioStreamer {
       this.sampleRate,
     );
     audioBuffer.getChannelData(0).set(audioData);
-    return audioBuffer;
+    
+return audioBuffer;
   }
 
   private scheduleNextBuffer() {

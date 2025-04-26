@@ -30,7 +30,8 @@ export function useWebcam(): UseMediaStreamResult {
       stream
         .getTracks()
         .forEach((track) => track.addEventListener("ended", handleStreamEnded));
-      return () => {
+      
+return () => {
         stream
           .getTracks()
           .forEach((track) =>
@@ -46,7 +47,8 @@ export function useWebcam(): UseMediaStreamResult {
     });
     setStream(mediaStream);
     setIsStreaming(true);
-    return mediaStream;
+    
+return mediaStream;
   };
 
   const stop = () => {

@@ -44,7 +44,8 @@ export const useLoggerStore = create<StoreLoggerState>((set, get) => ({
           ],
         };
       }
-      return {
+      
+return {
         logs: [
           ...state.logs.slice(-(get().maxLogs - 1)),
           {
