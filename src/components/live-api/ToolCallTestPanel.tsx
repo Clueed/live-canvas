@@ -41,8 +41,8 @@ export function ToolCallTestPanel({ canvasText, updateCanvasText, undo, redo }: 
     const handleExecuteFunction = () => {
         if (requiresTextInput && !inputText.trim()) {
             console.warn('Please enter required text input');
-            
-return;
+
+            return;
         }
 
         // Prepare args based on function requirements
