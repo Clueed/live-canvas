@@ -16,6 +16,7 @@ import { useLoggerStore } from '@/lib/store-logger';
 import { cn } from '@/lib/utils';
 import type { Part } from '@google/generative-ai';
 
+import { ToolCallTestPanel } from './ToolCallTestPanel';
 import { PanelLeftClose, PanelLeftOpen, Send } from 'lucide-react';
 
 const filterOptions = [
@@ -26,9 +27,11 @@ const filterOptions = [
 
 interface SidePanelProps {
     send: (parts: Part | Part[]) => void;
+    canvasText: string;
+    updateCanvasText: (text: string, isUserUpdate: boolean) => void;
 }
 
-export default function SidePanel({ send }: SidePanelProps) {
+export default function SidePanel({ send, canvasText, updateCanvasText }: SidePanelProps) {
     const { connected, client } = useLiveAPIContext();
     const [open, setOpen] = useState(true);
     const loggerRef = useRef<HTMLDivElement>(null); // Ref for ScrollArea viewport
@@ -124,6 +127,13 @@ export default function SidePanel({ send }: SidePanelProps) {
                 {' '}
                 <Logger filter={selectedFilter} />
             </div>
+
+            {/* Tool Call Test Panel */}
+            {open && (
+                <div className='border-t p-3'>
+                    <ToolCallTestPanel canvasText={canvasText} updateCanvasText={updateCanvasText} />
+                </div>
+            )}
 
             {/* Input Area */}
             <div className={cn('mt-auto border-t p-3', !connected && 'pointer-events-none opacity-50')}>
