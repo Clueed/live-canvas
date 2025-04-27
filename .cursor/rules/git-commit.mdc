@@ -1,8 +1,9 @@
 ---
-description: Guide to writting git commits.
+description: REQUIRED - Use this rule before ANY git commits. Contains formatting standards and requirements for all commit messages in this project.
 globs: 
 alwaysApply: false
 ---
+
 # Git Commit Guidelines
 
 ## 1. Quick Reference
