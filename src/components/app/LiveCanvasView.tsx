@@ -17,7 +17,6 @@ export function LiveCanvasView() {
   const { client, setConfig } = useLiveAPIContext();
 
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoStream, setVideoStream] = useState<MediaStream | null>(null); // Note: videoStream state is not used, consider removal if unnecessary
   const editor = useCreateEditor();
   const editorService = createEditorService(editor);
 
@@ -64,12 +63,7 @@ export function LiveCanvasView() {
     <div className='flex h-screen max-h-dvh w-screen max-w-dvw overflow-hidden'>
       <div className='flex h-full w-80 flex-col border-r'>
         <SidePanel send={send} editorService={editorService} />
-        <ControlTray
-          videoRef={videoRef}
-          supportsVideo={true}
-          onVideoStreamChange={setVideoStream}
-          sendRealtimeInput={sendRealtimeInput}
-        />
+        <ControlTray sendRealtimeInput={sendRealtimeInput} />
       </div>
       <main className='flex flex-1 flex-col'>
         <Canvas editor={editor} />
