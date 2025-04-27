@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useCreateEditor } from '@/components/editor/use-create-editor';
 import { Canvas } from '@/components/live-api/Canvas';
@@ -27,7 +27,7 @@ export function LiveCanvasView() {
   const toggleTestPanel = useCallback(() => setShowTestPanel((prev) => !prev), []);
   const toggleLoggerPanel = useCallback(() => setShowLoggerPanel((prev) => !prev), []);
 
-  const functionDeclarations = TOOL_CALL_FUNCTIONS.map((f) => f.declaration);
+  const functionDeclarations = useMemo(() => TOOL_CALL_FUNCTIONS.map((f) => f.declaration), []);
 
   useEffect(() => {
     setConfig({
@@ -71,7 +71,7 @@ export function LiveCanvasView() {
   return (
     <div className='flex h-screen max-h-dvh w-screen max-w-dvw overflow-hidden'>
       <div className='flex h-full w-80 flex-col border-r'>
-        <SidePanel send={send} editorService={editorService} />
+        <SidePanel send={send} editor={editor} />
         <ControlTray
           sendRealtimeInput={sendRealtimeInput}
           onToggleTestPanel={toggleTestPanel}
@@ -83,7 +83,7 @@ export function LiveCanvasView() {
       <main className='flex flex-1 flex-col'>
         <Canvas editor={editor} />
       </main>
-      <FloatingTestPanel show={showTestPanel} onClose={toggleTestPanel} editorService={editorService} />
+      <FloatingTestPanel show={showTestPanel} onClose={toggleTestPanel} editor={editor} />
       <FloatingLoggerPanel show={showLoggerPanel} onClose={toggleLoggerPanel} />
     </div>
   );

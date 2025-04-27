@@ -1,7 +1,5 @@
 import { EditorOperationResult } from '@/hooks/use-tool-call-handler';
 import { TOOL_CALL_FUNCTIONS } from '@/lib/editor';
-import { EDITOR_FUNCTION_MAP } from '@/lib/editor/function-declarations';
-import type { MultimodalLiveClient } from '@/lib/multimodal-live-client';
 import { LiveFunctionCall } from '@/types/multimodal-live-types';
 import { PlateEditor } from '@udecode/plate/react';
 

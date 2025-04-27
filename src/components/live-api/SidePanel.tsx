@@ -5,19 +5,19 @@ import React, { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useLiveAPIContext } from '@/contexts/LiveAPIContext';
-import { EditorService } from '@/lib/editor-service';
 import { cn } from '@/lib/utils';
 import type { Part } from '@google/generative-ai';
+import { type PlateEditor } from '@udecode/plate/react';
 
 import { ChatPanel } from './ChatPanel';
 import { Send } from 'lucide-react';
 
 interface SidePanelProps {
   send: (parts: Part | Part[]) => void;
-  editorService: EditorService;
+  editor: PlateEditor;
 }
 
-export default function SidePanel({ send, editorService }: SidePanelProps) {
+export default function SidePanel({ send, editor }: SidePanelProps) {
   const { connected } = useLiveAPIContext();
   const [textInput, setTextInput] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);

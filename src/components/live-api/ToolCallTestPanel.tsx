@@ -16,30 +16,27 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { EditorService } from '@/lib/editor-service';
 import { EDITOR_FUNCTION_DECLARATIONS } from '@/lib/editor/function-declarations';
 import { createFunctionCallHandler } from '@/lib/tool-call-handlers';
 import { LiveFunctionCall } from '@/types/multimodal-live-types';
+import { type PlateEditor } from '@udecode/plate/react';
 
 import { AlertCircle, X } from 'lucide-react';
 
 interface ToolCallTestPanelProps {
-  editorService: EditorService;
+  editor: PlateEditor;
 }
 
-export function ToolCallTestPanel({ editorService }: ToolCallTestPanelProps) {
+export function ToolCallTestPanel({ editor }: ToolCallTestPanelProps) {
   const [selectedFunction, setSelectedFunction] = useState(EDITOR_FUNCTION_DECLARATIONS[0].name);
   const [inputText, setInputText] = useState('');
   const [resultText, setResultText] = useState('');
   const [showResult, setShowResult] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const functionCallHandler = useCallback(createFunctionCallHandler(editorService), [editorService]);
+  const functionCallHandler = useCallback(createFunctionCallHandler(editor), [editor]);
 
-  // Get the current function declaration
   const currentFunction = EDITOR_FUNCTION_DECLARATIONS.find((func) => func.name === selectedFunction);
-
-  // Check if the current function requires parameters
   const requiresTextInput = currentFunction?.parameters?.properties?.text !== undefined;
 
   // Handler for executing the selected function
@@ -69,10 +66,17 @@ export function ToolCallTestPanel({ editorService }: ToolCallTestPanelProps) {
 
       // Extract error message from the response, handle different response structures
       let responseError: string | undefined;
-      if ('error' in response.response) {
-        responseError = response.response.error;
-      } else if ('output' in response.response && response.response.output && 'error' in response.response.output) {
-        responseError = response.response.output.error;
+      if (typeof response.response === 'object' && response.response && 'error' in response.response) {
+        responseError = typeof response.response.error === 'string' ? response.response.error : undefined;
+      } else if (
+        typeof response.response === 'object' &&
+        response.response &&
+        'output' in response.response &&
+        typeof response.response.output === 'object' &&
+        response.response.output &&
+        'error' in response.response.output
+      ) {
+        responseError = typeof response.response.output.error === 'string' ? response.response.output.error : undefined;
       }
 
       if (responseError) {
@@ -88,14 +92,32 @@ export function ToolCallTestPanel({ editorService }: ToolCallTestPanelProps) {
       setShowResult(true);
 
       // Special case for get_editor_artifact to maintain existing functionality
-      if (selectedFunction === 'get_editor_artifact' && 'artifact' in response.response) {
-        setInputText(response.response.artifact || '');
+      if (
+        selectedFunction === 'get_editor_artifact' &&
+        typeof response.response === 'object' &&
+        response.response &&
+        'artifact' in response.response
+      ) {
+        if (typeof response.response.artifact === 'string') {
+          setInputText(response.response.artifact);
+        } else {
+          setInputText('');
+        }
       }
 
       // Log the result
       const isSuccess =
-        ('success' in response.response && response.response.success) ||
-        ('output' in response.response && response.response.output?.success);
+        (typeof response.response === 'object' &&
+          response.response &&
+          'success' in response.response &&
+          response.response.success) ||
+        (typeof response.response === 'object' &&
+          response.response &&
+          'output' in response.response &&
+          typeof response.response.output === 'object' &&
+          response.response.output &&
+          'success' in response.response.output &&
+          response.response.output.success);
 
       console.log(
         isSuccess ? `${selectedFunction} Success:` : `${selectedFunction} Failed:`,

@@ -3,8 +3,8 @@
 import React, { useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { EditorService } from '@/lib/editor-service';
 import { useDraggable } from '@/lib/hooks/useDraggable';
+import { type PlateEditor } from '@udecode/plate/react';
 
 import { ToolCallTestPanel } from './ToolCallTestPanel';
 import { Move, X } from 'lucide-react';
@@ -12,10 +12,10 @@ import { Move, X } from 'lucide-react';
 interface FloatingTestPanelProps {
   show: boolean;
   onClose: () => void;
-  editorService: EditorService;
+  editor: PlateEditor;
 }
 
-export function FloatingTestPanel({ show, onClose, editorService }: FloatingTestPanelProps) {
+export function FloatingTestPanel({ show, onClose, editor }: FloatingTestPanelProps) {
   const { position, handleDragStart, handleDrag, handleDragEnd } = useDraggable({ x: 100, y: 100 }, show);
 
   if (!show) return null;
@@ -43,7 +43,7 @@ export function FloatingTestPanel({ show, onClose, editorService }: FloatingTest
         </Button>
       </div>
       <div className='max-h-[400px] overflow-y-auto p-3'>
-        <ToolCallTestPanel editorService={editorService} />
+        <ToolCallTestPanel editor={editor} />
       </div>
     </div>
   );
