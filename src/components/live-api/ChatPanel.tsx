@@ -36,10 +36,7 @@ export function ChatPanel({ className = '' }: ChatPanelProps) {
   const { client } = useLiveAPIContext();
   const { log, logs } = useLoggerStore();
   const { messages } = useChatMessages({
-    client: {
-      on: client.on.bind(client),
-      off: client.off.bind(client)
-    },
+    client: client,
     log,
     logs
   });

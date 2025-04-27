@@ -5,6 +5,7 @@ import { type MultimodalLiveClient } from '@/lib/multimodal-live-client';
 import { SYSTEM_PROMPT } from '@/lib/prompts';
 import { createFunctionCallHandler } from '@/lib/tool-call-handlers';
 import { type ToolCall } from '@/types/multimodal-live-types';
+import { PlateEditor } from '@udecode/plate/react';
 
 export interface EditorOperationResult<T = string> {
   success: boolean;
@@ -14,11 +15,11 @@ export interface EditorOperationResult<T = string> {
 
 interface UseToolCallHandlerProps {
   client: MultimodalLiveClient;
-  editorService: EditorService;
+  editor: PlateEditor;
 }
 
-export function useToolCallHandler({ client, editorService }: UseToolCallHandlerProps) {
-  const functionCallHandler = useCallback(createFunctionCallHandler(editorService), [editorService]);
+export function useToolCallHandler({ client, editor }: UseToolCallHandlerProps) {
+  const functionCallHandler = useCallback(createFunctionCallHandler(editor), [editor]);
 
   const onToolCallHandler = useCallback(
     (toolCall: ToolCall, argClient: MultimodalLiveClient) => {

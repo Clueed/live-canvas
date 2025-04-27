@@ -6,10 +6,18 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { EditorService } from '@/lib/editor-service';
-import { FUNCTION_DECLARATIONS } from '@/lib/prompts';
+import { EDITOR_FUNCTION_DECLARATIONS } from '@/lib/editor/function-declarations';
 import { createFunctionCallHandler } from '@/lib/tool-call-handlers';
 import { LiveFunctionCall } from '@/types/multimodal-live-types';
 
@@ -20,7 +28,7 @@ interface ToolCallTestPanelProps {
 }
 
 export function ToolCallTestPanel({ editorService }: ToolCallTestPanelProps) {
-  const [selectedFunction, setSelectedFunction] = useState(FUNCTION_DECLARATIONS[0].name);
+  const [selectedFunction, setSelectedFunction] = useState(EDITOR_FUNCTION_DECLARATIONS[0].name);
   const [inputText, setInputText] = useState('');
   const [resultText, setResultText] = useState('');
   const [showResult, setShowResult] = useState(false);
@@ -29,7 +37,7 @@ export function ToolCallTestPanel({ editorService }: ToolCallTestPanelProps) {
   const functionCallHandler = useCallback(createFunctionCallHandler(editorService), [editorService]);
 
   // Get the current function declaration
-  const currentFunction = FUNCTION_DECLARATIONS.find((func) => func.name === selectedFunction);
+  const currentFunction = EDITOR_FUNCTION_DECLARATIONS.find((func) => func.name === selectedFunction);
 
   // Check if the current function requires parameters
   const requiresTextInput = currentFunction?.parameters?.properties?.text !== undefined;
@@ -109,8 +117,17 @@ export function ToolCallTestPanel({ editorService }: ToolCallTestPanelProps) {
   };
 
   // Reset the result when changing functions
-  const handleFunctionChange = (value: string) => {
+  const handleSelectFunction = (value: string) => {
     setSelectedFunction(value);
+    const currentFunction = EDITOR_FUNCTION_DECLARATIONS.find((func) => func.name === value);
+    if (currentFunction && currentFunction.parameters) {
+      const initialParams = Object.fromEntries(
+        Object.entries(currentFunction.parameters.properties)
+          .filter(([key, prop]) => prop.type === 'string')
+          .map(([key, prop]) => [key, ''])
+      );
+      setInputText(JSON.stringify(initialParams));
+    }
     setShowResult(false);
     setError(null);
   };
@@ -135,16 +152,19 @@ export function ToolCallTestPanel({ editorService }: ToolCallTestPanelProps) {
 
         <div className='space-y-2'>
           <Label htmlFor='function-select'>Select Function</Label>
-          <Select value={selectedFunction} onValueChange={handleFunctionChange}>
+          <Select value={selectedFunction} onValueChange={handleSelectFunction}>
             <SelectTrigger className='w-full'>
               <SelectValue placeholder='Select a function' />
             </SelectTrigger>
             <SelectContent>
-              {FUNCTION_DECLARATIONS.map((func) => (
-                <SelectItem key={func.name} value={func.name}>
-                  {getFunctionDisplayName(func.name)}
-                </SelectItem>
-              ))}
+              <SelectGroup>
+                <SelectLabel>Editor Tools</SelectLabel>
+                {EDITOR_FUNCTION_DECLARATIONS.map((func) => (
+                  <SelectItem key={func.name} value={func.name}>
+                    {getFunctionDisplayName(func.name)}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
             </SelectContent>
           </Select>
         </div>

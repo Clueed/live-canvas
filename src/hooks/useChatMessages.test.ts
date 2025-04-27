@@ -59,9 +59,11 @@ describe('useChatMessages', () => {
         clientContent: {
           turns: [
             {
+              role: 'user',
               parts: [{ text: 'Hello there' }]
             }
-          ]
+          ],
+          turnComplete: true
         }
       }
     };
@@ -87,8 +89,10 @@ describe('useChatMessages', () => {
       message: {
         serverContent: {
           modelTurn: {
+            role: 'model',
             parts: [{ text: 'Hello, how can I help you?' }]
-          }
+          },
+          turnComplete: true
         }
       }
     };
@@ -119,9 +123,11 @@ describe('useChatMessages', () => {
         clientContent: {
           turns: [
             {
+              role: 'user',
               parts: [{ text: 'Voice transcription' }]
             }
-          ]
+          ],
+          turnComplete: true
         }
       }
     };
@@ -210,8 +216,10 @@ describe('useChatMessages', () => {
       message: {
         serverContent: {
           modelTurn: {
+            role: 'model',
             parts: [{ text: 'Hello' }]
-          }
+          },
+          turnComplete: true
         }
       }
     };
@@ -222,8 +230,10 @@ describe('useChatMessages', () => {
       message: {
         serverContent: {
           modelTurn: {
+            role: 'model',
             parts: [{ text: ', how can I help you?' }]
-          }
+          },
+          turnComplete: true
         }
       }
     };
@@ -254,8 +264,10 @@ describe('useChatMessages', () => {
       message: {
         serverContent: {
           modelTurn: {
+            role: 'model',
             parts: [{ text: 'First response' }]
-          }
+          },
+          turnComplete: true
         }
       }
     };
@@ -278,8 +290,10 @@ describe('useChatMessages', () => {
       message: {
         serverContent: {
           modelTurn: {
+            role: 'model',
             parts: [{ text: 'New response' }]
-          }
+          },
+          turnComplete: true
         }
       }
     };
@@ -303,9 +317,11 @@ describe('useChatMessages', () => {
           clientContent: {
             turns: [
               {
+                role: 'user',
                 parts: [{ text: 'Hello' }]
               }
-            ]
+            ],
+            turnComplete: true
           }
         }
       },
@@ -315,8 +331,10 @@ describe('useChatMessages', () => {
         message: {
           serverContent: {
             modelTurn: {
+              role: 'model',
               parts: [{ text: 'Hi there! How can I help you?' }]
-            }
+            },
+            turnComplete: true
           }
         }
       },
@@ -327,9 +345,11 @@ describe('useChatMessages', () => {
           clientContent: {
             turns: [
               {
+                role: 'user',
                 parts: [{ text: 'What time is it?' }]
               }
-            ]
+            ],
+            turnComplete: true
           }
         }
       },
@@ -339,8 +359,10 @@ describe('useChatMessages', () => {
         message: {
           serverContent: {
             modelTurn: {
+              role: 'model',
               parts: [{ text: 'It is 10:00 AM.' }]
-            }
+            },
+            turnComplete: true
           }
         }
       }

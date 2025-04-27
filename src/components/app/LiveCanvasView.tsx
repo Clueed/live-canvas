@@ -10,8 +10,9 @@ import { FloatingTestPanel } from '@/components/live-api/FloatingTestPanel';
 import SidePanel from '@/components/live-api/SidePanel';
 import { useLiveAPIContext } from '@/contexts/LiveAPIContext';
 import { useToolCallHandler } from '@/hooks/use-tool-call-handler';
-import { EditorService, createEditorService } from '@/lib/editor-service';
-import { FUNCTION_DECLARATIONS, SYSTEM_PROMPT } from '@/lib/prompts';
+import { TOOL_CALL_FUNCTIONS } from '@/lib/editor';
+import { EDITOR_FUNCTION_DECLARATIONS } from '@/lib/editor/function-declarations';
+import { SYSTEM_PROMPT } from '@/lib/prompts';
 import { type GenerativeContentBlob, type Part } from '@google/generative-ai';
 
 // Renamed component from LiveCanvasLayout to LiveCanvasView
@@ -19,15 +20,14 @@ export function LiveCanvasView() {
   const { client, setConfig } = useLiveAPIContext();
 
   const editor = useCreateEditor();
-  const editorService = createEditorService(editor);
 
-  // State for floating panels
   const [showTestPanel, setShowTestPanel] = useState(false);
   const [showLoggerPanel, setShowLoggerPanel] = useState(false);
 
-  // Toggle functions for floating panels
   const toggleTestPanel = useCallback(() => setShowTestPanel((prev) => !prev), []);
   const toggleLoggerPanel = useCallback(() => setShowLoggerPanel((prev) => !prev), []);
+
+  const functionDeclarations = TOOL_CALL_FUNCTIONS.map((f) => f.declaration);
 
   useEffect(() => {
     setConfig({
@@ -42,13 +42,13 @@ export function LiveCanvasView() {
           }
         ]
       },
-      tools: [{ functionDeclarations: FUNCTION_DECLARATIONS }]
+      tools: [{ functionDeclarations: functionDeclarations }]
     });
-  }, [setConfig]);
+  }, [setConfig, functionDeclarations, SYSTEM_PROMPT]);
 
   useToolCallHandler({
     client,
-    editorService
+    editor
   });
 
   const send = useCallback(
