@@ -1,0 +1,147 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Prefer Proper Solutions Over Workarounds
+
+## Introduction / Problem
+
+In software development, it's often tempting to use quick workarounds like type assertions (`as SomeType`), type casts, or ignoring error messages when facing type errors or implementation challenges. While these approaches may solve immediate issues, they can lead to technical debt, reduced type safety, and maintainability problems over time. This rule establishes guidelines for prioritizing proper, sustainable solutions over temporary workarounds.
+
+## Pattern Description
+
+### Type System
+
+When working with TypeScript, prefer these approaches (in order of preference):
+
+1. **Use proper typing**: Take time to understand the library's type system and use it correctly
+2. **Use built-in helper types**: Utilize TypeScript's utility types (`Partial<T>`, `Pick<T>`, etc.)
+3. **Access APIs properly**: Read documentation to understand the correct method to access plugin APIs or extended functionality
+4. **Extend interfaces properly**: Create proper type extensions when needed
+5. **Type guards**: Use runtime checks that also inform the type system
+
+```typescript
+// ❌ AVOID: Type assertions that bypass the type system
+const user = someData as User;
+const config = someObject as any;
+
+// ✅ BETTER: Use proper API access methods
+const user = validateUser(someData); // with proper type guard
+const config = getConfiguration<AppConfig>();
+
+// ✅ BETTER: Properly extend interfaces when needed
+interface ExtendedConfig extends BaseConfig {
+  customFeature: boolean;
+}
+
+// ✅ BETTER: Use type predicates for runtime checks
+function isUser(data: unknown): data is User {
+  return (
+    typeof data === 'object' && 
+    data !== null && 
+    'id' in data && 
+    'name' in data
+  );
+}
+```
+
+### Beyond Types
+
+This principle extends beyond just types to all aspects of development:
+
+1. **Read Documentation First**: Understand the proper APIs before implementing workarounds
+2. **Search for Established Patterns**: Research how others have solved similar problems
+3. **Fix Root Causes**: Address the underlying issue rather than its symptoms
+4. **Consider Long-term Maintenance**: Ask if your solution will make sense to others months later
+5. **Take Time to Refactor**: Invest in proper solutions even if they take longer initially
+
+```typescript
+// ❌ AVOID: Ignoring errors or using suppressions without understanding
+// @ts-ignore -- I don't know why this errors
+doSomething();
+
+// eslint-disable-next-line no-unused-vars
+function unusedFunction() {}
+
+// ✅ BETTER: Address root causes or provide proper explanations
+// @ts-expect-error -- Third-party library has incorrect typing for this method
+// See issue: https://github.com/example/lib/issues/123
+doSomething();
+
+// Use proper patterns rather than disabling linting
+const handleChange = useCallback(() => {
+  // Implementation
+}, [dependencies]);
+```
+
+## Implementation Steps / Policy
+
+1. **Investigate First**: When encountering errors or challenges, first research the proper solution:
+   - Read official documentation
+   - Check for examples in the codebase
+   - Search online for established patterns
+   
+2. **Consider Alternatives**: Before reaching for a type assertion or workaround:
+   - Is there a proper API or method available?
+   - Would creating a proper type or interface help?
+   - Should I refactor to avoid the issue entirely?
+   
+3. **Document When Necessary**: If a workaround is truly required:
+   - Add a detailed comment explaining why
+   - Link to relevant issues or documentation
+   - Create a technical debt ticket to revisit later
+   
+4. **Review Workarounds**: Regularly review and refactor code with workarounds:
+   - During code reviews, question assertions and workarounds
+   - Set time aside for addressing technical debt
+   - Treat workarounds as temporary, not permanent
+
+## Real-World Example (Learning)
+
+In a recent component implementation, we initially used a type assertion to handle an API response:
+
+```typescript
+// ❌ Initial workaround approach
+interface ComponentData {
+  id: string;
+  metadata: {
+    title: string;
+    description: string;
+  };
+}
+
+// Force the type without validation
+const componentData = apiResponse as ComponentData;
+displayComponent(componentData.metadata.title);
+```
+
+After reviewing the API documentation, we implemented a proper solution:
+
+```typescript
+// ✅ Proper solution
+import { fetchComponentData } from './api';
+
+// Use the proper API method with type safety
+const componentData = await fetchComponentData(id);
+if (componentData && componentData.metadata) {
+  displayComponent(componentData.metadata.title);
+}
+```
+
+The proper solution:
+- Provides better type safety
+- Includes necessary runtime checks
+- Is more maintainable and readable
+- Works with the API as designed
+
+## Common Pitfalls / Anti-Patterns
+
+* Using `as any` or `as SomeType` to silence TypeScript errors without understanding them
+* Adding `// @ts-ignore` comments without explaining why or researching the proper fix
+* Disabling ESLint rules instead of writing compliant code
+* Copying patterns from StackOverflow without understanding them
+* Prioritizing quick implementation over maintainability
+* Not reading documentation for libraries and tools being used
+* Building workarounds on top of other workarounds
+* Not investing time to understand error messages
