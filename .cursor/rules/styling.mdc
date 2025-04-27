@@ -1,0 +1,15 @@
+---
+description: 
+globs: *.tsx
+alwaysApply: false
+---
+# Styling Guidelines
+
+This project uses the following core technologies and conventions for styling components, primarily within `.tsx` files:
+
+1.  **Tailwind CSS v4:** Utilize Tailwind utility classes for styling. Refer to `src/app/globals.css` for base styles, plugins (`tailwindcss-animate`, `tailwind-scrollbar-hide`), and theme variables (CSS variables for colors, radius, etc.).
+2.  **Shadcn/ui:** Use `shadcn/ui` components (configured with "new-york" style, see `components.json`).
+    *   Add new components using `pnpm dlx shadcn-ui@latest add [component-name]`.
+    *   Components reside in `src/components/ui`.
+3.  **`class-variance-authority` (CVA):** Use `cva` for creating component variants, especially within `shadcn/ui` components. See examples in `src/components/ui/button.tsx`.
+4.  **`cn` Utility:** Use the `cn` function (from `@/lib/utils`) which combines `clsx` and `tailwind-merge` for conditionally applying and merging Tailwind classes.
