@@ -16,7 +16,6 @@ import { type GenerativeContentBlob, type Part } from '@google/generative-ai';
 export function LiveCanvasView() {
   const { client, setConfig } = useLiveAPIContext();
 
-  const videoRef = useRef<HTMLVideoElement>(null);
   const editor = useCreateEditor();
   const editorService = createEditorService(editor);
 
@@ -60,7 +59,7 @@ export function LiveCanvasView() {
   );
 
   return (
-    <div className='max-w-dvw flex h-screen max-h-dvh w-screen overflow-hidden'>
+    <div className='flex h-screen max-h-dvh w-screen max-w-dvw overflow-hidden'>
       <div className='flex h-full w-80 flex-col border-r'>
         <SidePanel send={send} editorService={editorService} />
         <ControlTray sendRealtimeInput={sendRealtimeInput} />
