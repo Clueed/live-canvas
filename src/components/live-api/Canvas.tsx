@@ -16,7 +16,7 @@ const CanvasComponent = React.memo(function CanvasComponent({ editor }: CanvasPr
     <DndProvider backend={HTML5Backend}>
       <Plate editor={editor}>
         <EditorContainer>
-          <Editor variant='default' />
+          <Editor variant='none' />
         </EditorContainer>
       </Plate>
     </DndProvider>

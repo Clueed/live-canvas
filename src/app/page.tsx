@@ -24,115 +24,91 @@ const host = 'generativelanguage.googleapis.com';
 const uri = `wss://${host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent`;
 
 function MainContent() {
-    const { client, setConfig } = useLiveAPIContext();
-    // const { canvasText, updateCanvasText, getOptionalCanvasPart } = useManagedCanvas();
-    const videoRef = useRef<HTMLVideoElement>(null);
-    const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
-    const editor = useCreateEditor();
+  const { client, setConfig } = useLiveAPIContext();
+  // const { canvasText, updateCanvasText, getOptionalCanvasPart } = useManagedCanvas();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
+  const editor = useCreateEditor();
 
-    const canvasText = () => editor.api.markdown.serialize();
-    const updateCanvasText = (newText: string) => {
-        const newMarkdown = editor.api.markdown.deserialize(newText);
-        if (!newMarkdown) {
-            return;
-        }
-        editor.tf.setValue(newMarkdown);
-    };
+  const canvasText = () => editor.api.markdown.serialize();
+  const updateCanvasText = (newText: string) => {
+    const newMarkdown = editor.api.markdown.deserialize(newText);
+    if (!newMarkdown) {
+      return;
+    }
+    editor.tf.setValue(newMarkdown);
+  };
 
-    useEffect(() => {
-        setConfig({
-            model: 'models/gemini-2.0-flash-exp',
-            generationConfig: {
-                responseModalities: 'text'
-            },
-            systemInstruction: {
-                parts: [
-                    {
-                        text: SYSTEM_PROMPT
-                    }
-                ]
-            },
-            tools: [{ functionDeclarations: FUNCTION_DECLARATIONS }]
-        });
-    }, [setConfig]);
+  useEffect(() => {
+    setConfig({
+      model: 'models/gemini-2.0-flash-exp',
+      generationConfig: {
+        responseModalities: 'text'
+      },
+      systemInstruction: {
+        parts: [
+          {
+            text: SYSTEM_PROMPT
+          }
+        ]
+      },
+      tools: [{ functionDeclarations: FUNCTION_DECLARATIONS }]
+    });
+  }, [setConfig]);
 
-    useToolCallHandler({ client, updateCanvasText, canvasText, undo: editor.tf.undo, redo: editor.tf.redo });
+  useToolCallHandler({ client, updateCanvasText, canvasText, undo: editor.tf.undo, redo: editor.tf.redo });
 
-    // Function to send text/parts to the API
-    const send = (inputParts: Part | Part[]) => {
-        const partsArray = Array.isArray(inputParts) ? inputParts : [inputParts];
-        // const optionalCanvasPart = getOptionalCanvasPart();
+  // Function to send text/parts to the API
+  const send = (inputParts: Part | Part[]) => {
+    const partsArray = Array.isArray(inputParts) ? inputParts : [inputParts];
+    // const optionalCanvasPart = getOptionalCanvasPart();
 
-        // if (optionalCanvasPart) {
-        //     client.send([optionalCanvasPart, ...partsArray]);
-        // } else {
-        client.send(partsArray, true);
-        // }
-    };
+    // if (optionalCanvasPart) {
+    //     client.send([optionalCanvasPart, ...partsArray]);
+    // } else {
+    client.send(partsArray, true);
+    // }
+  };
 
-    // Function to send realtime media chunks (audio/video)
-    const sendRealtimeInput = (chunks: GenerativeContentBlob[]) => {
-        // const optionalCanvasPart = getOptionalCanvasPart();
+  // Function to send realtime media chunks (audio/video)
+  const sendRealtimeInput = (chunks: GenerativeContentBlob[]) => {
+    // const optionalCanvasPart = getOptionalCanvasPart();
 
-        // if (optionalCanvasPart) {
-        //     client.send([optionalCanvasPart], false);
-        // }
+    // if (optionalCanvasPart) {
+    //     client.send([optionalCanvasPart], false);
+    // }
 
-        client.sendRealtimeInput(chunks);
-    };
+    client.sendRealtimeInput(chunks);
+  };
 
-    return (
-        <div className='flex h-screen w-screen overflow-hidden'>
-            <SidePanel
-                send={send}
-                canvasText={canvasText}
-                updateCanvasText={updateCanvasText}
-                undo={editor.tf.undo}
-                redo={editor.tf.redo}
-            />
-            <main className='flex flex-1 flex-col'>
-                <div className='absolute top-2 right-2 z-10'>
-                    <Link
-                        href='/editor-history'
-                        className='rounded bg-blue-500 px-4 py-2 text-white shadow transition-colors hover:bg-blue-600'>
-                        Try Editor History Demo
-                    </Link>
-                </div>
-
-                <div className='relative flex flex-1 overflow-hidden p-4'>
-                    <Canvas editor={editor} />
-
-                    <video
-                        className={cn(
-                            'absolute right-4 bottom-4 h-32 w-auto rounded border bg-black shadow-lg transition-opacity duration-300',
-                            {
-                                'opacity-100': videoStream,
-                                'pointer-events-none opacity-0': !videoStream
-                            }
-                        )}
-                        ref={videoRef}
-                        autoPlay
-                        playsInline
-                        muted // Mute local playback to avoid echo
-                    />
-                </div>
-
-                {/* Control Tray */}
-                <ControlTray
-                    videoRef={videoRef}
-                    supportsVideo={true} // Assuming video is supported
-                    onVideoStreamChange={setVideoStream}
-                    sendRealtimeInput={sendRealtimeInput}
-                />
-            </main>
-        </div>
-    );
+  return (
+    <div className='flex h-screen max-h-dvh w-screen max-w-dvw overflow-hidden'>
+      <div className='flex h-full w-80 flex-col border-r'>
+        <SidePanel
+          send={send}
+          canvasText={canvasText}
+          updateCanvasText={updateCanvasText}
+          undo={editor.tf.undo}
+          redo={editor.tf.redo}
+        />
+        <ControlTray
+          videoRef={videoRef}
+          supportsVideo={true} // Assuming video is supported
+          onVideoStreamChange={setVideoStream}
+          sendRealtimeInput={sendRealtimeInput}
+        />
+      </div>
+      <main className='flex flex-1 flex-col'>
+        <Canvas editor={editor} />
+      </main>
+    </div>
+  );
 }
 
 export default function Page() {
-    return (
-        <LiveAPIProvider url={uri} apiKey={API_KEY}>
-            <MainContent />
-        </LiveAPIProvider>
-    );
+  return (
+    <LiveAPIProvider url={uri} apiKey={API_KEY}>
+      <MainContent />
+    </LiveAPIProvider>
+  );
 }

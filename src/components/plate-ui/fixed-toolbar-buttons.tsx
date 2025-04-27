@@ -2,39 +2,18 @@
 
 import React from 'react';
 
+import { MoreDropdownMenu } from '@/components/plate-ui/more-dropdown-menu';
 import {
   BoldPlugin,
   CodePlugin,
   ItalicPlugin,
   StrikethroughPlugin,
-  UnderlinePlugin,
+  UnderlinePlugin
 } from '@udecode/plate-basic-marks/react';
-import {
-  FontBackgroundColorPlugin,
-  FontColorPlugin,
-} from '@udecode/plate-font/react';
+import { FontBackgroundColorPlugin, FontColorPlugin } from '@udecode/plate-font/react';
 import { HighlightPlugin } from '@udecode/plate-highlight/react';
-import {
-  AudioPlugin,
-  FilePlugin,
-  ImagePlugin,
-  VideoPlugin,
-} from '@udecode/plate-media/react';
+import { AudioPlugin, FilePlugin, ImagePlugin, VideoPlugin } from '@udecode/plate-media/react';
 import { useEditorReadOnly } from '@udecode/plate/react';
-import {
-  ArrowUpToLineIcon,
-  BaselineIcon,
-  BoldIcon,
-  Code2Icon,
-  HighlighterIcon,
-  ItalicIcon,
-  PaintBucketIcon,
-  StrikethroughIcon,
-  UnderlineIcon,
-  WandSparklesIcon,
-} from 'lucide-react';
-
-import { MoreDropdownMenu } from '@/components/plate-ui/more-dropdown-menu';
 
 import { AIToolbarButton } from './ai-toolbar-button';
 import { AlignDropdownMenu } from './align-dropdown-menu';
@@ -45,10 +24,7 @@ import { ExportToolbarButton } from './export-toolbar-button';
 import { FontSizeToolbarButton } from './font-size-toolbar-button';
 import { RedoToolbarButton, UndoToolbarButton } from './history-toolbar-button';
 import { ImportToolbarButton } from './import-toolbar-button';
-import {
-  BulletedIndentListToolbarButton,
-  NumberedIndentListToolbarButton,
-} from './indent-list-toolbar-button';
+import { BulletedIndentListToolbarButton, NumberedIndentListToolbarButton } from './indent-list-toolbar-button';
 import { IndentTodoToolbarButton } from './indent-todo-toolbar-button';
 import { IndentToolbarButton } from './indent-toolbar-button';
 import { InsertDropdownMenu } from './insert-dropdown-menu';
@@ -62,24 +38,36 @@ import { TableDropdownMenu } from './table-dropdown-menu';
 import { ToggleToolbarButton } from './toggle-toolbar-button';
 import { ToolbarGroup } from './toolbar';
 import { TurnIntoDropdownMenu } from './turn-into-dropdown-menu';
+import {
+  ArrowUpToLineIcon,
+  BaselineIcon,
+  BoldIcon,
+  Code2Icon,
+  HighlighterIcon,
+  ItalicIcon,
+  PaintBucketIcon,
+  StrikethroughIcon,
+  UnderlineIcon,
+  WandSparklesIcon
+} from 'lucide-react';
 
 export function FixedToolbarButtons() {
   const readOnly = useEditorReadOnly();
 
   return (
-    <div className="flex w-full">
+    <div className='flex w-full'>
       {!readOnly && (
         <>
           <ToolbarGroup>
             <UndoToolbarButton />
             <RedoToolbarButton />
           </ToolbarGroup>
-
+          {/* 
           <ToolbarGroup>
             <AIToolbarButton tooltip="AI commands">
               <WandSparklesIcon />
             </AIToolbarButton>
-          </ToolbarGroup>
+          </ToolbarGroup> */}
 
           <ToolbarGroup>
             <ExportToolbarButton>
@@ -88,7 +76,7 @@ export function FixedToolbarButtons() {
 
             <ImportToolbarButton />
           </ToolbarGroup>
-
+          {/* 
           <ToolbarGroup>
             <InsertDropdownMenu />
             <TurnIntoDropdownMenu />
@@ -96,46 +84,31 @@ export function FixedToolbarButtons() {
           </ToolbarGroup>
 
           <ToolbarGroup>
-            <MarkToolbarButton nodeType={BoldPlugin.key} tooltip="Bold (⌘+B)">
+            <MarkToolbarButton nodeType={BoldPlugin.key} tooltip='Bold (⌘+B)'>
               <BoldIcon />
             </MarkToolbarButton>
 
-            <MarkToolbarButton
-              nodeType={ItalicPlugin.key}
-              tooltip="Italic (⌘+I)"
-            >
+            <MarkToolbarButton nodeType={ItalicPlugin.key} tooltip='Italic (⌘+I)'>
               <ItalicIcon />
             </MarkToolbarButton>
 
-            <MarkToolbarButton
-              nodeType={UnderlinePlugin.key}
-              tooltip="Underline (⌘+U)"
-            >
+            <MarkToolbarButton nodeType={UnderlinePlugin.key} tooltip='Underline (⌘+U)'>
               <UnderlineIcon />
             </MarkToolbarButton>
 
-            <MarkToolbarButton
-              nodeType={StrikethroughPlugin.key}
-              tooltip="Strikethrough (⌘+⇧+M)"
-            >
+            <MarkToolbarButton nodeType={StrikethroughPlugin.key} tooltip='Strikethrough (⌘+⇧+M)'>
               <StrikethroughIcon />
             </MarkToolbarButton>
 
-            <MarkToolbarButton nodeType={CodePlugin.key} tooltip="Code (⌘+E)">
+            <MarkToolbarButton nodeType={CodePlugin.key} tooltip='Code (⌘+E)'>
               <Code2Icon />
             </MarkToolbarButton>
 
-            <ColorDropdownMenu
-              nodeType={FontColorPlugin.key}
-              tooltip="Text color"
-            >
+            <ColorDropdownMenu nodeType={FontColorPlugin.key} tooltip='Text color'>
               <BaselineIcon />
             </ColorDropdownMenu>
 
-            <ColorDropdownMenu
-              nodeType={FontBackgroundColorPlugin.key}
-              tooltip="Background color"
-            >
+            <ColorDropdownMenu nodeType={FontBackgroundColorPlugin.key} tooltip='Background color'>
               <PaintBucketIcon />
             </ColorDropdownMenu>
           </ToolbarGroup>
@@ -170,22 +143,22 @@ export function FixedToolbarButtons() {
 
           <ToolbarGroup>
             <MoreDropdownMenu />
-          </ToolbarGroup>
+          </ToolbarGroup> */}
         </>
       )}
 
-      <div className="grow" />
+      <div className='grow' />
 
-      <ToolbarGroup>
-        <MarkToolbarButton nodeType={HighlightPlugin.key} tooltip="Highlight">
+      {/* <ToolbarGroup>
+        <MarkToolbarButton nodeType={HighlightPlugin.key} tooltip='Highlight'>
           <HighlighterIcon />
         </MarkToolbarButton>
         <CommentToolbarButton />
-      </ToolbarGroup>
+      </ToolbarGroup> */}
 
-      <ToolbarGroup>
+      {/* <ToolbarGroup>
         <ModeDropdownMenu />
-      </ToolbarGroup>
+      </ToolbarGroup> */}
     </div>
   );
 }
