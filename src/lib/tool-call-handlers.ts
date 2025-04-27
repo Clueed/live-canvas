@@ -1,10 +1,11 @@
 import { EditorOperationResult } from '@/hooks/use-tool-call-handler';
-import { EditorService } from '@/lib/editor-service';
+import { EditorService, ReadableSelection } from '@/lib/editor-service';
 import {
   getEditorArtifact,
   getEditorSelection,
   redoLastArtifactUndo,
   setEditorArtifact,
+  setEditorSelection,
   undoLastArtifactChange
 } from '@/lib/prompts';
 import { LiveFunctionCall } from '@/types/multimodal-live-types';
@@ -59,17 +60,51 @@ export function createFunctionCallHandler(editorService: EditorService) {
         };
       }
       case getEditorSelection.name: {
-        const selection = editorService.getReadableSelection();
+        const result = editorService.getReadableSelection();
 
-        console.log('readable selection', selection);
+        console.log('readable selection result', result);
 
         return {
           response: {
-            success: true,
-            selection
+            output: result
           },
           id: fc.id
         };
+      }
+      case setEditorSelection.name: {
+        const args = fc.args as {
+          startParagraphIndex?: number;
+          endParagraphIndex?: number;
+          selectedText?: string;
+        };
+        if (
+          typeof args?.startParagraphIndex === 'number' &&
+          typeof args?.endParagraphIndex === 'number' &&
+          typeof args?.selectedText === 'string'
+        ) {
+          const result = editorService.setSelection(
+            args.startParagraphIndex,
+            args.endParagraphIndex,
+            args.selectedText
+          );
+
+          return {
+            response: {
+              output: result
+            },
+            id: fc.id
+          };
+        } else {
+          return {
+            response: {
+              output: {
+                success: false,
+                error: 'Invalid arguments: Missing or invalid startParagraphIndex, endParagraphIndex, or selectedText'
+              }
+            },
+            id: fc.id
+          };
+        }
       }
 
       default: {
