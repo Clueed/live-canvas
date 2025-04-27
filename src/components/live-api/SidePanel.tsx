@@ -83,7 +83,7 @@ export default function SidePanel({ send, editorService }: SidePanelProps) {
   return (
     <div
       className={cn(
-        'bg-muted/40 flex h-full flex-col transition-all duration-300 ease-in-out',
+        'bg-muted/40 flex h-full max-h-full flex-col overflow-hidden transition-all duration-300 ease-in-out',
         open ? 'w-80' : 'w-[68px]'
       )}>
       {/* Header */}
