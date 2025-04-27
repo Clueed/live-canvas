@@ -20,3 +20,8 @@ This project uses the following core technologies and conventions for styling co
     *   Components reside in `src/components/ui`.
 3.  **`class-variance-authority` (CVA):** Use `cva` for creating component variants, especially within `shadcn/ui` components. See examples in `src/components/ui/button.tsx`.
 4.  **`cn` Utility:** Use the `cn` function (from `@/lib/utils`) which combines `clsx` and `tailwind-merge` for conditionally applying and merging Tailwind classes.
+    *   When accepting a `className` prop from a parent component, merge it with the component's internal classes using `cn`. This ensures parent styles can override or extend the component's base styles correctly.
+    *   Preferred Example:
+        ```tsx
+        <div className={cn('flex-1 overflow-auto p-4', className)} {...props} />
+        ```
