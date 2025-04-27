@@ -42,14 +42,20 @@ const editorService = createEditorService(editor);
 
 ### Component Consumption
 
-Components should use the service through destructuring:
+Components should use the service through its interface:
 
 ```tsx
 // In a component
 function MyComponent({ editorService }: { editorService: EditorService }) {
-  const { canvasText, updateCanvasText, undo, redo } = editorService;
+  // Use the operations directly from the service
+  const handleGetText = () => {
+    const text = editorService.canvasText();
+    // ...
+  };
 
-  // Use the operations...
+  const handleUpdateText = (newText: string) => {
+    editorService.updateCanvasText(newText, false);
+  };
 }
 ```
 
@@ -61,7 +67,7 @@ The service connects with the application's tool call system:
 // In src/hooks/use-tool-call-handler.ts
 useToolCallHandler({
   client,
-  ...editorService
+  editorService
 });
 ```
 

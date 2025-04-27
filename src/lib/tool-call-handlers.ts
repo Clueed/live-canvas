@@ -1,21 +1,15 @@
 import { EditorOperationResult } from '@/hooks/use-tool-call-handler';
+import { EditorService } from '@/lib/editor-service';
 import { getEditorArtifact, redoLastArtifactUndo, setEditorArtifact, undoLastArtifactChange } from '@/lib/prompts';
 import { LiveFunctionCall } from '@/types/multimodal-live-types';
 
-interface FunctionCallHandlerParams {
-  canvasText: () => string;
-  updateCanvasText: (text: string, isUserUpdate: boolean) => void;
-  undo: () => EditorOperationResult;
-  redo: () => EditorOperationResult;
-}
-
-export function createFunctionCallHandler({ canvasText, updateCanvasText, undo, redo }: FunctionCallHandlerParams) {
+export function createFunctionCallHandler(editorService: EditorService) {
   return (fc: LiveFunctionCall) => {
     switch (fc.name) {
       case setEditorArtifact.name: {
         const args = fc.args as { text?: string };
         if (typeof args?.text === 'string') {
-          updateCanvasText(args.text, false);
+          editorService.updateCanvasText(args.text, false);
 
           return {
             response: { output: { success: true } },
@@ -30,12 +24,12 @@ export function createFunctionCallHandler({ canvasText, updateCanvasText, undo, 
       }
       case getEditorArtifact.name: {
         return {
-          response: { success: true, artifact: canvasText() },
+          response: { success: true, artifact: editorService.canvasText() },
           id: fc.id
         };
       }
       case undoLastArtifactChange.name: {
-        const result = undo();
+        const result = editorService.undo();
 
         return {
           response: {
@@ -47,7 +41,7 @@ export function createFunctionCallHandler({ canvasText, updateCanvasText, undo, 
         };
       }
       case redoLastArtifactUndo.name: {
-        const result = redo();
+        const result = editorService.redo();
 
         return {
           response: {

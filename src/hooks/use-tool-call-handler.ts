@@ -14,14 +14,11 @@ export interface EditorOperationResult<T = string> {
 
 interface UseToolCallHandlerProps {
   client: MultimodalLiveClient;
-  canvasText: () => string;
-  updateCanvasText: (text: string, isUserUpdate: boolean) => void;
-  undo: () => EditorOperationResult;
-  redo: () => EditorOperationResult;
+  editorService: EditorService;
 }
 
-export function useToolCallHandler({ client, ...editorFunctions }: UseToolCallHandlerProps) {
-  const functionCallHandler = useCallback(createFunctionCallHandler(editorFunctions), [editorFunctions]);
+export function useToolCallHandler({ client, editorService }: UseToolCallHandlerProps) {
+  const functionCallHandler = useCallback(createFunctionCallHandler(editorService), [editorService]);
 
   const onToolCallHandler = useCallback(
     (toolCall: ToolCall, argClient: MultimodalLiveClient) => {

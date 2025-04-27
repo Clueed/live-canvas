@@ -39,7 +39,7 @@ export function LiveCanvasView() {
 
   useToolCallHandler({
     client,
-    ...editorService
+    editorService
   });
 
   const send = useCallback(
@@ -60,7 +60,7 @@ export function LiveCanvasView() {
   );
 
   return (
-    <div className='flex h-screen max-h-dvh w-screen max-w-dvw overflow-hidden'>
+    <div className='max-w-dvw flex h-screen max-h-dvh w-screen overflow-hidden'>
       <div className='flex h-full w-80 flex-col border-r'>
         <SidePanel send={send} editorService={editorService} />
         <ControlTray sendRealtimeInput={sendRealtimeInput} />

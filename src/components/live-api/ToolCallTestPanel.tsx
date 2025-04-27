@@ -21,22 +21,13 @@ interface ToolCallTestPanelProps {
 }
 
 export function ToolCallTestPanel({ editorService }: ToolCallTestPanelProps) {
-  const { canvasText, updateCanvasText, undo, redo } = editorService;
   const [selectedFunction, setSelectedFunction] = useState(FUNCTION_DECLARATIONS[0].name);
   const [inputText, setInputText] = useState('');
   const [resultText, setResultText] = useState('');
   const [showResult, setShowResult] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const functionCallHandler = useCallback(
-    createFunctionCallHandler({
-      canvasText,
-      updateCanvasText,
-      undo,
-      redo
-    }),
-    [canvasText, updateCanvasText, undo, redo]
-  );
+  const functionCallHandler = useCallback(createFunctionCallHandler(editorService), [editorService]);
 
   // Get the current function declaration
   const currentFunction = FUNCTION_DECLARATIONS.find((func) => func.name === selectedFunction);
