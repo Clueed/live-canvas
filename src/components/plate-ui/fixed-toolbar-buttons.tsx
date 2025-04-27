@@ -153,8 +153,8 @@ export function FixedToolbarButtons() {
         <MarkToolbarButton nodeType={HighlightPlugin.key} tooltip='Highlight'>
           <HighlighterIcon />
         </MarkToolbarButton>
-        <CommentToolbarButton />
-      </ToolbarGroup> */}
+        </ToolbarGroup> */}
+      <CommentToolbarButton />
 
       {/* <ToolbarGroup>
         <ModeDropdownMenu />

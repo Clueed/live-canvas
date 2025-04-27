@@ -7,6 +7,7 @@ import { SuggestionBelowNodes } from '@/components/plate-ui/suggestion-line-brea
 import emojiMartData from '@emoji-mart/data';
 import { CalloutPlugin } from '@udecode/plate-callout/react';
 import { CodeBlockPlugin } from '@udecode/plate-code-block/react';
+import { CommentsPlugin } from '@udecode/plate-comments/react';
 import { DatePlugin } from '@udecode/plate-date/react';
 import { DocxPlugin } from '@udecode/plate-docx';
 import { EmojiPlugin } from '@udecode/plate-emoji/react';
@@ -64,7 +65,7 @@ export const viewPlugins = [
   // FontSizePlugin,
   HighlightPlugin,
   // KbdPlugin,
-  skipMarkPlugin
+  skipMarkPlugin,
 
   // Block Style
   // alignPlugin,
@@ -72,12 +73,12 @@ export const viewPlugins = [
   // lineHeightPlugin,
 
   // Collaboration
-  // commentsPlugin.configure({
-  //   render: { aboveNodes: BlockDiscussion as any }
-  // }),
-  // suggestionPlugin.configure({
-  //   render: { belowNodes: SuggestionBelowNodes as any }
-  // })
+  commentsPlugin.configure({
+    render: { aboveNodes: BlockDiscussion as any }
+  }),
+  suggestionPlugin.configure({
+    render: { belowNodes: SuggestionBelowNodes as any }
+  })
 ] as const;
 
 export const editorPlugins = [
