@@ -2,7 +2,19 @@ import { EditorOperationResult } from '@/hooks/use-tool-call-handler';
 import { MarkdownPlugin } from '@udecode/plate-markdown';
 import { type PlateEditor } from '@udecode/plate/react';
 
-import { BaseRange } from 'slate';
+import { BaseRange, Editor, Node } from 'slate';
+
+/**
+ * Represents a human-readable selection in the editor
+ */
+export interface ReadableSelection {
+  /** The paragraph index at the selection start */
+  startParagraphIndex: number;
+  /** The paragraph index at the selection end */
+  endParagraphIndex: number;
+  /** The selected text content */
+  selectedText: string;
+}
 
 /**
  * EditorService interface defining core editor operations.
@@ -32,10 +44,10 @@ export interface EditorService {
   redo: () => EditorOperationResult;
 
   /**
-   * Gets the current selection in the editor
-   * @returns The current selection as a BaseRange or null if no selection exists
+   * Gets the current selection in a human-readable format
+   * @returns A human-readable selection or null if no selection exists
    */
-  getSelection: () => BaseRange | null;
+  getReadableSelection: () => ReadableSelection | null;
 
   /**
    * Sets the selection in the editor
@@ -110,11 +122,65 @@ export function createEditorService(editor: PlateEditor): EditorService {
   };
 
   /**
-   * Gets the current selection in the editor
-   * @returns The current selection as a BaseRange or null if no selection exists
+   * Gets the current selection in a human-readable format
+   * @returns A human-readable selection or null if no selection exists
    */
-  const getSelection = (): BaseRange | null => {
-    return editor.selection;
+  const getReadableSelection = (): ReadableSelection | null => {
+    const selection = editor.selection;
+    if (!selection) return null;
+
+    try {
+      // Get the starting element index (usually paragraph number)
+      const startParagraphIndex = selection.anchor.path[0];
+      const endParagraphIndex = selection.focus.path[0];
+
+      // Extract text content from the selection
+      let selectedText = '';
+
+      if (startParagraphIndex === endParagraphIndex) {
+        // Selection within the same paragraph
+        const node = Node.get(editor as unknown as Editor, [startParagraphIndex]);
+        const text = Node.string(node);
+        const start = selection.anchor.offset;
+        const end = selection.focus.offset;
+        selectedText = text.slice(Math.min(start, end), Math.max(start, end));
+      } else {
+        // Selection across multiple paragraphs - for simplicity, just get all text from each paragraph
+        const startNode = Node.get(editor as unknown as Editor, [startParagraphIndex]);
+        const endNode = Node.get(editor as unknown as Editor, [endParagraphIndex]);
+
+        // Get text from start paragraph
+        const startText = Node.string(startNode);
+        // Get text from end paragraph
+        const endText = Node.string(endNode);
+
+        // Include text from paragraphs in between (if any)
+        const paragraphs = [];
+        paragraphs.push(startText);
+
+        // Add paragraphs in between if there are any
+        for (let i = startParagraphIndex + 1; i < endParagraphIndex; i++) {
+          const node = Node.get(editor as unknown as Editor, [i]);
+          paragraphs.push(Node.string(node));
+        }
+
+        if (startParagraphIndex !== endParagraphIndex) {
+          paragraphs.push(endText);
+        }
+
+        selectedText = paragraphs.join('\n');
+      }
+
+      return {
+        startParagraphIndex,
+        endParagraphIndex,
+        selectedText
+      };
+    } catch (error) {
+      console.error('Error creating readable selection:', error);
+
+      return null;
+    }
   };
 
   /**
@@ -130,7 +196,7 @@ export function createEditorService(editor: PlateEditor): EditorService {
     updateCanvasText,
     undo,
     redo,
-    getSelection,
+    getReadableSelection,
     setSelection
   };
 }
