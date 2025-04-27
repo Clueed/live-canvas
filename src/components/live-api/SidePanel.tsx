@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -9,6 +9,7 @@ import { EditorService } from '@/lib/editor-service';
 import { cn } from '@/lib/utils';
 import type { Part } from '@google/generative-ai';
 
+import { ChatPanel } from './ChatPanel';
 import { FloatingLoggerPanel } from './FloatingLoggerPanel';
 import { FloatingTestPanel } from './FloatingTestPanel';
 import { Beaker, ListFilter, PanelLeftClose, PanelLeftOpen, Send } from 'lucide-react';
@@ -83,7 +84,7 @@ export default function SidePanel({ send, editorService }: SidePanelProps) {
           </div>
         </header>
 
-        <div className='flex-1'></div>
+        <ChatPanel className={cn(!open && 'hidden')} />
 
         <div className={cn('mt-auto border-t p-3', !connected && 'pointer-events-none opacity-50')}>
           <div className='relative flex items-end gap-2'>
