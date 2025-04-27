@@ -30,7 +30,9 @@ const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
     <html suppressHydrationWarning lang='en' className='h-dvh'>
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground flex min-h-full flex-col antialiased`}>
-        <ThemeProvider attribute='class'>{children}</ThemeProvider>
+        <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

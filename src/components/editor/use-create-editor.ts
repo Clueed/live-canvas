@@ -1,67 +1,5 @@
 'use client';
 
-import type { Value } from '@udecode/plate';
-
-import { withProps } from '@udecode/cn';
-import { AIPlugin } from '@udecode/plate-ai/react';
-import {
-  BoldPlugin,
-  CodePlugin,
-  ItalicPlugin,
-  StrikethroughPlugin,
-  SubscriptPlugin,
-  SuperscriptPlugin,
-  UnderlinePlugin,
-} from '@udecode/plate-basic-marks/react';
-import { BlockquotePlugin } from '@udecode/plate-block-quote/react';
-import {
-  CodeBlockPlugin,
-  CodeLinePlugin,
-  CodeSyntaxPlugin,
-} from '@udecode/plate-code-block/react';
-import { CommentsPlugin } from '@udecode/plate-comments/react';
-import { DatePlugin } from '@udecode/plate-date/react';
-import { EmojiInputPlugin } from '@udecode/plate-emoji/react';
-import { ExcalidrawPlugin } from '@udecode/plate-excalidraw/react';
-import { HEADING_KEYS } from '@udecode/plate-heading';
-import { TocPlugin } from '@udecode/plate-heading/react';
-import { HighlightPlugin } from '@udecode/plate-highlight/react';
-import { HorizontalRulePlugin } from '@udecode/plate-horizontal-rule/react';
-import { KbdPlugin } from '@udecode/plate-kbd/react';
-import { ColumnItemPlugin, ColumnPlugin } from '@udecode/plate-layout/react';
-import { LinkPlugin } from '@udecode/plate-link/react';
-import {
-  EquationPlugin,
-  InlineEquationPlugin,
-} from '@udecode/plate-math/react';
-import {
-  AudioPlugin,
-  FilePlugin,
-  ImagePlugin,
-  MediaEmbedPlugin,
-  PlaceholderPlugin,
-  VideoPlugin,
-} from '@udecode/plate-media/react';
-import {
-  MentionInputPlugin,
-  MentionPlugin,
-} from '@udecode/plate-mention/react';
-import { SlashInputPlugin } from '@udecode/plate-slash-command/react';
-import { SuggestionPlugin } from '@udecode/plate-suggestion/react';
-import {
-  TableCellHeaderPlugin,
-  TableCellPlugin,
-  TablePlugin,
-  TableRowPlugin,
-} from '@udecode/plate-table/react';
-import { TogglePlugin } from '@udecode/plate-toggle/react';
-import {
-  type CreatePlateEditorOptions,
-  ParagraphPlugin,
-  PlateLeaf,
-  usePlateEditor,
-} from '@udecode/plate/react';
-
 import { copilotPlugins } from '@/components/editor/plugins/copilot-plugins';
 import { editorPlugins } from '@/components/editor/plugins/editor-plugins';
 import { FixedToolbarPlugin } from '@/components/editor/plugins/fixed-toolbar-plugin';
@@ -97,14 +35,51 @@ import { ParagraphElement } from '@/components/plate-ui/paragraph-element';
 import { withPlaceholders } from '@/components/plate-ui/placeholder';
 import { SlashInputElement } from '@/components/plate-ui/slash-input-element';
 import { SuggestionLeaf } from '@/components/plate-ui/suggestion-leaf';
-import {
-  TableCellElement,
-  TableCellHeaderElement,
-} from '@/components/plate-ui/table-cell-element';
+import { TableCellElement, TableCellHeaderElement } from '@/components/plate-ui/table-cell-element';
 import { TableElement } from '@/components/plate-ui/table-element';
 import { TableRowElement } from '@/components/plate-ui/table-row-element';
 import { TocElement } from '@/components/plate-ui/toc-element';
 import { ToggleElement } from '@/components/plate-ui/toggle-element';
+import { withProps } from '@udecode/cn';
+import type { Value } from '@udecode/plate';
+import { AIPlugin } from '@udecode/plate-ai/react';
+import {
+  BoldPlugin,
+  CodePlugin,
+  ItalicPlugin,
+  StrikethroughPlugin,
+  SubscriptPlugin,
+  SuperscriptPlugin,
+  UnderlinePlugin
+} from '@udecode/plate-basic-marks/react';
+import { BlockquotePlugin } from '@udecode/plate-block-quote/react';
+import { CodeBlockPlugin, CodeLinePlugin, CodeSyntaxPlugin } from '@udecode/plate-code-block/react';
+import { CommentsPlugin } from '@udecode/plate-comments/react';
+import { DatePlugin } from '@udecode/plate-date/react';
+import { EmojiInputPlugin } from '@udecode/plate-emoji/react';
+import { ExcalidrawPlugin } from '@udecode/plate-excalidraw/react';
+import { HEADING_KEYS } from '@udecode/plate-heading';
+import { TocPlugin } from '@udecode/plate-heading/react';
+import { HighlightPlugin } from '@udecode/plate-highlight/react';
+import { HorizontalRulePlugin } from '@udecode/plate-horizontal-rule/react';
+import { KbdPlugin } from '@udecode/plate-kbd/react';
+import { ColumnItemPlugin, ColumnPlugin } from '@udecode/plate-layout/react';
+import { LinkPlugin } from '@udecode/plate-link/react';
+import { EquationPlugin, InlineEquationPlugin } from '@udecode/plate-math/react';
+import {
+  AudioPlugin,
+  FilePlugin,
+  ImagePlugin,
+  MediaEmbedPlugin,
+  PlaceholderPlugin,
+  VideoPlugin
+} from '@udecode/plate-media/react';
+import { MentionInputPlugin, MentionPlugin } from '@udecode/plate-mention/react';
+import { SlashInputPlugin } from '@udecode/plate-slash-command/react';
+import { SuggestionPlugin } from '@udecode/plate-suggestion/react';
+import { TableCellHeaderPlugin, TableCellPlugin, TablePlugin, TableRowPlugin } from '@udecode/plate-table/react';
+import { TogglePlugin } from '@udecode/plate-toggle/react';
+import { type CreatePlateEditorOptions, ParagraphPlugin, PlateLeaf, usePlateEditor } from '@udecode/plate/react';
 
 export const viewComponents = {
   [AudioPlugin.key]: MediaAudioElement,
@@ -149,7 +124,7 @@ export const viewComponents = {
   [TocPlugin.key]: TocElement,
   [TogglePlugin.key]: ToggleElement,
   [UnderlinePlugin.key]: withProps(PlateLeaf, { as: 'u' }),
-  [VideoPlugin.key]: MediaVideoElement,
+  [VideoPlugin.key]: MediaVideoElement
 };
 
 export const editorComponents = {
@@ -157,7 +132,7 @@ export const editorComponents = {
   [AIPlugin.key]: AILeaf,
   [EmojiInputPlugin.key]: EmojiInputElement,
   [MentionInputPlugin.key]: MentionInputElement,
-  [SlashInputPlugin.key]: SlashInputElement,
+  [SlashInputPlugin.key]: SlashInputElement
 };
 
 export const useCreateEditor = (
@@ -178,20 +153,20 @@ export const useCreateEditor = (
       override: {
         components: {
           ...(readOnly ? viewComponents : withPlaceholders(editorComponents)),
-          ...components,
+          ...components
         },
-        ...override,
+        ...override
       },
       plugins: [
         ...copilotPlugins,
         ...editorPlugins,
-        FixedToolbarPlugin,
-        FloatingToolbarPlugin,
+        FixedToolbarPlugin
+        // FloatingToolbarPlugin,
       ],
       value: [
         {
           children: [{ text: 'Playground' }],
-          type: 'h1',
+          type: 'h1'
         },
         {
           children: [
@@ -199,12 +174,12 @@ export const useCreateEditor = (
             { bold: true, text: 'AI commands' },
             { text: ' or use ' },
             { kbd: true, text: 'Cmd+J' },
-            { text: ' to open the AI menu.' },
+            { text: ' to open the AI menu.' }
           ],
-          type: ParagraphPlugin.key,
-        },
+          type: ParagraphPlugin.key
+        }
       ],
-      ...options,
+      ...options
     },
     deps
   );
