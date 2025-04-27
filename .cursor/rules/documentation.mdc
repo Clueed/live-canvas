@@ -1,0 +1,68 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+title: Codebase Documentation Guidelines
+description: Instructs the AI to document the codebase, focusing on architecture and component usage within the ./docs directory.
+# No glob pattern needed as alwaysApply is true, making it universally applicable.
+alwaysApply: true
+---
+
+# Codebase Documentation Guidelines
+
+## Introduction / Purpose
+
+The purpose of this rule is to ensure that the codebase is consistently documented as modifications or additions are made. This documentation serves as a high-level reference, aiding in understanding the project's structure, component interactions, and design decisions.
+
+**Goal:** Maintain simple, useful architectural documentation in the `./docs` directory.
+
+## Documentation Instructions
+
+When you work with the codebase (e.g., adding features, refactoring, fixing bugs):
+
+1.  **Location:** Create or update documentation files within the `./docs` directory. Structure it logically, perhaps creating sub-directories or files based on features or modules if appropriate, but keep it simple initially (e.g., `docs/authentication.md`, `docs/ui-components.md`).
+2.  **Focus:** Prioritize documenting **architecture** and **usage patterns** over low-level implementation details.
+    * **What to Document:**
+        * The **purpose** of a component, module, or service.
+        * Its **key responsibilities**.
+        * How it **interacts** with other parts of the system (dependencies, dependents). *Example: "The `OrderProcessor` service consumes messages from the `OrderQueue` and interacts with the `InventoryAPI` and `NotificationService`."*
+        * **Where** a component is used (e.g., list pages/components that import and use a specific UI component). This helps understand the impact of changes.
+        * High-level **data flow**.
+        * Significant **design decisions** and their rationale (briefly).
+    * **What to Avoid Documenting:**
+        * Detailed step-by-step logic within functions (this can be seen in the code).
+        * Specific variable names or implementation minutiae.
+        * Function parameter lists and return types (these are best viewed directly in the code or via type definitions).
+3.  **Format:** Use clear and concise Markdown. Use headings, lists, and brief explanations. Link to relevant code sections using relative paths if helpful, but sparingly.
+4.  **Updates:** If you modify a component or its interactions significantly, update the corresponding documentation to reflect the changes.
+
+## Example Documentation Snippet (Conceptual)
+
+Suppose you updated a `UserProfileCard` component. The documentation might look like this in `docs/ui-components.md`:
+
+```markdown
+### UserProfileCard
+
+**Purpose:** Displays a summary of a user's profile information.
+
+**Responsibilities:**
+* Fetches user data based on a provided `userId` prop (or accepts a user object directly).
+* Displays avatar, name, and headline.
+* Provides a link to the full user profile page.
+
+**Usage:**
+* Used on the `TeamMembersPage`.
+* Used within the `ActivityFeed` items.
+
+**Interactions:**
+* May internally use the `Avatar` component.
+* Relies on the global `useUser` hook for fetching data (if applicable).
+
+**(Avoid documenting the exact JSX structure or CSS class names here).**
+
+## Common Pitfalls (Instructions for AI)
+- Avoid excessive detail: Do not simply describe the code line-by-line. Focus on the 'why' and 'how it connects'.
+- Keep it current: Ensure documentation is updated alongside significant code changes you make.
+- Use the correct location: All documentation generated based on this rule must reside within the ./docs directory.
