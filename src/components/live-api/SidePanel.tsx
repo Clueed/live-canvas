@@ -12,7 +12,7 @@ import type { Part } from '@google/generative-ai';
 import { ChatPanel } from './ChatPanel';
 import { FloatingLoggerPanel } from './FloatingLoggerPanel';
 import { FloatingTestPanel } from './FloatingTestPanel';
-import { Beaker, ListFilter, PanelLeftClose, PanelLeftOpen, Send } from 'lucide-react';
+import { Beaker, ListFilter, Send } from 'lucide-react';
 
 interface SidePanelProps {
   send: (parts: Part | Part[]) => void;
@@ -21,7 +21,6 @@ interface SidePanelProps {
 
 export default function SidePanel({ send, editorService }: SidePanelProps) {
   const { connected } = useLiveAPIContext();
-  const [open, setOpen] = useState(true);
   const [showTestPanel, setShowTestPanel] = useState(false);
   const [showLoggerPanel, setShowLoggerPanel] = useState(false);
   const [textInput, setTextInput] = useState('');
@@ -51,13 +50,9 @@ export default function SidePanel({ send, editorService }: SidePanelProps) {
 
   return (
     <>
-      <div
-        className={cn(
-          'bg-muted/40 flex h-full max-h-full flex-col overflow-hidden transition-all duration-300 ease-in-out',
-          open ? 'w-80' : 'w-[68px]'
-        )}>
+      <div className='flex h-full max-h-full w-80 flex-col overflow-hidden'>
         <header className='flex h-14 items-center justify-between border-b px-4'>
-          <h2 className={cn('text-lg font-semibold', !open && 'hidden')}>Console</h2>
+          <h2 className='text-lg font-semibold'>Console</h2>
           <div className='flex items-center gap-1'>
             <Button
               variant='ghost'
@@ -77,14 +72,10 @@ export default function SidePanel({ send, editorService }: SidePanelProps) {
               <Beaker className='h-5 w-5' />
               <span className='sr-only'>Toggle Test Panel</span>
             </Button>
-            <Button variant='ghost' size='icon' onClick={() => setOpen(!open)} className='flex-shrink-0'>
-              {open ? <PanelLeftClose className='h-5 w-5' /> : <PanelLeftOpen className='h-5 w-5' />}
-              <span className='sr-only'>{open ? 'Collapse Sidebar' : 'Expand Sidebar'}</span>
-            </Button>
           </div>
         </header>
 
-        <ChatPanel className={cn(!open && 'hidden')} />
+        <ChatPanel />
 
         <div className={cn('mt-auto border-t p-3', !connected && 'pointer-events-none opacity-50')}>
           <div className='relative flex items-end gap-2'>
