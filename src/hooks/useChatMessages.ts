@@ -34,7 +34,6 @@ interface UseChatMessagesProps {
 export function useChatMessages({ client, log, logs }: UseChatMessagesProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const lastTurnCompleteRef = useRef<Date | null>(null);
-  const [hasVoiceMessage, setHasVoiceMessage] = useState(false);
 
   // Subscribe to logs and turn completion events
   useEffect(() => {
@@ -57,13 +56,11 @@ export function useChatMessages({ client, log, logs }: UseChatMessagesProps) {
   useEffect(() => {
     if (!logs) {
       setMessages([]);
-      setHasVoiceMessage(false);
       return;
     }
 
     const processedMessageIds = new Set<string>();
     const chatMessages: ChatMessage[] = [];
-    let hasDetectedVoiceMessage = false;
 
     // Store voice input timestamps and whether they've been matched to a text message
     const voiceMessagesInfo = new Map<number, { date: Date; matched: boolean }>();
@@ -71,11 +68,8 @@ export function useChatMessages({ client, log, logs }: UseChatMessagesProps) {
       if (logEntry.message === 'audio') {
         const timestamp = logEntry.date.getTime(); // Use precise timestamp
         voiceMessagesInfo.set(timestamp, { date: logEntry.date, matched: false });
-        hasDetectedVoiceMessage = true;
       }
     });
-
-    setHasVoiceMessage(hasDetectedVoiceMessage);
 
     // Process text messages and try to match them with voice inputs
     logs.forEach((logEntry) => {
@@ -246,7 +240,7 @@ export function useChatMessages({ client, log, logs }: UseChatMessagesProps) {
     }
 
     setMessages(finalMessages);
-  }, [logs, client, log]); // Added client and log dependencies here for safety, though they primarily affect the other effect
+  }, [logs, client, log]);
 
-  return { messages, hasVoiceMessage };
+  return { messages };
 }
