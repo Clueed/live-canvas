@@ -2,6 +2,8 @@ import { EditorOperationResult } from '@/hooks/use-tool-call-handler';
 import { MarkdownPlugin } from '@udecode/plate-markdown';
 import { type PlateEditor } from '@udecode/plate/react';
 
+import { BaseRange } from 'slate';
+
 /**
  * EditorService interface defining core editor operations.
  * Provides a unified API for interacting with the editor.
@@ -28,6 +30,18 @@ export interface EditorService {
    * @returns An operation result indicating success/failure and updated content
    */
   redo: () => EditorOperationResult;
+
+  /**
+   * Gets the current selection in the editor
+   * @returns The current selection as a BaseRange or null if no selection exists
+   */
+  getSelection: () => BaseRange | null;
+
+  /**
+   * Sets the selection in the editor
+   * @param selection - The selection to set
+   */
+  setSelection: (selection: BaseRange) => void;
 }
 
 /**
@@ -69,8 +83,8 @@ export function createEditorService(editor: PlateEditor): EditorService {
       };
     }
     editor.tf.undo();
-    
-return {
+
+    return {
       success: true,
       content: editor.getApi(MarkdownPlugin).markdown.serialize()
     };
@@ -88,17 +102,35 @@ return {
       };
     }
     editor.tf.redo();
-    
-return {
+
+    return {
       success: true,
       content: editor.getApi(MarkdownPlugin).markdown.serialize()
     };
+  };
+
+  /**
+   * Gets the current selection in the editor
+   * @returns The current selection as a BaseRange or null if no selection exists
+   */
+  const getSelection = (): BaseRange | null => {
+    return editor.selection;
+  };
+
+  /**
+   * Sets the selection in the editor
+   * @param selection - The selection to set
+   */
+  const setSelection = (selection: BaseRange): void => {
+    editor.tf.select(selection);
   };
 
   return {
     canvasText,
     updateCanvasText,
     undo,
-    redo
+    redo,
+    getSelection,
+    setSelection
   };
 }

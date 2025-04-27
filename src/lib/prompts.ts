@@ -78,9 +78,75 @@ Returns an operation result with success status, error message if failed, and cu
   }
 };
 
+export const getEditorSelection: FunctionDeclaration = {
+  name: 'get_editor_selection',
+  description: `
+Retrieves the current selection range in the editor.
+Returns the selection as a BaseRange object or null if nothing is currently selected.
+Use this when you need to know what text is currently selected by the user or the current cursor position.
+`.trim(),
+  parameters: {
+    type: SchemaType.OBJECT,
+    properties: {},
+    required: []
+  }
+};
+
+export const setEditorSelection: FunctionDeclaration = {
+  name: 'set_editor_selection',
+  description: `
+Sets the selection in the editor to a specific range.
+Use this to programmatically select text or position the cursor at a specific location in the document.
+`.trim(),
+  parameters: {
+    type: SchemaType.OBJECT,
+    properties: {
+      anchor: {
+        type: SchemaType.OBJECT,
+        description: 'The anchor point of the selection',
+        properties: {
+          path: {
+            type: SchemaType.ARRAY,
+            description: 'The path to the node',
+            items: {
+              type: SchemaType.NUMBER
+            }
+          },
+          offset: {
+            type: SchemaType.NUMBER,
+            description: 'The offset within the node'
+          }
+        },
+        required: ['path', 'offset']
+      },
+      focus: {
+        type: SchemaType.OBJECT,
+        description: 'The focus point of the selection (defaults to anchor if not specified)',
+        properties: {
+          path: {
+            type: SchemaType.ARRAY,
+            description: 'The path to the node',
+            items: {
+              type: SchemaType.NUMBER
+            }
+          },
+          offset: {
+            type: SchemaType.NUMBER,
+            description: 'The offset within the node'
+          }
+        },
+        required: ['path', 'offset']
+      }
+    },
+    required: ['anchor']
+  }
+};
+
 export const FUNCTION_DECLARATIONS = [
   setEditorArtifact,
   getEditorArtifact,
   undoLastArtifactChange,
-  redoLastArtifactUndo
+  redoLastArtifactUndo,
+  getEditorSelection,
+  setEditorSelection
 ];

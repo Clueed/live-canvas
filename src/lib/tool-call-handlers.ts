@@ -1,6 +1,13 @@
 import { EditorOperationResult } from '@/hooks/use-tool-call-handler';
 import { EditorService } from '@/lib/editor-service';
-import { getEditorArtifact, redoLastArtifactUndo, setEditorArtifact, undoLastArtifactChange } from '@/lib/prompts';
+import {
+  getEditorArtifact,
+  getEditorSelection,
+  redoLastArtifactUndo,
+  setEditorArtifact,
+  setEditorSelection,
+  undoLastArtifactChange
+} from '@/lib/prompts';
 import { LiveFunctionCall } from '@/types/multimodal-live-types';
 
 export function createFunctionCallHandler(editorService: EditorService) {
@@ -51,6 +58,55 @@ export function createFunctionCallHandler(editorService: EditorService) {
           },
           id: fc.id
         };
+      }
+      case getEditorSelection.name: {
+        const selection = editorService.getSelection();
+
+        console.log('selection', selection);
+
+        return {
+          response: {
+            success: true,
+            selection
+          },
+          id: fc.id
+        };
+      }
+      case setEditorSelection.name: {
+        const args = fc.args as { anchor?: any; focus?: any };
+
+        if (args?.anchor?.path && typeof args.anchor.offset === 'number') {
+          try {
+            // If focus is not provided, it defaults to the anchor position
+            const selection = {
+              anchor: args.anchor,
+              focus: args.focus || args.anchor
+            };
+
+            editorService.setSelection(selection);
+
+            return {
+              response: { success: true },
+              id: fc.id
+            };
+          } catch (error) {
+            return {
+              response: {
+                success: false,
+                error: error instanceof Error ? error.message : 'Unknown error setting selection'
+              },
+              id: fc.id
+            };
+          }
+        } else {
+          return {
+            response: {
+              success: false,
+              error: 'Invalid selection arguments. Anchor must have valid path and offset.'
+            },
+            id: fc.id
+          };
+        }
       }
       default: {
         console.warn(`Unknown function call: ${fc.name}`);
