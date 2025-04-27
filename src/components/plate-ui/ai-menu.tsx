@@ -2,29 +2,17 @@
 
 import * as React from 'react';
 
-import { type NodeEntry, isHotkey } from '@udecode/plate';
-import {
-  AIChatPlugin,
-  useEditorChat,
-  useLastAssistantMessage,
-} from '@udecode/plate-ai/react';
-import {
-  BlockSelectionPlugin,
-  useIsSelecting,
-} from '@udecode/plate-selection/react';
-import {
-  useEditorPlugin,
-  useHotkeys,
-  usePluginOption,
-} from '@udecode/plate/react';
-import { Loader2Icon } from 'lucide-react';
-
 import { useChat } from '@/components/editor/use-chat';
+import { type NodeEntry, isHotkey } from '@udecode/plate';
+import { AIChatPlugin, useEditorChat, useLastAssistantMessage } from '@udecode/plate-ai/react';
+import { BlockSelectionPlugin, useIsSelecting } from '@udecode/plate-selection/react';
+import { useEditorPlugin, useHotkeys, usePluginOption } from '@udecode/plate/react';
 
 import { AIChatEditor } from './ai-chat-editor';
 import { AIMenuItems } from './ai-menu-items';
 import { Command, CommandList, InputCommand } from './command';
 import { Popover, PopoverAnchor, PopoverContent } from './popover';
+import { Loader2Icon } from 'lucide-react';
 
 export function AIMenu() {
   const { api, editor } = useEditorPlugin(AIChatPlugin);
@@ -38,9 +26,7 @@ export function AIMenu() {
   const chat = useChat();
 
   const { input, messages, setInput, status } = chat;
-  const [anchorElement, setAnchorElement] = React.useState<HTMLElement | null>(
-    null
-  );
+  const [anchorElement, setAnchorElement] = React.useState<HTMLElement | null>(null);
 
   const content = useLastAssistantMessage()?.content;
 
@@ -52,8 +38,7 @@ export function AIMenu() {
         setAnchorElement(anchorDom);
       }, 0);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [streaming]);
+  }, [streaming, api.aiChat, editor.api]);
 
   const setOpen = (open: boolean) => {
     if (open) {
@@ -83,16 +68,14 @@ export function AIMenu() {
       const [ancestor] = editor.api.block({ highest: true })!;
 
       if (!editor.api.isAt({ end: true }) && !editor.api.isEmpty(ancestor)) {
-        editor
-          .getApi(BlockSelectionPlugin)
-          .blockSelection.set(ancestor.id as string);
+        editor.getApi(BlockSelectionPlugin).blockSelection.set(ancestor.id as string);
       }
 
       show(editor.api.toDOMNode(ancestor)!);
     },
     onOpenSelection: () => {
       show(editor.api.toDOMNode(editor.api.blocks().at(-1)![0])!);
-    },
+    }
   });
 
   useHotkeys(
@@ -103,8 +86,7 @@ export function AIMenu() {
     { enableOnContentEditable: true, enableOnFormTags: true }
   );
 
-  const isLoading =
-    (status === 'streaming' && streaming) || status === 'submitted';
+  const isLoading = (status === 'streaming' && streaming) || status === 'submitted';
 
   if (isLoading && mode === 'insert') {
     return null;
@@ -115,36 +97,29 @@ export function AIMenu() {
       <PopoverAnchor virtualRef={{ current: anchorElement! }} />
 
       <PopoverContent
-        className="border-none bg-transparent p-0 shadow-none"
+        className='border-none bg-transparent p-0 shadow-none'
         style={{
-          width: anchorElement?.offsetWidth,
+          width: anchorElement?.offsetWidth
         }}
         onEscapeKeyDown={(e) => {
           e.preventDefault();
 
           api.aiChat.hide();
         }}
-        align="center"
-        side="bottom"
-      >
-        <Command
-          className="w-full rounded-lg border shadow-md"
-          value={value}
-          onValueChange={setValue}
-        >
-          {mode === 'chat' && isSelecting && content && (
-            <AIChatEditor content={content} />
-          )}
+        align='center'
+        side='bottom'>
+        <Command className='w-full rounded-lg border shadow-md' value={value} onValueChange={setValue}>
+          {mode === 'chat' && isSelecting && content && <AIChatEditor content={content} />}
 
           {isLoading ? (
-            <div className="flex grow items-center gap-2 p-2 text-sm text-muted-foreground select-none">
-              <Loader2Icon className="size-4 animate-spin" />
+            <div className='text-muted-foreground flex grow items-center gap-2 p-2 text-sm select-none'>
+              <Loader2Icon className='size-4 animate-spin' />
               {messages.length > 1 ? 'Editing...' : 'Thinking...'}
             </div>
           ) : (
             <InputCommand
-              variant="ghost"
-              className="rounded-none border-b border-solid border-border [&_svg]:hidden"
+              variant='ghost'
+              className='border-border rounded-none border-b border-solid [&_svg]:hidden'
               value={input}
               onKeyDown={(e) => {
                 if (isHotkey('backspace')(e) && input.length === 0) {
@@ -157,7 +132,7 @@ export function AIMenu() {
                 }
               }}
               onValueChange={setInput}
-              placeholder="Ask AI anything..."
+              placeholder='Ask AI anything...'
               data-plate-focus
               autoFocus
             />

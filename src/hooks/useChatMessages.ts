@@ -2,11 +2,11 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import type { LoggerEntry, LoggerStore } from '@/lib/store-logger';
 import {
   type ClientContentMessage,
   type ModelTurn,
   type ServerContentMessage,
+  type StreamingLog,
   type ToolCallCancellationMessage,
   type ToolResponseMessage,
   isClientContentMessage,
@@ -15,7 +15,12 @@ import {
   isToolCallCancellationMessage,
   isToolResponseMessage
 } from '@/types/multimodal-live-types';
-import type { LiveClient } from '@agentic/react';
+
+// Simple interface that captures the minimum needed functionality
+interface LiveClient {
+  on(event: string, listener: any): any;
+  off(event: string, listener: any): any;
+}
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -27,8 +32,8 @@ interface ChatMessage {
 
 interface UseChatMessagesProps {
   client: LiveClient;
-  log: LoggerStore['log'];
-  logs: LoggerEntry[];
+  log: (log: StreamingLog) => void;
+  logs: StreamingLog[];
 }
 
 export function useChatMessages({ client, log, logs }: UseChatMessagesProps) {
@@ -56,6 +61,7 @@ export function useChatMessages({ client, log, logs }: UseChatMessagesProps) {
   useEffect(() => {
     if (!logs) {
       setMessages([]);
+
       return;
     }
 

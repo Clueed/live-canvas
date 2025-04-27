@@ -3,12 +3,11 @@
 import React, { useEffect } from 'react';
 
 import type { WithRequiredKey } from '@udecode/plate';
-
 import {
   FloatingMedia as FloatingMediaPrimitive,
   FloatingMediaStore,
   useFloatingMediaValue,
-  useImagePreviewValue,
+  useImagePreviewValue
 } from '@udecode/plate-media/react';
 import {
   useEditorRef,
@@ -16,15 +15,15 @@ import {
   useElement,
   useReadOnly,
   useRemoveNodeButton,
-  useSelected,
+  useSelected
 } from '@udecode/plate/react';
-import { Link, Trash2Icon } from 'lucide-react';
 
 import { Button, buttonVariants } from './button';
 import { CaptionButton } from './caption';
 import { inputVariants } from './input';
 import { Popover, PopoverAnchor, PopoverContent } from './popover';
 import { Separator } from './separator';
+import { Link, Trash2Icon } from 'lucide-react';
 
 export interface MediaPopoverProps {
   children: React.ReactNode;
@@ -36,21 +35,16 @@ export function MediaPopover({ children, plugin }: MediaPopoverProps) {
   const readOnly = useReadOnly();
   const selected = useSelected();
 
-  const selectionCollapsed = useEditorSelector(
-    (editor) => !editor.api.isExpanded(),
-    []
-  );
+  const selectionCollapsed = useEditorSelector((editor) => !editor.api.isExpanded(), []);
   const isImagePreviewOpen = useImagePreviewValue('isOpen', editor.id);
-  const isOpen =
-    !readOnly && selected && selectionCollapsed && !isImagePreviewOpen;
+  const isOpen = !readOnly && selected && selectionCollapsed && !isImagePreviewOpen;
   const isEditing = useFloatingMediaValue('isEditing');
 
   useEffect(() => {
     if (!isOpen && isEditing) {
       FloatingMediaStore.set('isEditing', false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
+  }, [isOpen, isEditing]);
 
   const element = useElement();
   const { props: buttonProps } = useRemoveNodeButton({ element });
@@ -61,37 +55,32 @@ export function MediaPopover({ children, plugin }: MediaPopoverProps) {
     <Popover open={isOpen} modal={false}>
       <PopoverAnchor>{children}</PopoverAnchor>
 
-      <PopoverContent
-        className="w-auto p-1"
-        onOpenAutoFocus={(e) => e.preventDefault()}
-      >
+      <PopoverContent className='w-auto p-1' onOpenAutoFocus={(e) => e.preventDefault()}>
         {isEditing ? (
-          <div className="flex w-[330px] flex-col">
-            <div className="flex items-center">
-              <div className="flex items-center pr-1 pl-2 text-muted-foreground">
-                <Link className="size-4" />
+          <div className='flex w-[330px] flex-col'>
+            <div className='flex items-center'>
+              <div className='text-muted-foreground flex items-center pr-1 pl-2'>
+                <Link className='size-4' />
               </div>
 
               <FloatingMediaPrimitive.UrlInput
                 className={inputVariants({ h: 'sm', variant: 'ghost' })}
-                placeholder="Paste the embed link..."
+                placeholder='Paste the embed link...'
                 options={{ plugin }}
               />
             </div>
           </div>
         ) : (
-          <div className="box-content flex items-center">
-            <FloatingMediaPrimitive.EditButton
-              className={buttonVariants({ size: 'sm', variant: 'ghost' })}
-            >
+          <div className='box-content flex items-center'>
+            <FloatingMediaPrimitive.EditButton className={buttonVariants({ size: 'sm', variant: 'ghost' })}>
               Edit link
             </FloatingMediaPrimitive.EditButton>
 
-            <CaptionButton variant="ghost">Caption</CaptionButton>
+            <CaptionButton variant='ghost'>Caption</CaptionButton>
 
-            <Separator orientation="vertical" className="mx-1 h-6" />
+            <Separator orientation='vertical' className='mx-1 h-6' />
 
-            <Button size="icon" variant="ghost" {...buttonProps}>
+            <Button size='icon' variant='ghost' {...buttonProps}>
               <Trash2Icon />
             </Button>
           </div>
