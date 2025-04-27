@@ -1,4 +1,5 @@
 import { EditorOperationResult } from '@/hooks/use-tool-call-handler';
+import { MarkdownPlugin } from '@udecode/plate-markdown';
 import { type PlateEditor } from '@udecode/plate/react';
 
 /**
@@ -41,7 +42,7 @@ export function createEditorService(editor: PlateEditor): EditorService {
    * Retrieves the current editor content as Markdown
    * @returns The editor content as a Markdown string
    */
-  const canvasText = () => editor.api.markdown.serialize();
+  const canvasText = () => editor.getApi(MarkdownPlugin).markdown.serialize();
 
   /**
    * Updates the editor content with new Markdown text
@@ -49,7 +50,7 @@ export function createEditorService(editor: PlateEditor): EditorService {
    * @param isUserUpdate - Whether this update was initiated by the user
    */
   const updateCanvasText = (newText: string, isUserUpdate: boolean) => {
-    const newMarkdown = editor.api.markdown.deserialize(newText);
+    const newMarkdown = editor.getApi(MarkdownPlugin).markdown.deserialize(newText);
     if (!newMarkdown) {
       return;
     }
@@ -70,7 +71,7 @@ export function createEditorService(editor: PlateEditor): EditorService {
     editor.tf.undo();
     return {
       success: true,
-      content: editor.api.markdown.serialize()
+      content: editor.getApi(MarkdownPlugin).markdown.serialize()
     };
   };
 
@@ -88,7 +89,7 @@ export function createEditorService(editor: PlateEditor): EditorService {
     editor.tf.redo();
     return {
       success: true,
-      content: editor.api.markdown.serialize()
+      content: editor.getApi(MarkdownPlugin).markdown.serialize()
     };
   };
 
