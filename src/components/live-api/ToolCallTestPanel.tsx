@@ -8,7 +8,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { EditorOperationResult } from '@/hooks/use-tool-call-handler';
 import { EditorService } from '@/lib/editor-service';
 import { FUNCTION_DECLARATIONS } from '@/lib/prompts';
 import { createFunctionCallHandler } from '@/lib/tool-call-handlers';
@@ -42,8 +41,8 @@ export function ToolCallTestPanel({ editorService }: ToolCallTestPanelProps) {
 
     if (requiresTextInput && !inputText.trim()) {
       setError('Please enter required text input');
-      
-return;
+
+      return;
     }
 
     // Prepare args based on function requirements
@@ -60,31 +59,40 @@ return;
       // Execute the function call
       const response = functionCallHandler(functionCall);
 
-      // Check for errors in the response
-      const responseError = response.response.error || response.response.output?.error;
+      // Extract error message from the response, handle different response structures
+      let responseError: string | undefined;
+      if ('error' in response.response) {
+        responseError = response.response.error;
+      } else if ('output' in response.response && response.response.output && 'error' in response.response.output) {
+        responseError = response.response.output.error;
+      }
+
       if (responseError) {
         setError(responseError);
         setShowResult(false);
-        
-return;
+
+        return;
       }
 
-      // Handle response based on function type
-      if (selectedFunction === 'get_editor_artifact' && response.response.success) {
-        const artifact = response.response.artifact || '';
-        setInputText(artifact);
-        setResultText(artifact);
-        setShowResult(true);
-      } else {
-        setShowResult(false);
+      // Format the response as JSON for display
+      const formattedResult = JSON.stringify(response.response, null, 2);
+      setResultText(formattedResult);
+      setShowResult(true);
+
+      // Special case for get_editor_artifact to maintain existing functionality
+      if (selectedFunction === 'get_editor_artifact' && 'artifact' in response.response) {
+        setInputText(response.response.artifact || '');
       }
 
       // Log the result
+      const isSuccess =
+        ('success' in response.response && response.response.success) ||
+        ('output' in response.response && response.response.output?.success);
+
       console.log(
-        response.response.success || response.response.output?.success
-          ? `${selectedFunction} Success:`
-          : `${selectedFunction} Failed:`,
-        responseError || 'Operation completed successfully'
+        isSuccess ? `${selectedFunction} Success:` : `${selectedFunction} Failed:`,
+        responseError || 'Operation completed successfully',
+        response.response
       );
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
