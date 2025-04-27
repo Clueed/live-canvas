@@ -97,7 +97,8 @@ export function Comment(props: {
       if (discussion.id === id) {
         return { ...discussion, isResolved: true };
       }
-      return discussion;
+      
+return discussion;
     });
     discussionStore.set('discussions', updatedDiscussions);
   };
@@ -126,11 +127,14 @@ export function Comment(props: {
               updatedAt: new Date(),
             };
           }
-          return comment;
+          
+return comment;
         });
-        return { ...discussion, comments: updatedComments };
+        
+return { ...discussion, comments: updatedComments };
       }
-      return discussion;
+      
+return discussion;
     });
     discussionStore.set('discussions', updatedDiscussions);
   };

@@ -477,7 +477,8 @@ export const useResolvedDiscussion = (
 
       if (!nodes) {
         setOption('uniquePathMap', new Map(map).set(id, blockPath));
-        return;
+        
+return;
       }
 
       return;

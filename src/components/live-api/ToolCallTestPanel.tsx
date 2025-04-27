@@ -42,7 +42,8 @@ export function ToolCallTestPanel({ editorService }: ToolCallTestPanelProps) {
 
     if (requiresTextInput && !inputText.trim()) {
       setError('Please enter required text input');
-      return;
+      
+return;
     }
 
     // Prepare args based on function requirements
@@ -64,7 +65,8 @@ export function ToolCallTestPanel({ editorService }: ToolCallTestPanelProps) {
       if (responseError) {
         setError(responseError);
         setShowResult(false);
-        return;
+        
+return;
       }
 
       // Handle response based on function type

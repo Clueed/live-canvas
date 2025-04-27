@@ -69,7 +69,8 @@ export function createEditorService(editor: PlateEditor): EditorService {
       };
     }
     editor.tf.undo();
-    return {
+    
+return {
       success: true,
       content: editor.getApi(MarkdownPlugin).markdown.serialize()
     };
@@ -87,7 +88,8 @@ export function createEditorService(editor: PlateEditor): EditorService {
       };
     }
     editor.tf.redo();
-    return {
+    
+return {
       success: true,
       content: editor.getApi(MarkdownPlugin).markdown.serialize()
     };
