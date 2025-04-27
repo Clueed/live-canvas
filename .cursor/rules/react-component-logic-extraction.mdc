@@ -1,0 +1,148 @@
+---
+title: React Component Refactor
+description: Guidelines for refactoring complex React components 
+glob: "**/*.{tsx,jsx}"
+alwaysApply: false
+---
+# Refactoring Complex React Components: Logic Extraction
+
+## Introduction / Problem
+
+Large React components often become difficult to understand, test, and maintain as they accumulate complex state management, data fetching/processing logic, and intricate rendering details. This monolithic structure violates the single responsibility principle and hinders reusability.
+
+This rule describes a common and effective refactoring pattern: separating the core stateful logic into a custom hook and breaking down the UI into smaller, dedicated sub-components.
+
+## Pattern Description
+
+The core idea is to delegate responsibilities:
+
+1.  **Custom Hook:** Encapsulates state management, side effects (like data fetching or subscriptions), event handlers that modify state, and data processing/transformation logic.
+2.  **Sub-components:** Handle the rendering of specific parts of the UI based on the props they receive.
+3.  **Main Component:** Becomes much simpler. It primarily calls the custom hook, passes the necessary state and callbacks down to the sub-components, and arranges them in the layout.
+
+### Conceptual Example
+
+**Before Refactor:**
+
+```typescript
+// MonolithicComponent.tsx
+function MonolithicComponent() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [internalState, setInternalState] = useState(/* ... */);
+
+  useEffect(() => {
+    // Complex data fetching and processing logic
+    setLoading(true);
+    fetchData().then(result => {
+      const processed = processData(result);
+      setData(processed);
+      setLoading(false);
+    });
+  }, []);
+
+  const handleInteraction = () => {
+    // Logic involving internalState and maybe data
+    setInternalState(/* ... */);
+  };
+
+  // ... more logic ...
+
+  return (
+    <div>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <>
+          {/* Complex rendering Part 1 based on data */}
+          <section> {/* ... */} </section>
+
+          {/* Complex rendering Part 2 based on internalState */}
+          <aside> {/* ... */} </aside>
+        </>
+      )}
+      <button onClick={handleInteraction}>Do Something</button>
+    </div>
+  );
+}
+```
+
+**After Refactor:**
+
+```typescript
+// useComplexLogic.ts
+function useComplexLogic() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [internalState, setInternalState] = useState(/* ... */);
+
+  useEffect(() => {
+    setLoading(true);
+    fetchData().then(result => {
+      const processed = processData(result);
+      setData(processed);
+      setLoading(false);
+    });
+  }, []);
+
+  const handleInteraction = useCallback(() => {
+    setInternalState(/* ... */);
+  }, [/* dependencies */]);
+
+  // Return only what the component needs
+  return { data, loading, internalState, handleInteraction };
+}
+
+// ComplexComponent.tsx
+function Part1Renderer({ data }) {
+  return <section> {/* Render based on data */} </section>;
+}
+
+function Part2Renderer({ state }) {
+  return <aside> {/* Render based on state */} </aside>;
+}
+
+function ComplexComponent() {
+  const { data, loading, internalState, handleInteraction } = useComplexLogic();
+
+  return (
+    <div>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <>
+          <Part1Renderer data={data} />
+          <Part2Renderer state={internalState} />
+        </>
+      )}
+      <button onClick={handleInteraction}>Do Something</button>
+    </div>
+  );
+}
+```
+
+## Implementation Steps
+
+1.  **Identify Logic:** Pinpoint the state variables, effects, and handler functions within the component that manage data or state rather than just rendering.
+2.  **Extract UI Parts:** Identify distinct visual sections of the component's JSX. Create new, smaller functional components for these sections. Pass the required data and callbacks as props to these new sub-components. They can often be defined within the same file initially.
+3.  **Create Custom Hook:** Create a new function (e.g., `useMyComponentLogic`) in a separate file (e.g., `src/hooks/useMyComponentLogic.ts`).
+4.  **Move Logic to Hook:** Move the identified state (`useState`), effects (`useEffect`), memos (`useMemo`), callbacks (`useCallback`), and related helper functions from the original component into the custom hook.
+5.  **Define Hook Interface:** Determine what state values and functions the component actually needs from the hook and return only those in an object from the hook.
+6.  **Refactor Main Component:** Remove the extracted logic. Call the custom hook at the top of the component function. Use the returned values and functions from the hook, passing them as props to the UI sub-components as needed.
+7.  **Review Dependencies:** Ensure `useEffect` and `useCallback` dependencies are correct in the new hook.
+
+## Real-World Example (Learning)
+
+The refactoring of the `ChatPanel` component demonstrates this pattern:
+
+*   **Original State:** `ChatPanel` initially managed message processing, state, and subscriptions directly.
+*   **UI Extraction:** `UserMessage` and `AssistantMessage` components were created to handle rendering specific message types. [See UI Sub-components](mdc:../src/components/live-api/ChatPanel.tsx)
+*   **Logic Extraction:** The core logic for subscribing to logs, processing them into messages, handling voice input detection, and managing turns was moved into the `useChatMessages` hook. [See Custom Hook](mdc:../src/hooks/useChatMessages.ts)
+*   **Final State:** The `ChatPanel` component now primarily uses the `useChatMessages` hook and delegates rendering to `UserMessage` and `AssistantMessage`. [See Refactored Component](mdc:../src/components/live-api/ChatPanel.tsx)
+
+## Common Pitfalls
+
+*   **Over-extraction:** Creating too many tiny hooks or components can sometimes make the overall flow harder to follow.
+*   **Incorrect Dependencies:** Forgetting or incorrectly specifying dependencies in `useEffect` or `useCallback` within the hook can lead to stale state or infinite loops.
+*   **Prop Drilling:** If the main component ends up passing many props from the hook down through multiple layers of sub-components, consider alternative state management or component composition patterns.
+*   **Unclear Boundaries:** Difficulty deciding what logic belongs in the hook versus the component. The hook should manage the *state* and *behavior*, while the component manages the *presentation* based on that state.
