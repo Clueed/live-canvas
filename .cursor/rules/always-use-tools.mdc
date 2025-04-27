@@ -1,0 +1,21 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Always Check Available Resources
+
+## Introduction / Problem
+
+Before proceeding with any task or answering a query, it's crucial to leverage all available resources. Sometimes, specific tools, helper functions, or pre-defined rules exist that can significantly simplify the task, ensure consistency, or provide necessary context. Failing to check for these can lead to suboptimal solutions or duplicated effort.
+
+## Policy
+
+1.  **Scan for Tools:** Review the list of available tools. Is there a tool specifically designed for the task at hand (e.g., code search, file editing, running commands, documentation lookup)?
+2.  **Look for Helper Functions/Code:** Check the codebase for existing utility functions or components that might already solve part of the problem. Use search tools if necessary.
+3.  **Consult Rules:** Review the active rules (`.mdc` files, especially those starting with `@`). Do any rules provide specific guidance, constraints, or formatting requirements relevant to the current task (e.g., commit message format, error handling policy)?
+4.  **Prioritize Existing Resources:** Always prefer using existing, established tools, functions, and rules over creating new solutions or deviating from established patterns, unless there's a clear reason not to.
+
+## Debugging Usage
+
+If you observe that rules, tools, or functions are not being utilized as expected, refer to the `debug-rule-usage.mdc` rule to diagnose and address the issue.

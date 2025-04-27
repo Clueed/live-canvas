@@ -1,0 +1,101 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Debugging Rule Usage
+
+## Introduction / Problem
+
+AI assistants may sometimes fail to use required rules or tools even when they're available. This can happen because rule descriptions aren't clear enough, the assistant doesn't recognize when to apply them, or the rule isn't sufficiently prominent in the context. This meta-rule provides a systematic approach to diagnose why a rule wasn't used when it should have been and how to fix the underlying issue.
+
+## Pattern Description
+
+When you notice that the AI hasn't used a rule or tool that it should have, investigate using this process:
+
+1. **Verify Rule Visibility**: First, confirm the rule was actually available to the AI assistant.
+2. **Analyze Rule Description**: Check if the rule's description clearly communicates:
+   - When the rule should be used (the trigger)
+   - The importance/requirement level of the rule
+   - What the rule is about (purpose)
+3. **Analyze Rule Content**: Ensure the rule's content is clear, well-structured, and actionable
+4. **Test Improved Rule**: Adjust the rule based on findings and test again
+
+### Effective Rule Description Guidelines
+
+Rule descriptions should be explicit about:
+
+```
+{rule-name}: {IMPORTANCE LEVEL} - Use this rule {WHEN TO USE IT}. {BRIEF PURPOSE}.
+```
+
+For example:
+```
+git-commit: REQUIRED - Use this rule before ANY git commits. Contains formatting standards and requirements for all commit messages in this project.
+```
+
+Key elements:
+- **Clear trigger condition**: "before ANY git commits" 
+- **Explicit importance level**: "REQUIRED"
+- **Capitalization for emphasis**: "REQUIRED", "ANY"
+- **Clear purpose**: "formatting standards and requirements for all commit messages"
+
+Contrast with ineffective descriptions:
+```
+git-commit: Guide to writing git commits.
+```
+This is too passive and doesn't communicate requirement level or when to use it.
+
+## Implementation Steps
+
+When debugging rule usage:
+
+1. **Ask the AI**: Have the AI explain why it didn't use the rule
+   - "You have a {rule-name} rule available. Why did you not use it?"
+   - "What would have made you use the {rule-name} rule in this situation?"
+
+2. **Review Rule Description**:
+   - Is it immediately clear WHEN the rule should be used?
+   - Is it clearly marked as required/recommended/optional?
+   - Does it stand out among other rules?
+
+3. **Improve Rule Description**:
+   - Add imperative language: "Use this rule...", "Apply this before..."
+   - Add importance markers: "REQUIRED", "CRITICAL", "RECOMMENDED"
+   - Clarify exact trigger conditions: "before ANY git commits", "whenever creating new components"
+   - Use capitalization strategically to emphasize key points
+
+4. **Update Rule Content**: If the rule's internal content is unclear or too verbose, simplify and highlight the most important information first
+
+5. **Test the Improved Rule**: After updating, test again in a similar situation
+
+## Real-World Example
+
+In our project, we had a rule for git commits:
+
+```
+git-commit: Guide to writing git commits.
+```
+
+The AI assistant failed to use this rule when making git commits. When asked why, the analysis revealed that the description was too passive and didn't communicate that it was required or when to use it.
+
+The improved description:
+
+```
+git-commit: REQUIRED - Use this rule before ANY git commits. Contains formatting standards and requirements for all commit messages in this project.
+```
+
+The key improvements were:
+1. Adding "REQUIRED" to signal importance
+2. Explicitly stating when to use it ("before ANY git commits")
+3. Making the purpose clearer ("formatting standards and requirements")
+4. Using capitalization to emphasize key points
+## Common Pitfalls
+
+* **Passive language**: Descriptions like "A guide to..." or "Information about..." don't create a sense of requirement
+* **Missing trigger conditions**: Not specifying when the rule should be applied
+* **Buried requirements**: Putting the most critical information deep in the rule rather than in the description
+* **Vague importance levels**: Not indicating if the rule is required, recommended, or optional
+* **Overwhelming with options**: Having too many rules without clear priority signals
+* **Assuming context**: Expecting the AI to know when a rule applies without explicitly stating it
+* **Terminology mismatches**: Using different terms in the rule description vs. the task descriptions (e.g., "git messages" vs "commits")
