@@ -6,6 +6,7 @@ import { Logger, type LoggerFilterType } from '@/components/logger/Logger';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useLiveAPIContext } from '@/contexts/LiveAPIContext';
+import { useDraggable } from '@/lib/hooks/useDraggable';
 import { useLoggerStore } from '@/lib/store-logger';
 
 import { Move, X } from 'lucide-react';
@@ -23,62 +24,11 @@ interface FloatingLoggerPanelProps {
 
 export function FloatingLoggerPanel({ show, onClose }: FloatingLoggerPanelProps) {
   const { client } = useLiveAPIContext();
-  const [position, setPosition] = useState({ x: 100, y: 100 });
   const [selectedFilter, setSelectedFilter] = useState<LoggerFilterType>('none');
   const { log, logs } = useLoggerStore();
   const loggerRef = useRef<HTMLDivElement>(null);
   const loggerLastHeightRef = useRef<number>(-1);
-
-  const dragRef = useRef<{ isDragging: boolean; startX: number; startY: number }>({
-    isDragging: false,
-    startX: 0,
-    startY: 0
-  });
-
-  const handleDragStart = (e: React.MouseEvent<HTMLDivElement>) => {
-    dragRef.current = {
-      isDragging: true,
-      startX: e.clientX - position.x,
-      startY: e.clientY - position.y
-    };
-  };
-
-  const handleDrag = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!dragRef.current.isDragging) return;
-    setPosition({
-      x: e.clientX - dragRef.current.startX,
-      y: e.clientY - dragRef.current.startY
-    });
-  };
-
-  const handleDragEnd = () => {
-    dragRef.current.isDragging = false;
-  };
-
-  useEffect(() => {
-    const onMouseMove = (e: MouseEvent) => {
-      if (dragRef.current.isDragging) {
-        setPosition({
-          x: e.clientX - dragRef.current.startX,
-          y: e.clientY - dragRef.current.startY
-        });
-      }
-    };
-
-    const onMouseUp = () => {
-      dragRef.current.isDragging = false;
-    };
-
-    if (show) {
-      window.addEventListener('mousemove', onMouseMove);
-      window.addEventListener('mouseup', onMouseUp);
-    }
-
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
-    };
-  }, [show]);
+  const { position, handleDragStart, handleDrag, handleDragEnd } = useDraggable({ x: 100, y: 100 }, show);
 
   useEffect(() => {
     if (loggerRef.current) {
