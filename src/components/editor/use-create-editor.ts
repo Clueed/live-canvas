@@ -82,7 +82,7 @@ import { TogglePlugin } from '@udecode/plate-toggle/react';
 import { type CreatePlateEditorOptions, ParagraphPlugin, PlateLeaf, usePlateEditor } from '@udecode/plate/react';
 
 export const viewComponents = {
-  [AudioPlugin.key]: MediaAudioElement,
+  // [AudioPlugin.key]: MediaAudioElement,
   [BlockquotePlugin.key]: BlockquoteElement,
   [BoldPlugin.key]: withProps(PlateLeaf, { as: 'strong' }),
   [CodeBlockPlugin.key]: CodeBlockElement,
@@ -90,12 +90,12 @@ export const viewComponents = {
   [CodePlugin.key]: CodeLeaf,
   [CodeSyntaxPlugin.key]: CodeSyntaxLeaf,
   [ColumnItemPlugin.key]: ColumnElement,
-  [ColumnPlugin.key]: ColumnGroupElement,
-  [CommentsPlugin.key]: CommentLeaf,
-  [DatePlugin.key]: DateElement,
-  [EquationPlugin.key]: EquationElement,
-  [ExcalidrawPlugin.key]: ExcalidrawElement,
-  [FilePlugin.key]: MediaFileElement,
+  // [ColumnPlugin.key]: ColumnGroupElement,
+  // [CommentsPlugin.key]: CommentLeaf,
+  // [DatePlugin.key]: DateElement,
+  // [EquationPlugin.key]: EquationElement,
+  // [ExcalidrawPlugin.key]: ExcalidrawElement,
+  // [FilePlugin.key]: MediaFileElement,
   [HEADING_KEYS.h1]: withProps(HeadingElement, { variant: 'h1' }),
   [HEADING_KEYS.h2]: withProps(HeadingElement, { variant: 'h2' }),
   [HEADING_KEYS.h3]: withProps(HeadingElement, { variant: 'h3' }),
@@ -104,35 +104,35 @@ export const viewComponents = {
   [HEADING_KEYS.h6]: withProps(HeadingElement, { variant: 'h6' }),
   [HighlightPlugin.key]: HighlightLeaf,
   [HorizontalRulePlugin.key]: HrElement,
-  [ImagePlugin.key]: ImageElement,
-  [InlineEquationPlugin.key]: InlineEquationElement,
+  // [ImagePlugin.key]: ImageElement,
+  // [InlineEquationPlugin.key]: InlineEquationElement,
   [ItalicPlugin.key]: withProps(PlateLeaf, { as: 'em' }),
-  [KbdPlugin.key]: KbdLeaf,
-  [LinkPlugin.key]: LinkElement,
-  [MediaEmbedPlugin.key]: MediaEmbedElement,
-  [MentionPlugin.key]: MentionElement,
+  // [KbdPlugin.key]: KbdLeaf,
+  // [LinkPlugin.key]: LinkElement,
+  // [MediaEmbedPlugin.key]: MediaEmbedElement,
+  // [MentionPlugin.key]: MentionElement,
   [ParagraphPlugin.key]: ParagraphElement,
   [PlaceholderPlugin.key]: MediaPlaceholderElement,
   [StrikethroughPlugin.key]: withProps(PlateLeaf, { as: 's' }),
   [SubscriptPlugin.key]: withProps(PlateLeaf, { as: 'sub' }),
-  [SuggestionPlugin.key]: SuggestionLeaf,
+  // [SuggestionPlugin.key]: SuggestionLeaf,
   [SuperscriptPlugin.key]: withProps(PlateLeaf, { as: 'sup' }),
-  [TableCellHeaderPlugin.key]: TableCellHeaderElement,
-  [TableCellPlugin.key]: TableCellElement,
-  [TablePlugin.key]: TableElement,
-  [TableRowPlugin.key]: TableRowElement,
-  [TocPlugin.key]: TocElement,
-  [TogglePlugin.key]: ToggleElement,
-  [UnderlinePlugin.key]: withProps(PlateLeaf, { as: 'u' }),
-  [VideoPlugin.key]: MediaVideoElement
+  // [TableCellHeaderPlugin.key]: TableCellHeaderElement,
+  // [TableCellPlugin.key]: TableCellElement,
+  // [TablePlugin.key]: TableElement,
+  // [TableRowPlugin.key]: TableRowElement,
+  // [TocPlugin.key]: TocElement,
+  // [TogglePlugin.key]: ToggleElement,
+  [UnderlinePlugin.key]: withProps(PlateLeaf, { as: 'u' })
+  // [VideoPlugin.key]: MediaVideoElement
 };
 
 export const editorComponents = {
-  ...viewComponents,
-  [AIPlugin.key]: AILeaf,
-  [EmojiInputPlugin.key]: EmojiInputElement,
-  [MentionInputPlugin.key]: MentionInputElement,
-  [SlashInputPlugin.key]: SlashInputElement
+  ...viewComponents
+  // [AIPlugin.key]: AILeaf,
+  // [EmojiInputPlugin.key]: EmojiInputElement,
+  // [MentionInputPlugin.key]: MentionInputElement,
+  // [SlashInputPlugin.key]: SlashInputElement
 };
 
 export const useCreateEditor = (
@@ -158,7 +158,7 @@ export const useCreateEditor = (
         ...override
       },
       plugins: [
-        ...copilotPlugins,
+        // ...copilotPlugins,
         ...editorPlugins,
         FixedToolbarPlugin
         // FloatingToolbarPlugin,
