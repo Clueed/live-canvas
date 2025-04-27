@@ -1,15 +1,8 @@
 ---
-description: 
+description: After significant changes always document the codebase, focusing on architecture and component usage within the ./docs directory.
 globs: 
 alwaysApply: false
 ---
----
-title: Codebase Documentation Guidelines
-description: Instructs the AI to document the codebase, focusing on architecture and component usage within the ./docs directory.
-# No glob pattern needed as alwaysApply is true, making it universally applicable.
-alwaysApply: true
----
-
 # Codebase Documentation Guidelines
 
 ## Introduction / Purpose

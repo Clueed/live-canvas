@@ -1,13 +1,8 @@
 ---
-description: 
+description: Guide to writting git commits.
 globs: 
 alwaysApply: false
 ---
----
-description: Git commit standards and guidelines to ensure consistent and error-free commits
-globs: ["**/.git/**/*"]
----
-
 # Git Commit Guidelines
 
 ## 1. Quick Reference
