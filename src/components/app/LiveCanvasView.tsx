@@ -5,10 +5,12 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useCreateEditor } from '@/components/editor/use-create-editor';
 import { Canvas } from '@/components/live-api/Canvas';
 import ControlTray from '@/components/live-api/ControlTray';
+import { FloatingLoggerPanel } from '@/components/live-api/FloatingLoggerPanel';
+import { FloatingTestPanel } from '@/components/live-api/FloatingTestPanel';
 import SidePanel from '@/components/live-api/SidePanel';
 import { useLiveAPIContext } from '@/contexts/LiveAPIContext';
 import { useToolCallHandler } from '@/hooks/use-tool-call-handler';
-import { createEditorService } from '@/lib/editor-service';
+import { EditorService, createEditorService } from '@/lib/editor-service';
 import { FUNCTION_DECLARATIONS, SYSTEM_PROMPT } from '@/lib/prompts';
 import { type GenerativeContentBlob, type Part } from '@google/generative-ai';
 
@@ -18,6 +20,14 @@ export function LiveCanvasView() {
 
   const editor = useCreateEditor();
   const editorService = createEditorService(editor);
+
+  // State for floating panels
+  const [showTestPanel, setShowTestPanel] = useState(false);
+  const [showLoggerPanel, setShowLoggerPanel] = useState(false);
+
+  // Toggle functions for floating panels
+  const toggleTestPanel = useCallback(() => setShowTestPanel((prev) => !prev), []);
+  const toggleLoggerPanel = useCallback(() => setShowLoggerPanel((prev) => !prev), []);
 
   useEffect(() => {
     setConfig({
@@ -62,11 +72,19 @@ export function LiveCanvasView() {
     <div className='flex h-screen max-h-dvh w-screen max-w-dvw overflow-hidden'>
       <div className='flex h-full w-80 flex-col border-r'>
         <SidePanel send={send} editorService={editorService} />
-        <ControlTray sendRealtimeInput={sendRealtimeInput} />
+        <ControlTray
+          sendRealtimeInput={sendRealtimeInput}
+          onToggleTestPanel={toggleTestPanel}
+          onToggleLoggerPanel={toggleLoggerPanel}
+          isTestPanelOpen={showTestPanel}
+          isLoggerPanelOpen={showLoggerPanel}
+        />
       </div>
       <main className='flex flex-1 flex-col'>
         <Canvas editor={editor} />
       </main>
+      <FloatingTestPanel show={showTestPanel} onClose={toggleTestPanel} editorService={editorService} />
+      <FloatingLoggerPanel show={showLoggerPanel} onClose={toggleLoggerPanel} />
     </div>
   );
 }

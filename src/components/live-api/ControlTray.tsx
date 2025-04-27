@@ -15,13 +15,17 @@ import { AudioRecorder } from '@/lib/audio-recorder';
 import { cn } from '@/lib/utils';
 import type { GenerativeContentBlob } from '@google/generative-ai';
 
-import { Mic, MicOff, Pause, Play } from 'lucide-react';
+import { Beaker, ListFilter, Mic, MicOff, Pause, Play } from 'lucide-react';
 
 // Adjusted path
 
 export type ControlTrayProps = {
   children?: ReactNode;
   sendRealtimeInput: (chunks: GenerativeContentBlob[]) => void;
+  onToggleTestPanel: () => void;
+  onToggleLoggerPanel: () => void;
+  isTestPanelOpen: boolean;
+  isLoggerPanelOpen: boolean;
 };
 
 // --- Media Stream Button Component ---
@@ -69,7 +73,14 @@ const MediaStreamButton = memo(
 );
 
 // --- Main Control Tray Component ---
-function ControlTrayComponent({ children, sendRealtimeInput }: ControlTrayProps) {
+function ControlTrayComponent({
+  children,
+  sendRealtimeInput,
+  onToggleTestPanel,
+  onToggleLoggerPanel,
+  isTestPanelOpen,
+  isLoggerPanelOpen
+}: ControlTrayProps) {
   const [inVolume, setInVolume] = useState(0); // Input volume (mic)
   const [audioRecorder] = useState(() => new AudioRecorder());
   const [muted, setMuted] = useState(false);
@@ -110,17 +121,11 @@ function ControlTrayComponent({ children, sendRealtimeInput }: ControlTrayProps)
 
   return (
     <section className='bg-background flex h-16 items-center justify-between border-t px-4'>
-      {/* Left Aligned Controls */}
-      <nav className={cn('flex items-center gap-1', !connected && 'pointer-events-none opacity-50')}>
+      <nav className={cn('flex items-center gap-1')}>
         <TooltipProvider delayDuration={100}>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant='ghost'
-                size='icon'
-                onClick={() => setMuted(!muted)}
-                disabled={!connected}
-                className='h-9 w-9'>
+              <Button variant='ghost' size='icon' onClick={() => setMuted(!muted)} className='h-9 w-9'>
                 {muted ? <MicOff className='h-5 w-5' /> : <Mic className='h-5 w-5' />}
                 <span className='sr-only'>{muted ? 'Unmute Microphone' : 'Mute Microphone'}</span>
               </Button>
@@ -131,14 +136,49 @@ function ControlTrayComponent({ children, sendRealtimeInput }: ControlTrayProps)
           </Tooltip>
         </TooltipProvider>
 
-        {/* Placeholder for incoming volume - using AudioPulse */}
         <div className='flex h-9 w-9 items-center justify-center' title={`Mic Volume: ${inVolume.toFixed(2)}`}>
           <AudioPulse volume={inVolume} active={connected && !muted} />
         </div>
-        {/* Placeholder for outgoing volume */}
+
         <div className='flex h-9 w-9 items-center justify-center' title={`Speaker Volume: ${outVolume.toFixed(2)}`}>
           <AudioPulse volume={outVolume} active={connected} />
         </div>
+
+        <TooltipProvider delayDuration={100}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant={isLoggerPanelOpen ? 'secondary' : 'ghost'}
+                size='icon'
+                onClick={onToggleLoggerPanel}
+                className='h-9 w-9'>
+                <ListFilter className='h-5 w-5' />
+                <span className='sr-only'>{isLoggerPanelOpen ? 'Hide' : 'Show'} Logger Panel</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side='top'>
+              <p>{isLoggerPanelOpen ? 'Hide' : 'Show'} Logger Panel</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <TooltipProvider delayDuration={100}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant={isTestPanelOpen ? 'secondary' : 'ghost'}
+                size='icon'
+                onClick={onToggleTestPanel}
+                className='h-9 w-9'>
+                <Beaker className='h-5 w-5' />
+                <span className='sr-only'>{isTestPanelOpen ? 'Hide' : 'Show'} Test Panel</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side='top'>
+              <p>{isTestPanelOpen ? 'Hide' : 'Show'} Test Panel</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
 
         {/* Placeholder for potential additional children controls */}
         {children}
@@ -146,9 +186,6 @@ function ControlTrayComponent({ children, sendRealtimeInput }: ControlTrayProps)
 
       {/* Right Aligned Connection Toggle */}
       <div className='flex items-center gap-2'>
-        <span className={cn('text-xs font-medium', connected ? 'text-green-600' : 'text-yellow-600')}>
-          {connected ? 'Streaming' : 'Paused'}
-        </span>
         <TooltipProvider delayDuration={100}>
           <Tooltip>
             <TooltipTrigger asChild>
