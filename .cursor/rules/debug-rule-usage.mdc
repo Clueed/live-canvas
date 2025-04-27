@@ -3,6 +3,13 @@ description:
 globs: 
 alwaysApply: false
 ---
+---
+title: Debugging Rule Usage
+description: Guidelines for diagnosing and fixing issues when AI tools fail to use required rules or tools properly
+glob: 
+alwaysApply: false
+---
+
 # Debugging Rule Usage
 
 ## Introduction / Problem

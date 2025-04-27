@@ -3,7 +3,12 @@ description: REQUIRED - Use this rule before ANY git commits. Contains formattin
 globs: 
 alwaysApply: false
 ---
-
+---
+title: Git Commit Message Standards
+description: Required formatting standards and guidelines for all commit messages in this project
+glob:
+alwaysApply: false
+---
 # Git Commit Guidelines
 
 ## 1. Quick Reference

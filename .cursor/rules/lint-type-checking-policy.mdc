@@ -3,6 +3,12 @@ description:
 globs: 
 alwaysApply: true
 ---
+---
+title: Lint and Type Error Check Policy
+description: Guidelines for checking and resolving TypeScript type errors and ESLint linting errors before marking tasks as complete
+glob: "**/*.{ts,tsx,js,jsx}"
+alwaysApply: true
+---
 
 # Lint and Type Error Check Policy
 

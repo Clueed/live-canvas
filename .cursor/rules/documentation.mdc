@@ -3,6 +3,13 @@ description: After significant changes always document the codebase, focusing on
 globs: 
 alwaysApply: false
 ---
+---
+title: Codebase Documentation Guidelines
+description: Standards for documenting architecture and component usage within the ./docs directory after significant code changes
+glob: 
+alwaysApply: false
+---
+
 # Codebase Documentation Guidelines
 
 ## Introduction / Purpose

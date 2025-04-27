@@ -3,6 +3,13 @@ description:
 globs: 
 alwaysApply: true
 ---
+---
+title: Prefer Proper Solutions Over Workarounds
+description: Guidelines for prioritizing proper, sustainable solutions over temporary workarounds in TypeScript development
+glob: 
+alwaysApply: true
+---
+
 # Prefer Proper Solutions Over Workarounds
 
 ## Introduction / Problem

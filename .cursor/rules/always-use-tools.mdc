@@ -1,6 +1,7 @@
 ---
-description: 
-globs: 
+title: Always Check Available Resources
+description: Guidelines for leveraging all available tools, helper functions, and rules before implementing new solutions
+glob: 
 alwaysApply: true
 ---
 # Always Check Available Resources

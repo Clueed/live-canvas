@@ -3,6 +3,13 @@ description:
 globs: *.tsx
 alwaysApply: false
 ---
+---
+title: Styling Guidelines
+description: Standards and best practices for CSS, styling components, and maintaining visual consistency across the application
+glob: "**/*.{css,scss,sass,less,styled.{tsx}}"
+alwaysApply: false
+---
+
 # Styling Guidelines
 
 This project uses the following core technologies and conventions for styling components, primarily within `.tsx` files:
