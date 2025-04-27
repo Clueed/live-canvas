@@ -20,65 +20,67 @@ Best practices:
 `.trim();
 
 export const setEditorArtifact: FunctionDeclaration = {
-    name: 'set_editor_artifact',
-    description: `
+  name: 'set_editor_artifact',
+  description: `
 Replaces the entire content of the user's artifact in the editor, which supports Markdown formatting (headings, lists, code blocks, etc.).  
 Use this when you've generated or revised a complete draft and want to display it. 
 Does *not* merge with existing text; always supplies a full artifact string.  
     `.trim(),
-    parameters: {
-        type: SchemaType.OBJECT,
-        properties: {
-            text: {
-                type: SchemaType.STRING,
-                description: 'Complete artifact content.'
-            }
-        },
-        required: ['text']
-    }
+  parameters: {
+    type: SchemaType.OBJECT,
+    properties: {
+      text: {
+        type: SchemaType.STRING,
+        description: 'Complete artifact content.'
+      }
+    },
+    required: ['text']
+  }
 };
 
 export const getEditorArtifact: FunctionDeclaration = {
-    name: 'get_editor_artifact',
-    description: `
+  name: 'get_editor_artifact',
+  description: `
 Fetches the current text of the artifact in the editor, including any Markdown syntax.  
 Use this to read or reference what's already displayed before deciding edits.  
 Returns a single string with the full artifact content (Markdown intact)
 `.trim(),
-    parameters: {
-        type: SchemaType.OBJECT,
-        properties: {},
-        required: []
-    }
+  parameters: {
+    type: SchemaType.OBJECT,
+    properties: {},
+    required: []
+  }
 };
 
 export const undoLastArtifactChange: FunctionDeclaration = {
-    name: 'undo_last_artifact_change',
-    description: `
+  name: 'undo_last_artifact_change',
+  description: `
 Reverts the most recent modification made to the artifact in the editor, typically when the user explicitly asks to undo.
+Returns an operation result with success status, error message if failed, and current content after the undo operation.
 `.trim(),
-    parameters: {
-        type: SchemaType.OBJECT,
-        properties: {},
-        required: []
-    }
+  parameters: {
+    type: SchemaType.OBJECT,
+    properties: {},
+    required: []
+  }
 };
 
 export const redoLastArtifactUndo: FunctionDeclaration = {
-    name: 'redo_last_artifact_undo',
-    description: `
+  name: 'redo_last_artifact_undo',
+  description: `
 Reapplies the last artifact change that was undone, typically when the user explicitly asks to redo.
+Returns an operation result with success status, error message if failed, and current content after the redo operation.
 `.trim(),
-    parameters: {
-        type: SchemaType.OBJECT,
-        properties: {},
-        required: []
-    }
+  parameters: {
+    type: SchemaType.OBJECT,
+    properties: {},
+    required: []
+  }
 };
 
 export const FUNCTION_DECLARATIONS = [
-    setEditorArtifact,
-    getEditorArtifact,
-    undoLastArtifactChange,
-    redoLastArtifactUndo
+  setEditorArtifact,
+  getEditorArtifact,
+  undoLastArtifactChange,
+  redoLastArtifactUndo
 ];
