@@ -1,8 +1,6 @@
 import { useCallback, useEffect } from 'react';
 
-import { EditorService } from '@/lib/editor-service';
 import { type MultimodalLiveClient } from '@/lib/multimodal-live-client';
-import { SYSTEM_PROMPT } from '@/lib/prompts';
 import { createFunctionCallHandler } from '@/lib/tool-call-handlers';
 import { type ToolCall } from '@/types/multimodal-live-types';
 import { PlateEditor } from '@udecode/plate/react';
