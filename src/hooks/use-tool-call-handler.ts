@@ -1,50 +1,52 @@
 import { useCallback, useEffect } from 'react';
 
+import { EditorService } from '@/lib/editor-service';
 import { type MultimodalLiveClient } from '@/lib/multimodal-live-client';
 import { SYSTEM_PROMPT } from '@/lib/prompts';
 import { createFunctionCallHandler } from '@/lib/tool-call-handlers';
 import { type ToolCall } from '@/types/multimodal-live-types';
 
-interface UseToolCallHandlerProps {
-    client: MultimodalLiveClient;
-    updateCanvasText: (text: string, isUserUpdate: boolean) => void;
-    canvasText: () => string;
-    undo: () => void;
-    redo: () => void;
+export interface EditorOperationResult<T = string> {
+  success: boolean;
+  error?: string;
+  content?: T;
 }
 
-export function useToolCallHandler({ client, updateCanvasText, canvasText, undo, redo }: UseToolCallHandlerProps) {
-    const functionCallHandler = useCallback(createFunctionCallHandler({ canvasText, updateCanvasText, undo, redo }), [
-        canvasText,
-        updateCanvasText,
-        undo,
-        redo
-    ]);
+interface UseToolCallHandlerProps {
+  client: MultimodalLiveClient;
+  canvasText: () => string;
+  updateCanvasText: (text: string, isUserUpdate: boolean) => void;
+  undo: () => EditorOperationResult;
+  redo: () => EditorOperationResult;
+}
 
-    const onToolCallHandler = useCallback(
-        (toolCall: ToolCall, argClient: MultimodalLiveClient) => {
-            console.log(`Received toolcall:`, toolCall);
+export function useToolCallHandler({ client, ...editorFunctions }: UseToolCallHandlerProps) {
+  const functionCallHandler = useCallback(createFunctionCallHandler(editorFunctions), [editorFunctions]);
 
-            const functionResponses = toolCall.functionCalls.map((fc) => functionCallHandler(fc));
+  const onToolCallHandler = useCallback(
+    (toolCall: ToolCall, argClient: MultimodalLiveClient) => {
+      console.log(`Received toolcall:`, toolCall);
 
-            argClient.sendToolResponse({ functionResponses });
-        },
-        [functionCallHandler]
-    );
+      const functionResponses = toolCall.functionCalls.map((fc) => functionCallHandler(fc));
 
-    useEffect(() => {
-        if (!client) {
-            return;
-        }
+      argClient.sendToolResponse({ functionResponses });
+    },
+    [functionCallHandler]
+  );
 
-        const onToolCall = (toolCall: ToolCall) => {
-            onToolCallHandler(toolCall, client);
-        };
+  useEffect(() => {
+    if (!client) {
+      return;
+    }
 
-        client.on('toolcall', onToolCall);
+    const onToolCall = (toolCall: ToolCall) => {
+      onToolCallHandler(toolCall, client);
+    };
 
-        return () => {
-            client.off('toolcall', onToolCall);
-        };
-    }, [client, onToolCallHandler]);
+    client.on('toolcall', onToolCall);
+
+    return () => {
+      client.off('toolcall', onToolCall);
+    };
+  }, [client, onToolCallHandler]);
 }

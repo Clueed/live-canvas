@@ -11,6 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { useLiveAPIContext } from '@/contexts/LiveAPIContext';
 // Adjusted path
+import { EditorOperationResult } from '@/hooks/use-tool-call-handler';
+import { EditorService } from '@/lib/editor-service';
 import { useLoggerStore } from '@/lib/store-logger';
 // Adjusted path
 import { cn } from '@/lib/utils';
@@ -27,13 +29,10 @@ const filterOptions = [
 
 interface SidePanelProps {
   send: (parts: Part | Part[]) => void;
-  canvasText: () => string;
-  updateCanvasText: (text: string, isUserUpdate: boolean) => void;
-  undo: () => void;
-  redo: () => void;
+  editorService: EditorService;
 }
 
-export default function SidePanel({ send, canvasText, updateCanvasText }: SidePanelProps) {
+export default function SidePanel({ send, editorService }: SidePanelProps) {
   const { connected, client } = useLiveAPIContext();
   const [open, setOpen] = useState(true);
   const loggerRef = useRef<HTMLDivElement>(null); // Ref for ScrollArea viewport
@@ -133,7 +132,7 @@ export default function SidePanel({ send, canvasText, updateCanvasText }: SidePa
       {/* Tool Call Test Panel */}
       {open && (
         <div className='border-t p-3'>
-          <ToolCallTestPanel canvasText={canvasText} updateCanvasText={updateCanvasText} />
+          <ToolCallTestPanel editorService={editorService} />
         </div>
       )}
 

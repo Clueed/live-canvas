@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import Link from 'next/link';
 
@@ -9,8 +9,9 @@ import { Canvas } from '@/components/live-api/Canvas';
 import ControlTray from '@/components/live-api/ControlTray';
 import SidePanel from '@/components/live-api/SidePanel';
 import { LiveAPIProvider, useLiveAPIContext } from '@/contexts/LiveAPIContext';
-import { useToolCallHandler } from '@/hooks/use-tool-call-handler';
+import { EditorOperationResult, useToolCallHandler } from '@/hooks/use-tool-call-handler';
 import { useManagedCanvas } from '@/hooks/useManagedCanvas';
+import { createEditorService } from '@/lib/editor-service';
 import { FUNCTION_DECLARATIONS, SYSTEM_PROMPT, getEditorArtifact, setEditorArtifact } from '@/lib/prompts';
 import { cn } from '@/lib/utils';
 import type { ToolCall } from '@/types/multimodal-live-types';
@@ -25,19 +26,11 @@ const uri = `wss://${host}/ws/google.ai.generativelanguage.v1alpha.GenerativeSer
 
 function MainContent() {
   const { client, setConfig } = useLiveAPIContext();
-  // const { canvasText, updateCanvasText, getOptionalCanvasPart } = useManagedCanvas();
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
   const editor = useCreateEditor();
-
-  const canvasText = () => editor.api.markdown.serialize();
-  const updateCanvasText = (newText: string) => {
-    const newMarkdown = editor.api.markdown.deserialize(newText);
-    if (!newMarkdown) {
-      return;
-    }
-    editor.tf.setValue(newMarkdown);
-  };
+  const editorService = createEditorService(editor);
 
   useEffect(() => {
     setConfig({
@@ -56,41 +49,26 @@ function MainContent() {
     });
   }, [setConfig]);
 
-  useToolCallHandler({ client, updateCanvasText, canvasText, undo: editor.tf.undo, redo: editor.tf.redo });
+  useToolCallHandler({
+    client,
+    ...editorService
+  });
 
   // Function to send text/parts to the API
   const send = (inputParts: Part | Part[]) => {
     const partsArray = Array.isArray(inputParts) ? inputParts : [inputParts];
-    // const optionalCanvasPart = getOptionalCanvasPart();
-
-    // if (optionalCanvasPart) {
-    //     client.send([optionalCanvasPart, ...partsArray]);
-    // } else {
     client.send(partsArray, true);
-    // }
   };
 
   // Function to send realtime media chunks (audio/video)
   const sendRealtimeInput = (chunks: GenerativeContentBlob[]) => {
-    // const optionalCanvasPart = getOptionalCanvasPart();
-
-    // if (optionalCanvasPart) {
-    //     client.send([optionalCanvasPart], false);
-    // }
-
     client.sendRealtimeInput(chunks);
   };
 
   return (
     <div className='flex h-screen max-h-dvh w-screen max-w-dvw overflow-hidden'>
       <div className='flex h-full w-80 flex-col border-r'>
-        <SidePanel
-          send={send}
-          canvasText={canvasText}
-          updateCanvasText={updateCanvasText}
-          undo={editor.tf.undo}
-          redo={editor.tf.redo}
-        />
+        <SidePanel send={send} editorService={editorService} />
         <ControlTray
           videoRef={videoRef}
           supportsVideo={true} // Assuming video is supported
