@@ -2,6 +2,7 @@
 
 import React, { useCallback, useState } from 'react';
 
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -13,6 +14,8 @@ import { FUNCTION_DECLARATIONS } from '@/lib/prompts';
 import { createFunctionCallHandler } from '@/lib/tool-call-handlers';
 import { LiveFunctionCall } from '@/types/multimodal-live-types';
 
+import { AlertCircle, X } from 'lucide-react';
+
 interface ToolCallTestPanelProps {
   editorService: EditorService;
 }
@@ -23,6 +26,7 @@ export function ToolCallTestPanel({ editorService }: ToolCallTestPanelProps) {
   const [inputText, setInputText] = useState('');
   const [resultText, setResultText] = useState('');
   const [showResult, setShowResult] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const functionCallHandler = useCallback(
     createFunctionCallHandler({
@@ -42,9 +46,11 @@ export function ToolCallTestPanel({ editorService }: ToolCallTestPanelProps) {
 
   // Handler for executing the selected function
   const handleExecuteFunction = () => {
-    if (requiresTextInput && !inputText.trim()) {
-      console.warn('Please enter required text input');
+    // Clear any previous errors
+    setError(null);
 
+    if (requiresTextInput && !inputText.trim()) {
+      setError('Please enter required text input');
       return;
     }
 
@@ -58,26 +64,39 @@ export function ToolCallTestPanel({ editorService }: ToolCallTestPanelProps) {
       id: Date.now().toString()
     };
 
-    // Execute the function call
-    const response = functionCallHandler(functionCall);
+    try {
+      // Execute the function call
+      const response = functionCallHandler(functionCall);
 
-    // Handle response based on function type
-    if (selectedFunction === 'get_editor_artifact' && response.response.success) {
-      const artifact = response.response.artifact || '';
-      setInputText(artifact);
-      setResultText(artifact);
-      setShowResult(true);
-    } else {
-      setShowResult(false);
+      // Check for errors in the response
+      const responseError = response.response.error || response.response.output?.error;
+      if (responseError) {
+        setError(responseError);
+        setShowResult(false);
+        return;
+      }
+
+      // Handle response based on function type
+      if (selectedFunction === 'get_editor_artifact' && response.response.success) {
+        const artifact = response.response.artifact || '';
+        setInputText(artifact);
+        setResultText(artifact);
+        setShowResult(true);
+      } else {
+        setShowResult(false);
+      }
+
+      // Log the result
+      console.log(
+        response.response.success || response.response.output?.success
+          ? `${selectedFunction} Success:`
+          : `${selectedFunction} Failed:`,
+        responseError || 'Operation completed successfully'
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      console.error('Error executing function:', err);
     }
-
-    // Log the result
-    console.log(
-      response.response.success || response.response.output?.success
-        ? `${selectedFunction} Success:`
-        : `${selectedFunction} Failed:`,
-      response.response.error || response.response.output?.error || 'Operation completed successfully'
-    );
   };
 
   // Function to get a readable name from the function name
@@ -92,6 +111,7 @@ export function ToolCallTestPanel({ editorService }: ToolCallTestPanelProps) {
   const handleFunctionChange = (value: string) => {
     setSelectedFunction(value);
     setShowResult(false);
+    setError(null);
   };
 
   return (
@@ -100,6 +120,18 @@ export function ToolCallTestPanel({ editorService }: ToolCallTestPanelProps) {
         <CardTitle className='text-sm font-medium'>Tool Call Test Panel</CardTitle>
       </CardHeader>
       <CardContent className='space-y-4'>
+        {error && (
+          <Alert variant='destructive' className='relative mb-4'>
+            <AlertCircle className='h-4 w-4' />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+            <Button variant='ghost' size='icon' className='absolute top-1 right-1' onClick={() => setError(null)}>
+              <X className='h-4 w-4' />
+              <span className='sr-only'>Dismiss</span>
+            </Button>
+          </Alert>
+        )}
+
         <div className='space-y-2'>
           <Label htmlFor='function-select'>Select Function</Label>
           <Select value={selectedFunction} onValueChange={handleFunctionChange}>
