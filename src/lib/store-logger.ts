@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { StreamingLog } from '../types/multimodal-live-types';
-import { create } from 'zustand';
+import type { StreamingLog } from "../types/multimodal-live-types";
+import { create } from "zustand";
 
 interface StoreLoggerState {
   maxLogs: number;
@@ -37,9 +37,9 @@ export const useLoggerStore = create<StoreLoggerState>((set, get) => ({
               date,
               type,
               message,
-              count: prevLog.count ? prevLog.count + 1 : 1
-            } as StreamingLog
-          ]
+              count: prevLog.count ? prevLog.count + 1 : 1,
+            } as StreamingLog,
+          ],
         };
       }
 
@@ -49,16 +49,16 @@ export const useLoggerStore = create<StoreLoggerState>((set, get) => ({
           {
             date,
             type,
-            message
-          } as StreamingLog
-        ]
+            message,
+          } as StreamingLog,
+        ],
       };
     });
   },
 
   clearLogs: () => {
-    console.log('clear log');
+    console.log("clear log");
     set({ logs: [] });
   },
-  setMaxLogs: (n: number) => set({ maxLogs: n })
+  setMaxLogs: (n: number) => set({ maxLogs: n }),
 }));

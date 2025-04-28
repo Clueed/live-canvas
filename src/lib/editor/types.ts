@@ -1,7 +1,4 @@
-import { EditorOperationResult } from '@/hooks/use-tool-call-handler';
-import { PlateEditor } from '@udecode/plate/react';
-
-import { BaseRange, Editor, Node, Path, Point, Text } from 'slate';
+import type { EditorOperationResult } from "@/hooks/use-tool-call-handler";
 
 /**
  * Represents a human-readable selection in the editor
@@ -46,7 +43,9 @@ export interface EditorService {
    * Gets the current selection in a human-readable format
    * @returns An operation result containing the selection on success, or an error message on failure
    */
-  getReadableSelection: () => EditorOperationResult & { selection?: ReadableSelection };
+  getReadableSelection: () => EditorOperationResult & {
+    selection?: ReadableSelection;
+  };
 
   /**
    * Sets the selection in the editor based on paragraph indices
@@ -55,5 +54,9 @@ export interface EditorService {
    * @param selectedText - The exact text content to select within the range
    * @returns An operation result indicating success or failure
    */
-  setSelection: (startParagraphIndex: number, endParagraphIndex: number, selectedText: string) => EditorOperationResult;
+  setSelection: (
+    startParagraphIndex: number,
+    endParagraphIndex: number,
+    selectedText: string,
+  ) => EditorOperationResult;
 }

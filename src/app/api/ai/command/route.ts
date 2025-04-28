@@ -1,8 +1,8 @@
-import type { NextRequest } from 'next/server';
+import type { NextRequest } from "next/server";
 
-import { createOpenAI } from '@ai-sdk/openai';
-import { convertToCoreMessages, smoothStream, streamText } from 'ai';
-import { NextResponse } from 'next/server';
+import { createOpenAI } from "@ai-sdk/openai";
+import { convertToCoreMessages, smoothStream, streamText } from "ai";
+import { NextResponse } from "next/server";
 
 const CHUNKING_REGEXPS = {
   line: /\n+/m,
@@ -11,14 +11,14 @@ const CHUNKING_REGEXPS = {
 };
 
 export async function POST(req: NextRequest) {
-  const { apiKey: key, messages, model = 'gpt-4o', system } = await req.json();
+  const { apiKey: key, messages, model = "gpt-4o", system } = await req.json();
 
   const apiKey = key || process.env.OPENAI_API_KEY;
 
   if (!apiKey) {
     return NextResponse.json(
-      { error: 'Missing OpenAI API key.' },
-      { status: 401 }
+      { error: "Missing OpenAI API key." },
+      { status: 401 },
     );
   }
 
@@ -33,35 +33,35 @@ export async function POST(req: NextRequest) {
       experimental_transform: smoothStream({
         chunking: (buffer) => {
           // Check for code block markers
-          if (buffer.includes('```')) {
+          if (buffer.includes("```")) {
             isInCodeBlock = !isInCodeBlock;
           }
 
           // test case: should not deserialize link with markdown syntax
-          if (buffer.includes('http')) {
+          if (buffer.includes("http")) {
             isInLink = true;
-          } else if (buffer.includes('https')) {
+          } else if (buffer.includes("https")) {
             isInLink = true;
-          } else if (buffer.includes('\n') && isInLink) {
+          } else if (buffer.includes("\n") && isInLink) {
             isInLink = false;
           }
 
-          if (buffer.includes('*') || buffer.includes('-')) {
+          if (buffer.includes("*") || buffer.includes("-")) {
             isInList = true;
-          } else if (buffer.includes('\n') && isInList) {
+          } else if (buffer.includes("\n") && isInList) {
             isInList = false;
           }
 
           // Simple table detection: enter on |, exit on double newline
-          if (!isInTable && buffer.includes('|')) {
+          if (!isInTable && buffer.includes("|")) {
             isInTable = true;
-          } else if (isInTable && buffer.includes('\n\n')) {
+          } else if (isInTable && buffer.includes("\n\n")) {
             isInTable = false;
           }
 
           // Use line chunking for code blocks and tables, word chunking otherwise
           // Choose the appropriate chunking strategy based on content type
-          let match;
+          let match: RegExpExecArray | null;
 
           if (isInCodeBlock || isInTable || isInLink) {
             // Use line chunking for code blocks and tables
@@ -83,15 +83,15 @@ export async function POST(req: NextRequest) {
       }),
       maxTokens: 2048,
       messages: convertToCoreMessages(messages),
-      model: openai('gpt-4o'),
+      model: openai("gpt-4o"),
       system: system,
     });
 
     return result.toDataStreamResponse();
   } catch {
     return NextResponse.json(
-      { error: 'Failed to process AI request' },
-      { status: 500 }
+      { error: "Failed to process AI request" },
+      { status: 500 },
     );
   }
 }

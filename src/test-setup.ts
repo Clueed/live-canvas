@@ -1,7 +1,7 @@
-import '@testing-library/jest-dom';
+import "@testing-library/jest-dom";
 
 // Mock environment variables
-process.env.NEXT_PUBLIC_GCP_API_KEY = 'test-api-key';
+process.env.NEXT_PUBLIC_GCP_API_KEY = "test-api-key";
 
 // Mock window object properties not implemented in happy-dom
 global.ResizeObserver = class ResizeObserver {
@@ -14,7 +14,7 @@ global.ResizeObserver = class ResizeObserver {
 const originalMediaStream = global.MediaStream;
 class MockMediaStream implements MediaStream {
   active = true;
-  id = 'mock-id';
+  id = "mock-id";
   onaddtrack = null;
   onremovetrack = null;
 

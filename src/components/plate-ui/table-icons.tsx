@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import type { LucideProps } from 'lucide-react';
+import type { LucideProps } from "lucide-react";
 
 export const BorderAll = (props: LucideProps) => (
   <svg
@@ -16,16 +16,16 @@ export const BorderAll = (props: LucideProps) => (
       d="M0.25 1C0.25 0.585786 0.585786 0.25 1 0.25H14C14.4142 0.25 14.75 0.585786 14.75 1V14C14.75 14.4142 14.4142 14.75 14 14.75H1C0.585786 14.75 0.25 14.4142 0.25 14V1ZM1.75 1.75V13.25H13.25V1.75H1.75Z"
       fill="currentColor"
       fillRule="evenodd"
-    ></path>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="5"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="3"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="7"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="5" y="7"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="3" y="7"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="9" y="7"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="11" y="7"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="9"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="11"></rect>
+    />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="5" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="3" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="7" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="5" y="7" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="3" y="7" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="9" y="7" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="11" y="7" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="9" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="11" />
   </svg>
 );
 
@@ -43,33 +43,33 @@ export const BorderBottom = (props: LucideProps) => (
       d="M1 13.25L14 13.25V14.75L1 14.75V13.25Z"
       fill="currentColor"
       fillRule="evenodd"
-    ></path>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="5"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="13" y="5"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="3"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="13" y="3"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="7"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="1"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="13" y="7"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="13" y="1"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="5" y="7"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="5" y="1"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="3" y="7"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="3" y="1"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="9" y="7"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="9" y="1"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="11" y="7"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="11" y="1"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="9"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="13" y="9"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="11"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="13" y="11"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="1" y="5"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="1" y="3"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="1" y="7"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="1" y="1"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="1" y="9"></rect>
-    <rect fill="currentColor" height="1" rx=".5" width="1" x="1" y="11"></rect>
+    />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="5" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="13" y="5" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="3" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="13" y="3" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="7" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="1" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="13" y="7" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="13" y="1" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="5" y="7" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="5" y="1" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="3" y="7" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="3" y="1" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="9" y="7" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="9" y="1" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="11" y="7" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="11" y="1" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="9" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="13" y="9" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="11" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="13" y="11" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="1" y="5" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="1" y="3" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="1" y="7" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="1" y="1" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="1" y="9" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="1" y="11" />
   </svg>
 );
 
@@ -87,7 +87,7 @@ export const BorderLeft = (props: LucideProps) => (
       d="M1.75 1L1.75 14L0.249999 14L0.25 1L1.75 1Z"
       fill="currentColor"
       fillRule="evenodd"
-    ></path>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -96,7 +96,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="10"
       y="7"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -105,7 +105,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="10"
       y="13"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -114,7 +114,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="12"
       y="7"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -123,7 +123,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="12"
       y="13"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -132,7 +132,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="8"
       y="7"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -141,7 +141,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="14"
       y="7"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -150,7 +150,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="8"
       y="13"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -159,7 +159,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="14"
       y="13"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -168,7 +168,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="8"
       y="5"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -177,7 +177,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="14"
       y="5"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -186,7 +186,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="8"
       y="3"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -195,7 +195,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="14"
       y="3"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -204,7 +204,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="8"
       y="9"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -213,7 +213,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="14"
       y="9"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -222,7 +222,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="8"
       y="11"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -231,7 +231,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="14"
       y="11"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -240,7 +240,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="6"
       y="7"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -249,7 +249,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="6"
       y="13"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -258,7 +258,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="4"
       y="7"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -267,7 +267,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="4"
       y="13"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -276,7 +276,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="10"
       y="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -285,7 +285,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="12"
       y="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -294,7 +294,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="8"
       y="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -303,7 +303,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="14"
       y="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -312,7 +312,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="6"
       y="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -321,7 +321,7 @@ export const BorderLeft = (props: LucideProps) => (
       width="1"
       x="4"
       y="1"
-    ></rect>
+    />
   </svg>
 );
 
@@ -334,270 +334,39 @@ export const BorderNone = (props: LucideProps) => (
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="7"
-      y="5.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="13"
-      y="5.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="7"
-      y="3.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="13"
-      y="3.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="7"
-      y="7.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="7"
-      y="13.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="7"
-      y="1.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="13"
-      y="7.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="13"
-      y="13.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="13"
-      y="1.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="5"
-      y="7.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="5"
-      y="13.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="5"
-      y="1.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="3"
-      y="7.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="3"
-      y="13.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="3"
-      y="1.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="9"
-      y="7.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="9"
-      y="13.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="9"
-      y="1.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="11"
-      y="7.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="11"
-      y="13.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="11"
-      y="1.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="7"
-      y="9.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="13"
-      y="9.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="7"
-      y="11.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="13"
-      y="11.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="1"
-      y="5.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="1"
-      y="3.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="1"
-      y="7.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="1"
-      y="13.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="1"
-      y="1.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="1"
-      y="9.025"
-    ></rect>
-    <rect
-      fill="currentColor"
-      height="1"
-      rx=".5"
-      width="1"
-      x="1"
-      y="11.025"
-    ></rect>
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="5.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="13" y="5.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="3.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="13" y="3.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="7.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="13.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="1.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="13" y="7.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="13" y="13.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="13" y="1.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="5" y="7.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="5" y="13.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="5" y="1.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="3" y="7.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="3" y="13.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="3" y="1.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="9" y="7.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="9" y="13.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="9" y="1.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="11" y="7.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="11" y="13.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="11" y="1.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="9.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="13" y="9.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="7" y="11.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="13" y="11.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="1" y="5.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="1" y="3.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="1" y="7.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="1" y="13.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="1" y="1.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="1" y="9.025" />
+    <rect fill="currentColor" height="1" rx=".5" width="1" x="1" y="11.025" />
   </svg>
 );
 
@@ -615,189 +384,189 @@ export const BorderRight = (props: LucideProps) => (
       d="M13.25 1L13.25 14L14.75 14L14.75 1L13.25 1Z"
       fill="currentColor"
       fillRule="evenodd"
-    ></path>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 5 7)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 5 13)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 3 7)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 3 13)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 7 7)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 1 7)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 7 13)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 1 13)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 7 5)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 1 5)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 7 3)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 1 3)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 7 9)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 1 9)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 7 11)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 1 11)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 9 7)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 9 13)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 11 7)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 11 13)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 5 1)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 3 1)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 7 1)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 1 1)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 9 1)"
       width="1"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
       rx=".5"
       transform="matrix(0 1 1 0 11 1)"
       width="1"
-    ></rect>
+    />
   </svg>
 );
 
@@ -815,7 +584,7 @@ export const BorderTop = (props: LucideProps) => (
       d="M14 1.75L1 1.75L1 0.249999L14 0.25L14 1.75Z"
       fill="currentColor"
       fillRule="evenodd"
-    ></path>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -824,7 +593,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="8"
       y="10"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -833,7 +602,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="2"
       y="10"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -842,7 +611,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="8"
       y="12"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -851,7 +620,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="2"
       y="12"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -860,7 +629,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="8"
       y="8"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -869,7 +638,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="8"
       y="14"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -878,7 +647,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="2"
       y="8"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -887,7 +656,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="2"
       y="14"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -896,7 +665,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="10"
       y="8"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -905,7 +674,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="10"
       y="14"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -914,7 +683,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="12"
       y="8"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -923,7 +692,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="12"
       y="14"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -932,7 +701,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="6"
       y="8"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -941,7 +710,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="6"
       y="14"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -950,7 +719,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="4"
       y="8"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -959,7 +728,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="4"
       y="14"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -968,7 +737,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="8"
       y="6"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -977,7 +746,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="2"
       y="6"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -986,7 +755,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="8"
       y="4"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -995,7 +764,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="2"
       y="4"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -1004,7 +773,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="14"
       y="10"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -1013,7 +782,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="14"
       y="12"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -1022,7 +791,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="14"
       y="8"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -1031,7 +800,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="14"
       y="14"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -1040,7 +809,7 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="14"
       y="6"
-    ></rect>
+    />
     <rect
       fill="currentColor"
       height="1"
@@ -1049,6 +818,6 @@ export const BorderTop = (props: LucideProps) => (
       width="1"
       x="14"
       y="4"
-    ></rect>
+    />
   </svg>
 );

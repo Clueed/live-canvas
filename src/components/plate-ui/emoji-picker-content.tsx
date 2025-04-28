@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { memo, useCallback } from 'react';
+import { memo, useCallback } from "react";
 
-import type { UseEmojiPickerType } from '@udecode/plate-emoji/react';
+import type { UseEmojiPickerType } from "@udecode/plate-emoji/react";
 
-import { cn } from '@udecode/cn';
-import { type Emoji, type GridRow, EmojiSettings } from '@udecode/plate-emoji';
+import { cn } from "@udecode/cn";
+import { type Emoji, type GridRow, EmojiSettings } from "@udecode/plate-emoji";
 
 export type EmojiButtonProps = {
   emoji: Emoji;
@@ -16,20 +16,20 @@ export type EmojiButtonProps = {
 
 export type EmojiPickerContentProps = Pick<
   UseEmojiPickerType,
-  | 'emojiLibrary'
-  | 'i18n'
-  | 'isSearching'
-  | 'onMouseOver'
-  | 'onSelectEmoji'
-  | 'refs'
-  | 'searchResult'
-  | 'settings'
-  | 'visibleCategories'
+  | "emojiLibrary"
+  | "i18n"
+  | "isSearching"
+  | "onMouseOver"
+  | "onSelectEmoji"
+  | "refs"
+  | "searchResult"
+  | "settings"
+  | "visibleCategories"
 >;
 
 export type RowOfButtonsProps = {
   row: GridRow;
-} & Pick<UseEmojiPickerType, 'emojiLibrary' | 'onMouseOver' | 'onSelectEmoji'>;
+} & Pick<UseEmojiPickerType, "emojiLibrary" | "onMouseOver" | "onSelectEmoji">;
 
 const Button = memo(
   ({ emoji, index, onMouseOver, onSelect }: EmojiButtonProps) => {
@@ -60,9 +60,9 @@ const Button = memo(
         </span>
       </button>
     );
-  }
+  },
 );
-Button.displayName = 'Button';
+Button.displayName = "Button";
 
 const RowOfButtons = memo(
   ({ emojiLibrary, row, onMouseOver, onSelectEmoji }: RowOfButtonsProps) => (
@@ -77,9 +77,9 @@ const RowOfButtons = memo(
         />
       ))}
     </div>
-  )
+  ),
 );
-RowOfButtons.displayName = 'RowOfButtons';
+RowOfButtons.displayName = "RowOfButtons";
 
 export function EmojiPickerContent({
   emojiLibrary,
@@ -100,7 +100,7 @@ export function EmojiPickerContent({
         ? visibleCategories.get(categoryId)
         : false;
     },
-    [visibleCategories]
+    [visibleCategories],
   );
 
   const EmojiList = useCallback(() => {
@@ -183,11 +183,11 @@ export function EmojiPickerContent({
     <div
       ref={refs.current.contentRoot}
       className={cn(
-        'h-full min-h-[50%] overflow-x-hidden overflow-y-auto px-2',
-        '[&::-webkit-scrollbar]:w-4',
-        '[&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-button]:size-0',
-        '[&::-webkit-scrollbar-thumb]:min-h-11 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted [&::-webkit-scrollbar-thumb]:hover:bg-muted-foreground/25',
-        '[&::-webkit-scrollbar-thumb]:border-4 [&::-webkit-scrollbar-thumb]:border-solid [&::-webkit-scrollbar-thumb]:border-popover [&::-webkit-scrollbar-thumb]:bg-clip-padding'
+        "h-full min-h-[50%] overflow-x-hidden overflow-y-auto px-2",
+        "[&::-webkit-scrollbar]:w-4",
+        "[&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-button]:size-0",
+        "[&::-webkit-scrollbar-thumb]:min-h-11 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted [&::-webkit-scrollbar-thumb]:hover:bg-muted-foreground/25",
+        "[&::-webkit-scrollbar-thumb]:border-4 [&::-webkit-scrollbar-thumb]:border-solid [&::-webkit-scrollbar-thumb]:border-popover [&::-webkit-scrollbar-thumb]:bg-clip-padding",
       )}
       data-id="scroll"
     >

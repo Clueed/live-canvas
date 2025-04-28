@@ -1,42 +1,42 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
-import type { TElement } from '@udecode/plate';
+import type { TElement } from "@udecode/plate";
 
-import { cn } from '@udecode/cn';
-import { toUnitLess } from '@udecode/plate-font';
-import { FontSizePlugin } from '@udecode/plate-font/react';
-import { HEADING_KEYS } from '@udecode/plate-heading';
-import { useEditorPlugin, useEditorSelector } from '@udecode/plate/react';
-import { Minus, Plus } from 'lucide-react';
+import { cn } from "@udecode/cn";
+import { toUnitLess } from "@udecode/plate-font";
+import { FontSizePlugin } from "@udecode/plate-font/react";
+import { HEADING_KEYS } from "@udecode/plate-heading";
+import { useEditorPlugin, useEditorSelector } from "@udecode/plate/react";
+import { Minus, Plus } from "lucide-react";
 
-import { Popover, PopoverContent, PopoverTrigger } from './popover';
-import { ToolbarButton } from './toolbar';
+import { Popover, PopoverContent, PopoverTrigger } from "./popover";
+import { ToolbarButton } from "./toolbar";
 
-const DEFAULT_FONT_SIZE = '16';
+const DEFAULT_FONT_SIZE = "16";
 
 const FONT_SIZE_MAP = {
-  [HEADING_KEYS.h1]: '36',
-  [HEADING_KEYS.h2]: '24',
-  [HEADING_KEYS.h3]: '20',
+  [HEADING_KEYS.h1]: "36",
+  [HEADING_KEYS.h2]: "24",
+  [HEADING_KEYS.h3]: "20",
 } as const;
 
 const FONT_SIZES = [
-  '8',
-  '9',
-  '10',
-  '12',
-  '14',
-  '16',
-  '18',
-  '24',
-  '30',
-  '36',
-  '48',
-  '60',
-  '72',
-  '96',
+  "8",
+  "9",
+  "10",
+  "12",
+  "14",
+  "16",
+  "18",
+  "24",
+  "30",
+  "36",
+  "48",
+  "60",
+  "72",
+  "96",
 ] as const;
 
 export function FontSizeToolbarButton() {
@@ -93,7 +93,7 @@ export function FontSizeToolbarButton() {
         <PopoverTrigger asChild>
           <input
             className={cn(
-              'h-full w-10 shrink-0 bg-transparent px-1 text-center text-sm hover:bg-muted'
+              "h-full w-10 shrink-0 bg-transparent px-1 text-center text-sm hover:bg-muted",
             )}
             value={displayValue}
             onBlur={() => {
@@ -106,7 +106,7 @@ export function FontSizeToolbarButton() {
               setInputValue(toUnitLess(cursorFontSize));
             }}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') {
+              if (e.key === "Enter") {
                 e.preventDefault();
                 handleInputChange();
               }
@@ -123,7 +123,7 @@ export function FontSizeToolbarButton() {
             <button
               key={size}
               className={cn(
-                'flex h-8 w-full items-center justify-center text-sm hover:bg-accent data-[highlighted=true]:bg-accent'
+                "flex h-8 w-full items-center justify-center text-sm hover:bg-accent data-[highlighted=true]:bg-accent",
               )}
               onClick={() => {
                 api.fontSize.setMark(`${size}px`);

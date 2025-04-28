@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import type { ExtendConfig, Path } from '@udecode/plate';
+import type { ExtendConfig, Path } from "@udecode/plate";
 
-import { isSlateString } from '@udecode/plate';
+import { isSlateString } from "@udecode/plate";
 import {
   type BaseCommentsConfig,
   BaseCommentsPlugin,
-} from '@udecode/plate-comments';
-import { toTPlatePlugin, useHotkeys } from '@udecode/plate/react';
+} from "@udecode/plate-comments";
+import { toTPlatePlugin, useHotkeys } from "@udecode/plate/react";
 
 export type CommentsConfig = ExtendConfig<
   BaseCommentsConfig,
@@ -29,7 +29,7 @@ export const commentsPlugin = toTPlatePlugin<CommentsConfig>(
         let isSet = false;
 
         const unsetActiveSuggestion = () => {
-          setOption('activeId', null);
+          setOption("activeId", null);
           isSet = true;
         };
 
@@ -37,7 +37,7 @@ export const commentsPlugin = toTPlatePlugin<CommentsConfig>(
 
         while (leaf.parentElement) {
           if (leaf.classList.contains(`slate-${type}`)) {
-            const commentsEntry = api.comment!.node();
+            const commentsEntry = api.comment?.node();
 
             if (!commentsEntry) {
               unsetActiveSuggestion();
@@ -45,9 +45,9 @@ export const commentsPlugin = toTPlatePlugin<CommentsConfig>(
               break;
             }
 
-            const id = api.comment!.nodeId(commentsEntry[0]);
+            const id = api.comment?.nodeId(commentsEntry[0]);
 
-            setOption('activeId', id ?? null);
+            setOption("activeId", id ?? null);
             isSet = true;
 
             break;
@@ -62,7 +62,7 @@ export const commentsPlugin = toTPlatePlugin<CommentsConfig>(
     options: {
       activeId: null,
       commentingBlock: null,
-      hotkey: ['meta+shift+m', 'ctrl+shift+m'],
+      hotkey: ["meta+shift+m", "ctrl+shift+m"],
       hoverId: null,
       uniquePathMap: new Map(),
     },
@@ -79,8 +79,8 @@ export const commentsPlugin = toTPlatePlugin<CommentsConfig>(
         },
         {
           enableOnContentEditable: true,
-        }
+        },
       );
     },
-  }
+  },
 );

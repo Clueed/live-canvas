@@ -1,14 +1,12 @@
-'use client';
+"use client";
 
-import React from 'react';
+import { AIChatPlugin, AIPlugin } from "@udecode/plate-ai/react";
 
-import { AIChatPlugin, AIPlugin } from '@udecode/plate-ai/react';
+import { markdownPlugin } from "@/components/editor/plugins/markdown-plugin";
+import { AILoadingBar } from "@/components/plate-ui/ai-loading-bar";
+import { AIMenu } from "@/components/plate-ui/ai-menu";
 
-import { markdownPlugin } from '@/components/editor/plugins/markdown-plugin';
-import { AILoadingBar } from '@/components/plate-ui/ai-loading-bar';
-import { AIMenu } from '@/components/plate-ui/ai-menu';
-
-import { cursorOverlayPlugin } from './cursor-overlay-plugin';
+import { cursorOverlayPlugin } from "./cursor-overlay-plugin";
 const systemCommon = `\
 You are an advanced AI-powered note-taking assistant, designed to enhance productivity and creativity in note management.
 Respond directly to user prompts with clear, concise, and relevant content. Maintain a neutral, helpful tone.

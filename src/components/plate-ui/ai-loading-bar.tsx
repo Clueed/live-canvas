@@ -1,33 +1,33 @@
-'use client';
-import { cn } from '@udecode/cn';
-import { AIChatPlugin } from '@udecode/plate-ai/react';
+"use client";
+import { cn } from "@udecode/cn";
+import { AIChatPlugin } from "@udecode/plate-ai/react";
 import {
   useEditorPlugin,
   useHotkeys,
   usePluginOption,
-} from '@udecode/plate/react';
-import { Pause } from 'lucide-react';
+} from "@udecode/plate/react";
+import { Pause } from "lucide-react";
 
-import { useChat } from '@/components/editor/use-chat';
+import { useChat } from "@/components/editor/use-chat";
 
-import { Button } from './button';
+import { Button } from "./button";
 
 export const AILoadingBar = () => {
   const chat = useChat();
-  const mode = usePluginOption(AIChatPlugin, 'mode');
+  const mode = usePluginOption(AIChatPlugin, "mode");
 
-  const streaming = usePluginOption(AIChatPlugin, 'streaming');
+  const streaming = usePluginOption(AIChatPlugin, "streaming");
 
   const { status } = chat;
 
   const { api } = useEditorPlugin(AIChatPlugin);
 
   const isLoading =
-    (status === 'streaming' && streaming) || status === 'submitted';
+    (status === "streaming" && streaming) || status === "submitted";
 
-  const visible = (isLoading && mode === 'insert') || streaming;
+  const visible = (isLoading && mode === "insert") || streaming;
 
-  useHotkeys('esc', () => {
+  useHotkeys("esc", () => {
     api.aiChat.stop();
   });
 
@@ -36,11 +36,11 @@ export const AILoadingBar = () => {
   return (
     <div
       className={cn(
-        'absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 items-center gap-3 rounded-md border border-border bg-muted px-3 py-1.5 text-sm text-muted-foreground shadow-md transition-all duration-300'
+        "absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 items-center gap-3 rounded-md border border-border bg-muted px-3 py-1.5 text-sm text-muted-foreground shadow-md transition-all duration-300",
       )}
     >
       <span className="h-4 w-4 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent" />
-      <span>{status === 'submitted' ? 'Thinking...' : 'Writing...'}</span>
+      <span>{status === "submitted" ? "Thinking..." : "Writing..."}</span>
       <Button
         size="sm"
         variant="ghost"

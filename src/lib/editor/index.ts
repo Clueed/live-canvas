@@ -1,17 +1,22 @@
-import { EditorOperationResult } from '@/hooks/use-tool-call-handler';
-import { FunctionDeclaration } from '@google/generative-ai';
-import { PlateEditor } from '@udecode/plate/react';
+import type { EditorOperationResult } from "@/hooks/use-tool-call-handler";
+import type { FunctionDeclaration } from "@google/generative-ai";
+import type { PlateEditor } from "@udecode/plate/react";
 
-import { redoOperation, undoOperation } from './history-operations';
-import { getSelectionOperation, setSelectionOperation } from './selection-operations';
-import { getEditorArtifactOperation, setEditorArtifactOperation } from './text-operations';
-import { EditorService } from './types';
-import { ZodSchema, ZodTypeDef } from 'zod';
+import { redoOperation, undoOperation } from "./history-operations";
+import {
+  getSelectionOperation,
+  setSelectionOperation,
+} from "./selection-operations";
+import {
+  getEditorArtifactOperation,
+  setEditorArtifactOperation,
+} from "./text-operations";
+import type { ZodSchema, } from "zod";
 
 export interface FunctionOperation {
   declaration: FunctionDeclaration;
-  create: (editor: PlateEditor) => (...args: any[]) => EditorOperationResult;
-  paramsSchema?: ZodSchema<any, any>;
+  create: (editor: PlateEditor) => (...args: unknown[]) => EditorOperationResult;
+  paramsSchema?: ZodSchema<unknown, unknown>;
 }
 
 export const TOOL_CALL_FUNCTIONS = [
@@ -20,11 +25,11 @@ export const TOOL_CALL_FUNCTIONS = [
   undoOperation,
   redoOperation,
   getSelectionOperation,
-  setSelectionOperation
+  setSelectionOperation,
 ] as FunctionOperation[];
 
 // Re-export all types and modules for easy access
-export * from './types';
-export * from './text-operations';
-export * from './history-operations';
-export * from './selection-operations';
+export * from "./types";
+export * from "./text-operations";
+export * from "./history-operations";
+export * from "./selection-operations";

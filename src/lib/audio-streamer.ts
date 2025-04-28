@@ -21,16 +21,16 @@ import {
 
 export class AudioStreamer {
   public audioQueue: Float32Array[] = [];
-  private isPlaying: boolean = false;
-  private sampleRate: number = 24000;
-  private bufferSize: number = 7680;
+  private isPlaying = false;
+  private sampleRate = 24000;
+  private bufferSize = 7680;
   private processingBuffer: Float32Array = new Float32Array(0);
-  private scheduledTime: number = 0;
+  private scheduledTime = 0;
   public gainNode: GainNode;
   public source: AudioBufferSourceNode;
-  private isStreamComplete: boolean = false;
+  private isStreamComplete = false;
   private checkInterval: number | null = null;
-  private initialBufferTime: number = 0.1; //0.1 // 100ms initial buffer
+  private initialBufferTime = 0.1; //0.1 // 100ms initial buffer
   private endOfQueueAudioSource: AudioBufferSourceNode | null = null;
 
   public onComplete = () => {};
@@ -42,24 +42,27 @@ export class AudioStreamer {
     this.addPCM16 = this.addPCM16.bind(this);
   }
 
-  async addWorklet<T extends (d: any) => void>(
+  async addWorklet<T extends (d: MessageEvent) => void>(
     workletName: string,
     workletSrc: string,
     handler: T,
   ): Promise<this> {
     let workletsRecord = registeredWorklets.get(this.context);
-    if (workletsRecord && workletsRecord[workletName]) {
+    if (workletsRecord?.[workletName]) {
       // the worklet already exists on this context
       // add the new handler to it
       workletsRecord[workletName].handlers.push(handler);
-      
-return Promise.resolve(this);
+
+      return Promise.resolve(this);
       //throw new Error(`Worklet ${workletName} already exists on context`);
     }
 
     if (!workletsRecord) {
       registeredWorklets.set(this.context, {});
-      workletsRecord = registeredWorklets.get(this.context)!;
+      workletsRecord = registeredWorklets.get(this.context);
+      if (!workletsRecord) {
+        throw new Error("Failed to initialize worklets record");
+      }
     }
 
     // create new record to fill in as becomes available
@@ -119,8 +122,8 @@ return Promise.resolve(this);
       this.sampleRate,
     );
     audioBuffer.getChannelData(0).set(audioData);
-    
-return audioBuffer;
+
+    return audioBuffer;
   }
 
   private scheduleNextBuffer() {
@@ -130,7 +133,8 @@ return audioBuffer;
       this.audioQueue.length > 0 &&
       this.scheduledTime < this.context.currentTime + SCHEDULE_AHEAD_TIME
     ) {
-      const audioData = this.audioQueue.shift()!;
+      const audioData = this.audioQueue.shift();
+      if (!audioData) continue;
       const audioBuffer = this.createAudioBuffer(audioData);
       const source = this.context.createBufferSource();
 
@@ -160,7 +164,7 @@ return audioBuffer;
           const { node, handlers } = graph;
           if (node) {
             source.connect(node);
-            node.port.onmessage = function (ev: MessageEvent) {
+            node.port.onmessage = (ev: MessageEvent) => {
               handlers.forEach((handler) => {
                 handler.call(node.port, ev);
               });

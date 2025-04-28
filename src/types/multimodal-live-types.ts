@@ -41,7 +41,7 @@ export type LiveConfig = {
   model: string;
   systemInstruction?: { parts: Part[] };
   generationConfig?: Partial<LiveGenerationConfig>;
-  tools?: Array<Tool | { googleSearch: {} } | { codeExecution: {} }>;
+  tools?: Array<Tool | { googleSearch: Record<string, never> } | { codeExecution: Record<string, never> }>;
 };
 
 export type LiveGenerationConfig = GenerationConfig & {
@@ -99,7 +99,7 @@ export type LiveIncomingMessage =
   | ServerContentMessage
   | SetupCompleteMessage;
 
-export type SetupCompleteMessage = { setupComplete: {} };
+export type SetupCompleteMessage = { setupComplete: Record<string, never> };
 
 export type ServerContentMessage = {
   serverContent: ServerContent;
@@ -151,8 +151,8 @@ export type StreamingLog = {
 
 // Type-Guards
 
-const prop = (a: any, prop: string, kind: string = "object") =>
-  typeof a === "object" && typeof a[prop] === "object";
+const prop = (a: unknown, prop: string, kind = "object") =>
+  typeof a === "object" && a !== null && typeof (a as Record<string, unknown>)[prop] === "object";
 
 // outgoing messages
 export const isSetupMessage = (a: unknown): a is SetupMessage =>
@@ -171,25 +171,25 @@ export const isToolResponseMessage = (a: unknown): a is ToolResponseMessage =>
 export const isSetupCompleteMessage = (a: unknown): a is SetupCompleteMessage =>
   prop(a, "setupComplete");
 
-export const isServerContentMessage = (a: any): a is ServerContentMessage =>
+export const isServerContentMessage = (a: unknown): a is ServerContentMessage =>
   prop(a, "serverContent");
 
-export const isToolCallMessage = (a: any): a is ToolCallMessage =>
+export const isToolCallMessage = (a: unknown): a is ToolCallMessage =>
   prop(a, "toolCall");
 
 export const isToolCallCancellationMessage = (
-  a: unknown
+  a: unknown,
 ): a is ToolCallCancellationMessage =>
   prop(a, "toolCallCancellation") &&
-  isToolCallCancellation((a as any).toolCallCancellation);
+  isToolCallCancellation((a as { toolCallCancellation?: unknown }).toolCallCancellation);
 
-export const isModelTurn = (a: any): a is ModelTurn =>
+export const isModelTurn = (a: unknown): a is ModelTurn =>
   typeof (a as ModelTurn).modelTurn === "object";
 
-export const isTurnComplete = (a: any): a is TurnComplete =>
+export const isTurnComplete = (a: unknown): a is TurnComplete =>
   typeof (a as TurnComplete).turnComplete === "boolean";
 
-export const isInterrupted = (a: any): a is Interrupted =>
+export const isInterrupted = (a: unknown): a is Interrupted =>
   (a as Interrupted).interrupted;
 
 export function isToolCall(value: unknown): value is ToolCall {
@@ -228,7 +228,7 @@ export function isLiveFunctionCall(value: unknown): value is LiveFunctionCall {
 }
 
 export function isLiveFunctionResponse(
-  value: unknown
+  value: unknown,
 ): value is LiveFunctionResponse {
   if (!value || typeof value !== "object") return false;
 
@@ -240,6 +240,6 @@ export function isLiveFunctionResponse(
 }
 
 export const isToolCallCancellation = (
-  a: unknown
+  a: unknown,
 ): a is ToolCallCancellationMessage["toolCallCancellation"] =>
-  typeof a === "object" && Array.isArray((a as any).ids);
+  typeof a === "object" && a !== null && Array.isArray((a as { ids?: unknown }).ids);
