@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   getSelectionOperation,
   setSelectionOperation,
-} from "./selection-operations";
+} from "./editor-selection-ai-functions";
 
 // Define a minimal mock node type for test purposes
 interface MockTextNode {

@@ -1,10 +1,10 @@
-import { TOOL_CALL_FUNCTIONS } from "@/lib/editor";
+import { AI_FUNCTIONS } from "@/lib/ai-functions";
 import type { LiveFunctionCall } from "@/types/multimodal-live-types";
 import type { PlateEditor } from "@udecode/plate/react";
 
 export function createFunctionCallHandler(editor: PlateEditor) {
   return (fc: LiveFunctionCall) => {
-    const functionDeclaration = TOOL_CALL_FUNCTIONS.find(
+    const functionDeclaration = AI_FUNCTIONS.find(
       (f) => f.declaration.name === fc.name,
     );
 

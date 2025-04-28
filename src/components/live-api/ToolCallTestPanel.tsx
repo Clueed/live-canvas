@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -14,10 +13,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { TOOL_CALL_FUNCTIONS } from "@/lib/editor";
+import { AI_FUNCTIONS } from "@/lib/ai-functions";
 import { createFunctionCallHandler } from "@/lib/tool-call-handlers";
 import type { LiveFunctionCall } from "@/types/multimodal-live-types";
 import type { PlateEditor } from "@udecode/plate/react";
+import { useState } from "react";
 
 interface ToolCallTestPanelProps {
   editor: PlateEditor;
@@ -25,7 +25,7 @@ interface ToolCallTestPanelProps {
 
 export function ToolCallTestPanel({ editor }: ToolCallTestPanelProps) {
   const [selectedFunction, setSelectedFunction] = useState(
-    TOOL_CALL_FUNCTIONS[0].declaration.name,
+    AI_FUNCTIONS[0].declaration.name,
   );
   const [inputText, setInputText] = useState("");
   const [resultText, setResultText] = useState("");
@@ -33,7 +33,7 @@ export function ToolCallTestPanel({ editor }: ToolCallTestPanelProps) {
 
   const functionCallHandler = createFunctionCallHandler(editor);
 
-  const currentFunction = TOOL_CALL_FUNCTIONS.find(
+  const currentFunction = AI_FUNCTIONS.find(
     (func) => func.declaration.name === selectedFunction,
   );
   const requiresTextInput = !!(
@@ -93,7 +93,7 @@ export function ToolCallTestPanel({ editor }: ToolCallTestPanelProps) {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Editor Tools</SelectLabel>
-                {TOOL_CALL_FUNCTIONS.map((func) => (
+                {AI_FUNCTIONS.map((func) => (
                   <SelectItem
                     key={func.declaration.name}
                     value={func.declaration.name}

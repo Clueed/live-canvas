@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useCreateEditor } from "@/components/editor/use-create-editor";
 import { Canvas } from "@/components/live-api/Canvas";
@@ -15,7 +10,7 @@ import { FloatingTestPanel } from "@/components/live-api/FloatingTestPanel";
 import SidePanel from "@/components/live-api/SidePanel";
 import { useLiveAPIContext } from "@/contexts/LiveAPIContext";
 import { useToolCallHandler } from "@/hooks/use-tool-call-handler";
-import { TOOL_CALL_FUNCTIONS } from "@/lib/editor";
+import { AI_FUNCTIONS } from "@/lib/ai-functions";
 import { SYSTEM_PROMPT } from "@/lib/prompts";
 import type { GenerativeContentBlob, Part } from "@google/generative-ai";
 
@@ -38,7 +33,7 @@ export function LiveCanvasView() {
   );
 
   const functionDeclarations = useMemo(
-    () => TOOL_CALL_FUNCTIONS.map((f) => f.declaration),
+    () => AI_FUNCTIONS.map((f) => f.declaration),
     [],
   );
 
