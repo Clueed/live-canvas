@@ -11,7 +11,6 @@ import SidePanel from '@/components/live-api/SidePanel';
 import { useLiveAPIContext } from '@/contexts/LiveAPIContext';
 import { useToolCallHandler } from '@/hooks/use-tool-call-handler';
 import { TOOL_CALL_FUNCTIONS } from '@/lib/editor';
-import { EDITOR_FUNCTION_DECLARATIONS } from '@/lib/editor/function-declarations';
 import { SYSTEM_PROMPT } from '@/lib/prompts';
 import { type GenerativeContentBlob, type Part } from '@google/generative-ai';
 

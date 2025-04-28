@@ -32,7 +32,12 @@ export function createFunctionCallHandler(editor: PlateEditor) {
 
       args = argsResult.data;
     }
-    const response = functionCall(args);
+    let response;
+    if (argsSchema) {
+      response = functionCall(args);
+    } else {
+      response = functionCall();
+    }
 
     return {
       response: response,
