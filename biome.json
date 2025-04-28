@@ -1,0 +1,14 @@
+{
+  "files": {
+    "include": ["src"]
+  },
+  "formatter": {
+    "indentStyle": "space"
+  },
+  "linter": {
+    "rules": {
+      "recommended": true,
+      "noForEach": "off"
+    }
+  }
+}
