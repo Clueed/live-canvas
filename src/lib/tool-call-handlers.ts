@@ -34,12 +34,8 @@ export function createFunctionCallHandler(editor: PlateEditor) {
 
       args = argsResult.data;
     }
-    let response;
-    if (argsSchema) {
-      response = functionCall(args);
-    } else {
-      response = functionCall();
-    }
+    
+    const response = argsSchema ? functionCall(args) : functionCall();
 
     return {
       response: response,

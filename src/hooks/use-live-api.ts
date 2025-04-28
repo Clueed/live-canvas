@@ -60,10 +60,12 @@ export function useLiveAPI({
           audioStreamerRef.current = new AudioStreamer(audioCtx);
 
           try {
-            await audioStreamerRef.current.addWorklet<any>(
+            await audioStreamerRef.current.addWorklet<(
+              ev: MessageEvent<{ volume: number }>
+            ) => void>(
               "vumeter-out",
               VolMeterWorket,
-              (ev: any) => {
+              (ev) => {
                 setVolume(ev.data.volume);
               },
             );

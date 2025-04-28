@@ -59,7 +59,10 @@ export class AudioRecorder extends EventEmitter {
         })
         .then((audioCtx) => {
           this.audioContext = audioCtx;
-          this.source = this.audioContext.createMediaStreamSource(this.stream!);
+          if (!this.stream) {
+            throw new Error("MediaStream not initialized");
+          }
+          this.source = this.audioContext.createMediaStreamSource(this.stream);
 
           const workletName = "audio-recorder-worklet";
           const src = createWorketFromSrc(workletName, AudioRecordingWorklet);

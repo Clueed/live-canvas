@@ -5,10 +5,10 @@ import { useChatMessages } from "./useChatMessages";
 import { EventEmitter } from "eventemitter3";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-// Mock the MultimodalLiveClient
+type EventHandler = (...args: unknown[]) => void;
 class MockMultimodalLiveClient extends EventEmitter {
-  on: any;
-  off: any;
+  on: (event: string, handler: EventHandler) => this;
+  off: (event: string, handler: EventHandler) => this;
 
   constructor() {
     super();
@@ -31,7 +31,7 @@ describe("useChatMessages", () => {
   it("should initialize with empty messages", () => {
     const { result } = renderHook(() =>
       useChatMessages({
-        client: mockClient as any,
+        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
@@ -43,7 +43,7 @@ describe("useChatMessages", () => {
   it("should register event listeners on mount", () => {
     renderHook(() =>
       useChatMessages({
-        client: mockClient as any,
+        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
@@ -59,7 +59,7 @@ describe("useChatMessages", () => {
   it("should remove event listeners on unmount", () => {
     const { unmount } = renderHook(() =>
       useChatMessages({
-        client: mockClient as any,
+        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
@@ -96,7 +96,7 @@ describe("useChatMessages", () => {
 
     const { result } = renderHook(() =>
       useChatMessages({
-        client: mockClient as any,
+        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
@@ -131,7 +131,7 @@ describe("useChatMessages", () => {
 
     const { result } = renderHook(() =>
       useChatMessages({
-        client: mockClient as any,
+        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
@@ -172,7 +172,7 @@ describe("useChatMessages", () => {
 
     const { result } = renderHook(() =>
       useChatMessages({
-        client: mockClient as any,
+        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
@@ -199,7 +199,7 @@ describe("useChatMessages", () => {
 
     const { result } = renderHook(() =>
       useChatMessages({
-        client: mockClient as any,
+        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
@@ -228,7 +228,7 @@ describe("useChatMessages", () => {
 
     const { result } = renderHook(() =>
       useChatMessages({
-        client: mockClient as any,
+        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
@@ -256,7 +256,7 @@ describe("useChatMessages", () => {
 
     const { result } = renderHook(() =>
       useChatMessages({
-        client: mockClient as any,
+        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
@@ -302,7 +302,7 @@ describe("useChatMessages", () => {
 
     const { result } = renderHook(() =>
       useChatMessages({
-        client: mockClient as any,
+        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
@@ -317,7 +317,7 @@ describe("useChatMessages", () => {
   it("should create a new message after turn completion", () => {
     // Mock turn completion behavior
     let turnCompleteHandler: () => void;
-    mockClient.on.mockImplementation((event: string, handler: any) => {
+    mockClient.on.mockImplementation((event: string, handler: (...args: unknown[]) => void) => {
       if (event === "turncomplete") {
         turnCompleteHandler = handler;
       }
@@ -342,7 +342,7 @@ describe("useChatMessages", () => {
 
     const { result, rerender } = renderHook(() =>
       useChatMessages({
-        client: mockClient as any,
+        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
@@ -442,7 +442,7 @@ describe("useChatMessages", () => {
 
     const { result } = renderHook(() =>
       useChatMessages({
-        client: mockClient as any,
+        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),

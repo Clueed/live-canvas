@@ -43,7 +43,8 @@ export function ChatPanel({ className = "" }: ChatPanelProps) {
   const chatRef = useRef<HTMLDivElement>(null);
 
   // Scroll to bottom when messages update
-  useEffect(() => {
+  // // biome-ignore lint/correctness/useExhaustiveDependencies: deps for events
+    useEffect(() => {
     if (chatRef.current) {
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }
