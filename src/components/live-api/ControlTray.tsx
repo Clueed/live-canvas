@@ -3,7 +3,6 @@
 import type React from "react";
 import {
   type ReactNode,
-  type RefObject,
   memo,
   useEffect,
   useRef,
@@ -20,8 +19,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useLiveAPIContext } from "@/contexts/LiveAPIContext";
-// Adjusted path
-import type { UseMediaStreamResult } from "@/hooks/use-media-stream-mux";
 // Adjusted path
 import { AudioRecorder } from "@/lib/audio-recorder";
 // Adjusted path

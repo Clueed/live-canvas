@@ -11,8 +11,7 @@ import {
   getEditorArtifactOperation,
   setEditorArtifactOperation,
 } from "./text-operations";
-import { EditorService } from "./types";
-import { type ZodSchema, ZodTypeDef } from "zod";
+import type { ZodSchema, } from "zod";
 
 export interface FunctionOperation {
   declaration: FunctionDeclaration;

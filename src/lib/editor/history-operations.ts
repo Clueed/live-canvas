@@ -1,5 +1,5 @@
 import type { EditorOperationResult } from "@/hooks/use-tool-call-handler";
-import { FunctionDeclaration, Schema, SchemaType } from "@google/generative-ai";
+import { SchemaType } from "@google/generative-ai";
 import { MarkdownPlugin } from "@udecode/plate-markdown";
 import type { PlateEditor } from "@udecode/plate/react";
 

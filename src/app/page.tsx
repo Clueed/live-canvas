@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 import { LiveCanvasView } from "@/components/app/LiveCanvasView";
 import { LiveAPIProvider } from "@/contexts/LiveAPIContext";
 

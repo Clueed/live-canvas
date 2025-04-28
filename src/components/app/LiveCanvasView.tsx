@@ -1,10 +1,9 @@
 "use client";
 
-import React, {
+import {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 

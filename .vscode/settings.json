@@ -5,7 +5,7 @@
     "typescript.updateImportsOnFileMove.enabled": "always",
     // JSON
     "[json]": {
-        "editor.defaultFormatter": "vscode.json-language-features"
+        "editor.defaultFormatter": "biomejs.biome"
     },
     "[jsonc]": {
         "editor.defaultFormatter": "vscode.json-language-features"
@@ -31,4 +31,7 @@
     ],
     "eslint.format.enable": true,
     "npm.packageManager": "npm",
+    "[typescript]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    },
 }

@@ -1,7 +1,5 @@
 "use client";
 
-import React, { useEffect } from "react";
-
 import { Button } from "@/components/ui/button";
 import { useDraggable } from "@/lib/hooks/useDraggable";
 import type { PlateEditor } from "@udecode/plate/react";

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { Editor, EditorContainer } from "@/components/plate-ui/editor";
 import { Plate } from "@udecode/plate/react";

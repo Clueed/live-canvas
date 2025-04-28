@@ -1,11 +1,11 @@
-import { EditorOperationResult } from "@/hooks/use-tool-call-handler";
+
 import type { PlateEditor } from "@udecode/plate/react";
 
 import {
   getSelectionOperation,
   setSelectionOperation,
 } from "./selection-operations";
-import { type BaseRange, Editor, Node, Path, Point, Text } from "slate";
+import { type BaseRange, Node, Text } from "slate";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Define a minimal mock node type for test purposes

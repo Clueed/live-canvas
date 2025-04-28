@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Logger, type LoggerFilterType } from "@/components/logger/Logger";
 import { Button } from "@/components/ui/button";

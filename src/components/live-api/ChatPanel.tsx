@@ -7,7 +7,7 @@ import { useChatMessages } from "@/hooks/useChatMessages";
 import { useLoggerStore } from "@/lib/store-logger";
 import { cn } from "@/lib/utils";
 
-import { AudioLinesIcon, BotIcon, MicIcon, UserIcon } from "lucide-react";
+import { AudioLinesIcon, BotIcon, UserIcon } from "lucide-react";
 
 interface ChatMessage {
   role: "user" | "assistant";

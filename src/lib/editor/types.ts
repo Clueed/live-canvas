@@ -1,7 +1,4 @@
 import type { EditorOperationResult } from "@/hooks/use-tool-call-handler";
-import { PlateEditor } from "@udecode/plate/react";
-
-import { BaseRange, Editor, Node, Path, Point, Text } from "slate";
 
 /**
  * Represents a human-readable selection in the editor

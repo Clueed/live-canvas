@@ -1,51 +1,22 @@
 "use client";
-
-import { copilotPlugins } from "@/components/editor/plugins/copilot-plugins";
 import { editorPlugins } from "@/components/editor/plugins/editor-plugins";
 import { FixedToolbarPlugin } from "@/components/editor/plugins/fixed-toolbar-plugin";
-import { FloatingToolbarPlugin } from "@/components/editor/plugins/floating-toolbar-plugin";
-import { AILeaf } from "@/components/plate-ui/ai-leaf";
 import { BlockquoteElement } from "@/components/plate-ui/blockquote-element";
 import { CodeBlockElement } from "@/components/plate-ui/code-block-element";
 import { CodeLeaf } from "@/components/plate-ui/code-leaf";
 import { CodeLineElement } from "@/components/plate-ui/code-line-element";
 import { CodeSyntaxLeaf } from "@/components/plate-ui/code-syntax-leaf";
 import { ColumnElement } from "@/components/plate-ui/column-element";
-import { ColumnGroupElement } from "@/components/plate-ui/column-group-element";
 import { CommentLeaf } from "@/components/plate-ui/comment-leaf";
-import { DateElement } from "@/components/plate-ui/date-element";
-import { EmojiInputElement } from "@/components/plate-ui/emoji-input-element";
-import { EquationElement } from "@/components/plate-ui/equation-element";
-import { ExcalidrawElement } from "@/components/plate-ui/excalidraw-element";
 import { HeadingElement } from "@/components/plate-ui/heading-element";
 import { HighlightLeaf } from "@/components/plate-ui/highlight-leaf";
 import { HrElement } from "@/components/plate-ui/hr-element";
-import { ImageElement } from "@/components/plate-ui/image-element";
-import { InlineEquationElement } from "@/components/plate-ui/inline-equation-element";
-import { KbdLeaf } from "@/components/plate-ui/kbd-leaf";
-import { LinkElement } from "@/components/plate-ui/link-element";
-import { MediaAudioElement } from "@/components/plate-ui/media-audio-element";
-import { MediaEmbedElement } from "@/components/plate-ui/media-embed-element";
-import { MediaFileElement } from "@/components/plate-ui/media-file-element";
 import { MediaPlaceholderElement } from "@/components/plate-ui/media-placeholder-element";
-import { MediaVideoElement } from "@/components/plate-ui/media-video-element";
-import { MentionElement } from "@/components/plate-ui/mention-element";
-import { MentionInputElement } from "@/components/plate-ui/mention-input-element";
 import { ParagraphElement } from "@/components/plate-ui/paragraph-element";
 import { withPlaceholders } from "@/components/plate-ui/placeholder";
-import { SlashInputElement } from "@/components/plate-ui/slash-input-element";
 import { SuggestionLeaf } from "@/components/plate-ui/suggestion-leaf";
-import {
-  TableCellElement,
-  TableCellHeaderElement,
-} from "@/components/plate-ui/table-cell-element";
-import { TableElement } from "@/components/plate-ui/table-element";
-import { TableRowElement } from "@/components/plate-ui/table-row-element";
-import { TocElement } from "@/components/plate-ui/toc-element";
-import { ToggleElement } from "@/components/plate-ui/toggle-element";
 import { withProps } from "@udecode/cn";
 import type { Value } from "@udecode/plate";
-import { AIPlugin } from "@udecode/plate-ai/react";
 import {
   BoldPlugin,
   CodePlugin,
@@ -62,41 +33,14 @@ import {
   CodeSyntaxPlugin,
 } from "@udecode/plate-code-block/react";
 import { CommentsPlugin } from "@udecode/plate-comments/react";
-import { DatePlugin } from "@udecode/plate-date/react";
-import { EmojiInputPlugin } from "@udecode/plate-emoji/react";
-import { ExcalidrawPlugin } from "@udecode/plate-excalidraw/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
-import { TocPlugin } from "@udecode/plate-heading/react";
 import { HighlightPlugin } from "@udecode/plate-highlight/react";
 import { HorizontalRulePlugin } from "@udecode/plate-horizontal-rule/react";
-import { KbdPlugin } from "@udecode/plate-kbd/react";
-import { ColumnItemPlugin, ColumnPlugin } from "@udecode/plate-layout/react";
-import { LinkPlugin } from "@udecode/plate-link/react";
+import { ColumnItemPlugin, } from "@udecode/plate-layout/react";
 import {
-  EquationPlugin,
-  InlineEquationPlugin,
-} from "@udecode/plate-math/react";
-import {
-  AudioPlugin,
-  FilePlugin,
-  ImagePlugin,
-  MediaEmbedPlugin,
   PlaceholderPlugin,
-  VideoPlugin,
 } from "@udecode/plate-media/react";
-import {
-  MentionInputPlugin,
-  MentionPlugin,
-} from "@udecode/plate-mention/react";
-import { SlashInputPlugin } from "@udecode/plate-slash-command/react";
 import { SuggestionPlugin } from "@udecode/plate-suggestion/react";
-import {
-  TableCellHeaderPlugin,
-  TableCellPlugin,
-  TablePlugin,
-  TableRowPlugin,
-} from "@udecode/plate-table/react";
-import { TogglePlugin } from "@udecode/plate-toggle/react";
 import {
   type CreatePlateEditorOptions,
   ParagraphPlugin,

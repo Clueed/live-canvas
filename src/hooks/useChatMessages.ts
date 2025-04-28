@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, } from "react";
 
 import type { MultimodalLiveClient } from "@/lib/multimodal-live-client";
 import type { StreamingLog } from "@/types/multimodal-live-types";

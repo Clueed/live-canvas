@@ -1,4 +1,4 @@
-import { EditorOperationResult } from "@/hooks/use-tool-call-handler";
+
 import { TOOL_CALL_FUNCTIONS } from "@/lib/editor";
 import type { LiveFunctionCall } from "@/types/multimodal-live-types";
 import type { PlateEditor } from "@udecode/plate/react";
