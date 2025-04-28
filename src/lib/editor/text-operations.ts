@@ -1,14 +1,13 @@
 import { type Schema, SchemaType } from "@google/generative-ai";
 import { MarkdownPlugin } from "@udecode/plate-markdown";
 import type { PlateEditor } from "@udecode/plate/react";
-
-import type { FunctionOperation } from ".";
 import { z } from "zod";
+import { defineAiFunction } from "./helpers";
 
 /**
  * Operation for retrieving the current editor artifact content
  */
-export const getEditorArtifactOperation = {
+export const getEditorArtifactOperation = defineAiFunction({
   declaration: {
     name: "get_editor_artifact",
     description: `
@@ -16,36 +15,18 @@ Fetches the current text of the artifact in the editor, including any Markdown s
 Use this to read or reference what's already displayed before deciding edits.
 Returns a single string with the full artifact content (Markdown intact)
 `.trim(),
-    parameters: {
-      type: SchemaType.OBJECT,
-      properties: {},
-      required: [],
-    },
   },
-
-  /**
-   * Creates a function to retrieve the editor content as Markdown
-   * @param editor PlateEditor instance
-   * @returns Function that returns the editor content as a Markdown string
-   */
-  create: (editor: PlateEditor) =>
-    function getEditorArtifact() {
-      return {
-        success: true,
+  create: (editor: PlateEditor) => () => {
+    return {
+      success: true,
+      response: {
         artifact: editor.getApi(MarkdownPlugin).markdown.serialize(),
-      };
-    },
-};
-
-/**
- * Operation for setting the editor artifact content
- */
-const setEditorArtifactParamsSchema = z.object({
-  text: z.string(),
+      },
+    };
+  },
 });
 
-export const setEditorArtifactOperation = {
-  paramsSchema: setEditorArtifactParamsSchema,
+export const setEditorArtifactOperation = defineAiFunction({
   declaration: {
     name: "set_editor_artifact",
     description: `
@@ -64,23 +45,17 @@ Does *not* merge with existing text; always supplies a full artifact string.
       required: ["text"],
     },
   },
-  /**
-   * Creates a function to update the editor content with new Markdown text
-   * @param editor PlateEditor instance
-   * @returns Function that updates the editor with new Markdown content, validating input first.
-   */
-  create: (editor: PlateEditor) =>
-    function setEditorArtifact(
-      args: z.infer<typeof setEditorArtifactParamsSchema>,
-    ) {
-      const newMarkdown = editor
-        .getApi(MarkdownPlugin)
-        .markdown.deserialize(args.text);
-      if (!newMarkdown) {
-        return { success: false, error: "Failed to deserialize markdown" };
-      }
-      editor.tf.setValue(newMarkdown);
-
-      return { success: true };
-    },
-} as const satisfies FunctionOperation;
+  paramsSchema: z.object({
+    text: z.string(),
+  }),
+  create: (editor: PlateEditor) => (args) => {
+    const newMarkdown = editor
+      .getApi(MarkdownPlugin)
+      .markdown.deserialize(args.text);
+    if (!newMarkdown) {
+      return { success: false, error: "Failed to deserialize markdown" };
+    }
+    editor.tf.setValue(newMarkdown);
+    return { success: true };
+  },
+});

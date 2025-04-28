@@ -4,10 +4,10 @@
     "git.autofetch": true,
     "git.enableSmartCommit": true,
     "editor.defaultFormatter": "biomejs.biome",
-    "editor.formatOnSave": false,
+    "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
         "source.fixAll": "explicit",
-        "source.organizeImports": "never"
+        "source.organizeImports": "always"
     },
     "npm.packageManager": "npm",
     "[typescript]": {

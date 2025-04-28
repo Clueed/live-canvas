@@ -5,12 +5,6 @@ import { createFunctionCallHandler } from "@/lib/tool-call-handlers";
 import type { ToolCall } from "@/types/multimodal-live-types";
 import type { PlateEditor } from "@udecode/plate/react";
 
-export interface EditorOperationResult<T = string> {
-  success: boolean;
-  error?: string;
-  content?: T;
-}
-
 interface UseToolCallHandlerProps {
   client: MultimodalLiveClient;
   editor: PlateEditor;

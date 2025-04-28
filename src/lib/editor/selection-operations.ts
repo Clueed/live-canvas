@@ -1,12 +1,6 @@
-import type { EditorOperationResult } from "@/hooks/use-tool-call-handler";
-import {
-  type FunctionDeclaration,
-  type Schema,
-  SchemaType,
-} from "@google/generative-ai";
+import { type Schema, SchemaType } from "@google/generative-ai";
 import type { PlateEditor } from "@udecode/plate/react";
 
-import type { ReadableSelection } from "./types";
 import {
   type BaseRange,
   type Editor,
@@ -16,67 +10,45 @@ import {
   Text,
 } from "slate";
 import { z } from "zod";
+import { defineAiFunction } from "./helpers";
 
 /**
  * Get editor selection operation
  */
-export const getSelectionOperation = {
+export const getSelectionOperation = defineAiFunction({
   declaration: {
     name: "get_editor_selection",
     description: `
 Retrieves the visual selection in the editor. Use to communicate with the user about intent.
-Returns a selection object with the following properties:
-- startParagraphIndex: The paragraph index at the start of the selection
-- endParagraphIndex: The paragraph index at the end of the selection
-- selectedText: The actual text content that is selected
 `.trim(),
-    parameters: {
-      type: SchemaType.OBJECT,
-      properties: {},
-      required: [],
-    },
   },
-
-  /**
-   * Creates get selection operation function for the editor
-   * @param editor PlateEditor instance
-   * @returns Function to get the current selection
-   */
-  create: (editor: PlateEditor) => {
-    /**
-     * Gets the current selection in a human-readable format
-     * @returns An operation result containing the selection on success, or an error message on failure
-     */
-    return function getReadableSelection(): EditorOperationResult & {
-      selection?: ReadableSelection;
-    } {
-      const selection = editor.selection;
-      if (!selection) {
-        return { success: false, error: "No selection exists in the editor" };
-      }
-
-      try {
-        const { startParagraphIndex, endParagraphIndex, selectedText } =
-          getSelectionText(editor as unknown as Editor, selection);
-
-        return {
-          success: true,
-          selection: { startParagraphIndex, endParagraphIndex, selectedText },
-        };
-      } catch (error) {
-        return {
-          success: false,
-          error: `Error creating readable selection: ${error}`,
-        };
-      }
-    };
+  create: (editor: PlateEditor) => () => {
+    const selection = editor.selection;
+    if (!selection) {
+      return { success: false, error: "No selection exists in the editor" };
+    }
+    try {
+      const { startParagraphIndex, endParagraphIndex, selectedText } =
+        getSelectionText(editor as unknown as Editor, selection);
+      return {
+        success: true,
+        startParagraphIndex,
+        endParagraphIndex,
+        selectedText,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: `Error creating readable selection: ${error}`,
+      };
+    }
   },
-};
+});
 
 /**
  * Set editor selection operation
  */
-export const setSelectionOperation = {
+export const setSelectionOperation = defineAiFunction({
   declaration: {
     name: "set_editor_selection",
     description: `
@@ -103,40 +75,21 @@ Specify the visual selection in the editor. Use to communicate with the user abo
       },
       required: ["startParagraphIndex", "endParagraphIndex", "selectedText"],
     },
-  } satisfies FunctionDeclaration,
-
+  },
   paramsSchema: z.object({
     startParagraphIndex: z.number(),
     endParagraphIndex: z.number(),
     selectedText: z.string().min(1),
   }),
-  /**
-   * Creates set selection operation function for the editor
-   * @param editor PlateEditor instance
-   * @returns Function to set the editor selection
-   */
-  create: (editor: PlateEditor) => {
-    /**
-     * Sets the selection in the editor to span the given paragraph indices
-     * @param startParagraphIndex - The 0-based index of the starting paragraph
-     * @param endParagraphIndex - The 0-based index of the ending paragraph
-     * @param selectedText - The exact text content to select within the range
-     * @returns An operation result indicating success or failure
-     */
-    return function setSelection(
-      startParagraphIndex: number,
-      endParagraphIndex: number,
-      selectedText: string,
-    ): EditorOperationResult {
+  create:
+    (editor: PlateEditor) =>
+    ({ startParagraphIndex, endParagraphIndex, selectedText }) => {
       if (!selectedText || selectedText.trim() === "") {
         return { success: false, error: "selectedText cannot be empty." };
       }
-
       try {
-        const editorNode = editor as unknown as Editor; // Cast for Node operations
+        const editorNode = editor as unknown as Editor;
         const maxIndex = editorNode.children.length - 1;
-
-        // Validate indices
         if (
           startParagraphIndex < 0 ||
           startParagraphIndex > maxIndex ||
@@ -149,7 +102,6 @@ Specify the visual selection in the editor. Use to communicate with the user abo
             error: `Invalid paragraph indices provided: start=${startParagraphIndex}, end=${endParagraphIndex}. Max index: ${maxIndex}`,
           };
         }
-
         const texts = getParagraphTexts(
           editorNode,
           startParagraphIndex,
@@ -173,16 +125,13 @@ Specify the visual selection in the editor. Use to communicate with the user abo
           found.end.offset,
         );
         const selectionRange: BaseRange = { anchor, focus };
-
         editor.tf.select(selectionRange);
-
         return { success: true };
       } catch (error) {
         return { success: false, error: `Error setting selection: ${error}` };
       }
-    };
-  },
-};
+    },
+});
 
 function getParagraphNodes(editor: Editor, start: number, end: number): Node[] {
   const nodes: Node[] = [];
@@ -270,4 +219,13 @@ function getSelectionText(editor: Editor, selection: BaseRange) {
     endParagraphIndex,
     selectedText: combineParagraphTexts(texts),
   };
+}
+
+export interface ReadableSelection {
+  /** The paragraph index at the selection start */
+  startParagraphIndex: number;
+  /** The paragraph index at the selection end */
+  endParagraphIndex: number;
+  /** The selected text content */
+  selectedText: string;
 }

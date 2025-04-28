@@ -1,4 +1,3 @@
-
 import { TOOL_CALL_FUNCTIONS } from "@/lib/editor";
 import type { LiveFunctionCall } from "@/types/multimodal-live-types";
 import type { PlateEditor } from "@udecode/plate/react";
@@ -20,22 +19,16 @@ export function createFunctionCallHandler(editor: PlateEditor) {
 
     const functionCall = functionDeclaration.create(editor);
 
-    let args = undefined;
     const argsSchema = functionDeclaration.paramsSchema;
-    if (argsSchema) {
-      const argsResult = argsSchema.safeParse(fc.args);
-
-      if (!argsResult.success) {
-        return {
-          response: { success: false, error: argsResult.error.message },
-          id: fc.id,
-        };
-      }
-
-      args = argsResult.data;
+    const argsResult = argsSchema.safeParse(fc.args);
+    if (!argsResult.success) {
+      return {
+        response: { success: false, error: argsResult.error.message },
+        id: fc.id,
+      };
     }
-    
-    const response = argsSchema ? functionCall(args) : functionCall();
+
+    const response = functionCall(argsResult.data);
 
     return {
       response: response,
