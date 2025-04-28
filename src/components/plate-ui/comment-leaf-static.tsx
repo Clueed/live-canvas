@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
-import type { SlateLeafProps } from '@udecode/plate';
-import type { TCommentText } from '@udecode/plate-comments';
+import type { SlateLeafProps } from "@udecode/plate";
+import type { TCommentText } from "@udecode/plate-comments";
 
-import { cn } from '@udecode/cn';
-import { SlateLeaf } from '@udecode/plate';
+import { cn } from "@udecode/cn";
+import { SlateLeaf } from "@udecode/plate";
 
 export function CommentLeafStatic({
   children,
@@ -15,11 +15,11 @@ export function CommentLeafStatic({
     <SlateLeaf
       className={cn(
         className,
-        'border-b-2 border-b-highlight/35 bg-highlight/15'
+        "border-b-2 border-b-highlight/35 bg-highlight/15",
       )}
       {...props}
     >
-      <>{children}</>
+      {children}
     </SlateLeaf>
   );
 }

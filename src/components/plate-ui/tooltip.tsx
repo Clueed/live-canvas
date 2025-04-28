@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
-import * as TooltipPrimitive from '@radix-ui/react-tooltip';
-import { withCn, withProps } from '@udecode/cn';
+import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+import { withCn, withProps } from "@udecode/cn";
 
-import { Button } from './button';
+import { Button } from "./button";
 
 export const TooltipProvider = withProps(TooltipPrimitive.Provider, {
   delayDuration: 0,
@@ -23,7 +23,7 @@ export const TooltipContent = withCn(
   withProps(TooltipPrimitive.Content, {
     sideOffset: 4,
   }),
-  'z-50 overflow-hidden rounded-md bg-black px-3 py-1.5 text-sm font-semibold text-white shadow-md'
+  "z-50 overflow-hidden rounded-md bg-black px-3 py-1.5 text-sm font-semibold text-white shadow-md",
 );
 
 type TooltipProps<T extends React.ElementType> = {
@@ -33,11 +33,11 @@ type TooltipProps<T extends React.ElementType> = {
   tooltip?: React.ReactNode;
   tooltipContentProps?: Omit<
     React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>,
-    'children'
+    "children"
   >;
   tooltipProps?: Omit<
     React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Root>,
-    'children'
+    "children"
   >;
   tooltipTriggerProps?: React.ComponentPropsWithoutRef<
     typeof TooltipPrimitive.Trigger

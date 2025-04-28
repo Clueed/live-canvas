@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { createContext, FC, ReactNode, useContext } from "react";
-import { useLiveAPI, UseLiveAPIResults } from "../hooks/use-live-api";
+import { createContext, type FC, type ReactNode, useContext } from "react";
+import { useLiveAPI, type UseLiveAPIResults } from "../hooks/use-live-api";
 
 // Define the context type
 export type LiveAPIContextType = UseLiveAPIResults;
@@ -49,6 +49,6 @@ export const useLiveAPIContext = () => {
   if (!context) {
     throw new Error("useLiveAPIContext must be used wihin a LiveAPIProvider");
   }
-  
-return context;
+
+  return context;
 };

@@ -1,16 +1,16 @@
-'use client';
-import React, { useRef } from 'react';
+"use client";
+import React, { useRef } from "react";
 
-import type { TSuggestionData } from '@udecode/plate-suggestion';
+import type { TSuggestionData } from "@udecode/plate-suggestion";
 
-import { cn } from '@udecode/cn';
-import { type RenderNodeWrapper, usePluginOption } from '@udecode/plate/react';
-import { CornerDownLeftIcon } from 'lucide-react';
+import { cn } from "@udecode/cn";
+import { type RenderNodeWrapper, usePluginOption } from "@udecode/plate/react";
+import { CornerDownLeftIcon } from "lucide-react";
 
 import {
   type SuggestionConfig,
   suggestionPlugin,
-} from '@/components/editor/plugins/suggestion-plugin';
+} from "@/components/editor/plugins/suggestion-plugin";
 
 export const SuggestionBelowNodes: RenderNodeWrapper<SuggestionConfig> = ({
   api,
@@ -38,11 +38,11 @@ function SuggestionLineBreak({
   suggestionData: TSuggestionData;
 }) {
   const { type } = suggestionData;
-  const isRemove = type === 'remove';
-  const isInsert = type === 'insert';
+  const isRemove = type === "remove";
+  const isInsert = type === "insert";
 
-  const activeSuggestionId = usePluginOption(suggestionPlugin, 'activeId');
-  const hoverSuggestionId = usePluginOption(suggestionPlugin, 'hoverId');
+  const activeSuggestionId = usePluginOption(suggestionPlugin, "activeId");
+  const hoverSuggestionId = usePluginOption(suggestionPlugin, "hoverId");
 
   const isActive = activeSuggestionId === suggestionData.id;
   const isHover = hoverSuggestionId === suggestionData.id;
@@ -53,15 +53,15 @@ function SuggestionLineBreak({
     <span
       ref={spanRef}
       className={cn(
-        'absolute border-b-2 border-b-brand/[.24] bg-brand/[.08] text-justify text-brand/80 no-underline transition-colors duration-200',
+        "absolute border-b-2 border-b-brand/[.24] bg-brand/[.08] text-justify text-brand/80 no-underline transition-colors duration-200",
         isInsert &&
           (isActive || isHover) &&
-          'border-b-brand/[.60] bg-brand/[.13]',
+          "border-b-brand/[.60] bg-brand/[.13]",
         isRemove &&
-          'border-b-gray-300 bg-gray-300/25 text-gray-400 line-through',
+          "border-b-gray-300 bg-gray-300/25 text-gray-400 line-through",
         isRemove &&
           (isActive || isHover) &&
-          'border-b-gray-500 bg-gray-400/25 text-gray-500 no-underline'
+          "border-b-gray-500 bg-gray-400/25 text-gray-500 no-underline",
       )}
       style={{
         bottom: 4.5,

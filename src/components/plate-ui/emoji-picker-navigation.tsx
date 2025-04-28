@@ -1,21 +1,21 @@
-import type { EmojiCategoryList } from '@udecode/plate-emoji';
-import type { UseEmojiPickerType } from '@udecode/plate-emoji/react';
+import type { EmojiCategoryList } from "@udecode/plate-emoji";
+import type { UseEmojiPickerType } from "@udecode/plate-emoji/react";
 
-import { cn } from '@udecode/cn';
+import { cn } from "@udecode/cn";
 
-import { Button } from './button';
+import { Button } from "./button";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from './tooltip';
+} from "./tooltip";
 
 export type EmojiPickerNavigationProps = {
   onClick: (id: EmojiCategoryList) => void;
 } & Pick<
   UseEmojiPickerType,
-  'emojiLibrary' | 'focusedCategory' | 'i18n' | 'icons'
+  "emojiLibrary" | "focusedCategory" | "i18n" | "icons"
 >;
 
 // KEEP: This is for the animated idicator bar under the icon - Opt in if needed
@@ -66,9 +66,9 @@ export function EmojiPickerNavigation({
                     size="sm"
                     variant="ghost"
                     className={cn(
-                      'h-fit rounded-full fill-current p-1.5 text-muted-foreground hover:bg-muted hover:text-muted-foreground',
+                      "h-fit rounded-full fill-current p-1.5 text-muted-foreground hover:bg-muted hover:text-muted-foreground",
                       id === focusedCategory &&
-                        'pointer-events-none bg-accent fill-current text-accent-foreground'
+                        "pointer-events-none bg-accent fill-current text-accent-foreground",
                     )}
                     onClick={() => {
                       onClick(id);

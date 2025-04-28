@@ -15,7 +15,7 @@
  */
 
 import { useState, useEffect } from "react";
-import { UseMediaStreamResult } from "./use-media-stream-mux";
+import type { UseMediaStreamResult } from "./use-media-stream-mux";
 
 export function useWebcam(): UseMediaStreamResult {
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -30,8 +30,8 @@ export function useWebcam(): UseMediaStreamResult {
       stream
         .getTracks()
         .forEach((track) => track.addEventListener("ended", handleStreamEnded));
-      
-return () => {
+
+      return () => {
         stream
           .getTracks()
           .forEach((track) =>
@@ -47,8 +47,8 @@ return () => {
     });
     setStream(mediaStream);
     setIsStreaming(true);
-    
-return mediaStream;
+
+    return mediaStream;
   };
 
   const stop = () => {

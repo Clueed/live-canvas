@@ -1,18 +1,20 @@
-import { EditorOperationResult } from '@/hooks/use-tool-call-handler';
-import { TOOL_CALL_FUNCTIONS } from '@/lib/editor';
-import { LiveFunctionCall } from '@/types/multimodal-live-types';
-import { PlateEditor } from '@udecode/plate/react';
+import { EditorOperationResult } from "@/hooks/use-tool-call-handler";
+import { TOOL_CALL_FUNCTIONS } from "@/lib/editor";
+import type { LiveFunctionCall } from "@/types/multimodal-live-types";
+import type { PlateEditor } from "@udecode/plate/react";
 
 export function createFunctionCallHandler(editor: PlateEditor) {
   return (fc: LiveFunctionCall) => {
-    const functionDeclaration = TOOL_CALL_FUNCTIONS.find((f) => f.declaration.name === fc.name);
+    const functionDeclaration = TOOL_CALL_FUNCTIONS.find(
+      (f) => f.declaration.name === fc.name,
+    );
 
     if (!functionDeclaration) {
       console.warn(`Unknown function call: ${fc.name}`);
 
       return {
-        response: { success: false, error: 'Unknown function call' },
-        id: fc.id
+        response: { success: false, error: "Unknown function call" },
+        id: fc.id,
       };
     }
 
@@ -26,7 +28,7 @@ export function createFunctionCallHandler(editor: PlateEditor) {
       if (!argsResult.success) {
         return {
           response: { success: false, error: argsResult.error.message },
-          id: fc.id
+          id: fc.id,
         };
       }
 
@@ -41,7 +43,7 @@ export function createFunctionCallHandler(editor: PlateEditor) {
 
     return {
       response: response,
-      id: fc.id
+      id: fc.id,
     };
   };
 }

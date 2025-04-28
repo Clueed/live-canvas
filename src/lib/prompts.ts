@@ -16,4 +16,3 @@ Best practices:
 - Tailor the level of structure—such as headings, sub-headings, and horizontal lines—to the length of the text: short snippets (up to one page) do not require headings unless explicitly requested; longer documents should leverage headings, sub-headings, and other layout elements for clarity and navigation.
 - For long explanations that appear unstructured or brainstorming-like, format each logical topic as a bullet point, facilitating easy rearrangement later.
 `.trim();
-

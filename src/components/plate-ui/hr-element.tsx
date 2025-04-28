@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
-import { cn, withRef } from '@udecode/cn';
+import { cn, withRef } from "@udecode/cn";
 import {
   PlateElement,
   useFocused,
   useReadOnly,
   useSelected,
-} from '@udecode/plate/react';
+} from "@udecode/plate/react";
 
 export const HrElement = withRef<typeof PlateElement>(
   ({ className, nodeProps, ...props }, ref) => {
@@ -24,14 +24,14 @@ export const HrElement = withRef<typeof PlateElement>(
           <hr
             {...nodeProps}
             className={cn(
-              'h-0.5 rounded-sm border-none bg-muted bg-clip-content',
-              selected && focused && 'ring-2 ring-ring ring-offset-2',
-              !readOnly && 'cursor-pointer'
+              "h-0.5 rounded-sm border-none bg-muted bg-clip-content",
+              selected && focused && "ring-2 ring-ring ring-offset-2",
+              !readOnly && "cursor-pointer",
             )}
           />
         </div>
         {children}
       </PlateElement>
     );
-  }
+  },
 );

@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
-import { cn, withRef } from '@udecode/cn';
-import { useMediaState } from '@udecode/plate-media/react';
-import { ResizableProvider } from '@udecode/plate-resizable';
-import { PlateElement, useReadOnly, withHOC } from '@udecode/plate/react';
-import { FileUp } from 'lucide-react';
+import { cn, withRef } from "@udecode/cn";
+import { useMediaState } from "@udecode/plate-media/react";
+import { ResizableProvider } from "@udecode/plate-resizable";
+import { PlateElement, useReadOnly, withHOC } from "@udecode/plate/react";
+import { FileUp } from "lucide-react";
 
-import { Caption, CaptionTextarea } from './caption';
+import { Caption, CaptionTextarea } from "./caption";
 
 export const MediaFileElement = withHOC(
   ResizableProvider,
@@ -21,7 +21,7 @@ export const MediaFileElement = withHOC(
       return (
         <PlateElement
           ref={ref}
-          className={cn(className, 'my-px rounded-sm')}
+          className={cn(className, "my-px rounded-sm")}
           {...props}
         >
           <a
@@ -53,6 +53,6 @@ export const MediaFileElement = withHOC(
           {children}
         </PlateElement>
       );
-    }
-  )
+    },
+  ),
 );

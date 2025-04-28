@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
-import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
-import { SuggestionPlugin } from '@udecode/plate-suggestion/react';
+import { SuggestionPlugin } from "@udecode/plate-suggestion/react";
 import {
   useEditorRef,
   usePlateState,
   usePluginOption,
-} from '@udecode/plate/react';
-import { Eye, Pen, PencilLineIcon } from 'lucide-react';
+} from "@udecode/plate/react";
+import { Eye, Pen, PencilLineIcon } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -19,21 +19,21 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
   useOpenState,
-} from './dropdown-menu';
-import { ToolbarButton } from './toolbar';
+} from "./dropdown-menu";
+import { ToolbarButton } from "./toolbar";
 
 export function ModeDropdownMenu(props: DropdownMenuProps) {
   const editor = useEditorRef();
-  const [readOnly, setReadOnly] = usePlateState('readOnly');
+  const [readOnly, setReadOnly] = usePlateState("readOnly");
   const openState = useOpenState();
 
-  const isSuggesting = usePluginOption(SuggestionPlugin, 'isSuggesting');
+  const isSuggesting = usePluginOption(SuggestionPlugin, "isSuggesting");
 
-  let value = 'editing';
+  let value = "editing";
 
-  if (readOnly) value = 'viewing';
+  if (readOnly) value = "viewing";
 
-  if (isSuggesting) value = 'suggestion';
+  if (isSuggesting) value = "suggestion";
 
   const item: any = {
     editing: (
@@ -72,23 +72,21 @@ export function ModeDropdownMenu(props: DropdownMenuProps) {
         <DropdownMenuRadioGroup
           value={value}
           onValueChange={(newValue) => {
-            if (newValue === 'viewing') {
+            if (newValue === "viewing") {
               setReadOnly(true);
 
               return;
-            } else {
-              setReadOnly(false);
             }
+            setReadOnly(false);
 
-            if (newValue === 'suggestion') {
-              editor.setOption(SuggestionPlugin, 'isSuggesting', true);
+            if (newValue === "suggestion") {
+              editor.setOption(SuggestionPlugin, "isSuggesting", true);
 
               return;
-            } else {
-              editor.setOption(SuggestionPlugin, 'isSuggesting', false);
             }
+            editor.setOption(SuggestionPlugin, "isSuggesting", false);
 
-            if (newValue === 'editing') {
+            if (newValue === "editing") {
               editor.tf.focus();
 
               return;

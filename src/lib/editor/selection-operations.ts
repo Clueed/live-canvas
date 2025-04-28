@@ -1,17 +1,28 @@
-import { EditorOperationResult } from '@/hooks/use-tool-call-handler';
-import { FunctionDeclaration, Schema, SchemaType } from '@google/generative-ai';
-import { PlateEditor } from '@udecode/plate/react';
+import type { EditorOperationResult } from "@/hooks/use-tool-call-handler";
+import {
+  type FunctionDeclaration,
+  type Schema,
+  SchemaType,
+} from "@google/generative-ai";
+import type { PlateEditor } from "@udecode/plate/react";
 
-import { ReadableSelection } from './types';
-import { BaseRange, Editor, Node, Path, Point, Text } from 'slate';
-import { z } from 'zod';
+import type { ReadableSelection } from "./types";
+import {
+  type BaseRange,
+  type Editor,
+  Node,
+  type Path,
+  type Point,
+  Text,
+} from "slate";
+import { z } from "zod";
 
 /**
  * Get editor selection operation
  */
 export const getSelectionOperation = {
   declaration: {
-    name: 'get_editor_selection',
+    name: "get_editor_selection",
     description: `
 Retrieves the visual selection in the editor. Use to communicate with the user about intent.
 Returns a selection object with the following properties:
@@ -22,8 +33,8 @@ Returns a selection object with the following properties:
     parameters: {
       type: SchemaType.OBJECT,
       properties: {},
-      required: []
-    }
+      required: [],
+    },
   },
 
   /**
@@ -31,32 +42,35 @@ Returns a selection object with the following properties:
    * @param editor PlateEditor instance
    * @returns Function to get the current selection
    */
-  create: function (editor: PlateEditor) {
+  create: (editor: PlateEditor) => {
     /**
      * Gets the current selection in a human-readable format
      * @returns An operation result containing the selection on success, or an error message on failure
      */
-    return function getReadableSelection(): EditorOperationResult & { selection?: ReadableSelection } {
+    return function getReadableSelection(): EditorOperationResult & {
+      selection?: ReadableSelection;
+    } {
       const selection = editor.selection;
       if (!selection) {
-        return { success: false, error: 'No selection exists in the editor' };
+        return { success: false, error: "No selection exists in the editor" };
       }
 
       try {
-        const { startParagraphIndex, endParagraphIndex, selectedText } = getSelectionText(
-          editor as unknown as Editor,
-          selection
-        );
+        const { startParagraphIndex, endParagraphIndex, selectedText } =
+          getSelectionText(editor as unknown as Editor, selection);
 
         return {
           success: true,
-          selection: { startParagraphIndex, endParagraphIndex, selectedText }
+          selection: { startParagraphIndex, endParagraphIndex, selectedText },
         };
       } catch (error) {
-        return { success: false, error: `Error creating readable selection: ${error}` };
+        return {
+          success: false,
+          error: `Error creating readable selection: ${error}`,
+        };
       }
     };
-  }
+  },
 };
 
 /**
@@ -64,7 +78,7 @@ Returns a selection object with the following properties:
  */
 export const setSelectionOperation = {
   declaration: {
-    name: 'set_editor_selection',
+    name: "set_editor_selection",
     description: `
 Specify the visual selection in the editor. Use to communicate with the user about intent.
 `.trim(),
@@ -73,32 +87,35 @@ Specify the visual selection in the editor. Use to communicate with the user abo
       properties: {
         startParagraphIndex: {
           type: SchemaType.NUMBER,
-          description: 'The 0-based index of the paragraph where the selection should start.'
+          description:
+            "The 0-based index of the paragraph where the selection should start.",
         } satisfies Schema,
         endParagraphIndex: {
           type: SchemaType.NUMBER,
-          description: 'The 0-based index of the paragraph where the selection should end (inclusive).'
+          description:
+            "The 0-based index of the paragraph where the selection should end (inclusive).",
         } satisfies Schema,
         selectedText: {
           type: SchemaType.STRING,
-          description: 'The exact text content that should be selected within the specified paragraph range.'
-        } satisfies Schema
+          description:
+            "The exact text content that should be selected within the specified paragraph range.",
+        } satisfies Schema,
       },
-      required: ['startParagraphIndex', 'endParagraphIndex', 'selectedText']
-    }
+      required: ["startParagraphIndex", "endParagraphIndex", "selectedText"],
+    },
   } satisfies FunctionDeclaration,
 
   paramsSchema: z.object({
     startParagraphIndex: z.number(),
     endParagraphIndex: z.number(),
-    selectedText: z.string().min(1)
+    selectedText: z.string().min(1),
   }),
   /**
    * Creates set selection operation function for the editor
    * @param editor PlateEditor instance
    * @returns Function to set the editor selection
    */
-  create: function (editor: PlateEditor) {
+  create: (editor: PlateEditor) => {
     /**
      * Sets the selection in the editor to span the given paragraph indices
      * @param startParagraphIndex - The 0-based index of the starting paragraph
@@ -109,10 +126,10 @@ Specify the visual selection in the editor. Use to communicate with the user abo
     return function setSelection(
       startParagraphIndex: number,
       endParagraphIndex: number,
-      selectedText: string
+      selectedText: string,
     ): EditorOperationResult {
-      if (!selectedText || selectedText.trim() === '') {
-        return { success: false, error: 'selectedText cannot be empty.' };
+      if (!selectedText || selectedText.trim() === "") {
+        return { success: false, error: "selectedText cannot be empty." };
       }
 
       try {
@@ -129,20 +146,32 @@ Specify the visual selection in the editor. Use to communicate with the user abo
         ) {
           return {
             success: false,
-            error: `Invalid paragraph indices provided: start=${startParagraphIndex}, end=${endParagraphIndex}. Max index: ${maxIndex}`
+            error: `Invalid paragraph indices provided: start=${startParagraphIndex}, end=${endParagraphIndex}. Max index: ${maxIndex}`,
           };
         }
 
-        const texts = getParagraphTexts(editorNode, startParagraphIndex, endParagraphIndex);
+        const texts = getParagraphTexts(
+          editorNode,
+          startParagraphIndex,
+          endParagraphIndex,
+        );
         const found = findTextInParagraphs(texts, selectedText);
         if (!found) {
           return {
             success: false,
-            error: `Could not find the text "${selectedText}" within paragraphs ${startParagraphIndex} to ${endParagraphIndex}`
+            error: `Could not find the text "${selectedText}" within paragraphs ${startParagraphIndex} to ${endParagraphIndex}`,
           };
         }
-        const anchor = getSlatePoint(editorNode, startParagraphIndex + found.start.paragraph, found.start.offset);
-        const focus = getSlatePoint(editorNode, startParagraphIndex + found.end.paragraph, found.end.offset);
+        const anchor = getSlatePoint(
+          editorNode,
+          startParagraphIndex + found.start.paragraph,
+          found.start.offset,
+        );
+        const focus = getSlatePoint(
+          editorNode,
+          startParagraphIndex + found.end.paragraph,
+          found.end.offset,
+        );
         const selectionRange: BaseRange = { anchor, focus };
 
         editor.tf.select(selectionRange);
@@ -152,7 +181,7 @@ Specify the visual selection in the editor. Use to communicate with the user abo
         return { success: false, error: `Error setting selection: ${error}` };
       }
     };
-  }
+  },
 };
 
 function getParagraphNodes(editor: Editor, start: number, end: number): Node[] {
@@ -166,12 +195,16 @@ function getParagraphNodes(editor: Editor, start: number, end: number): Node[] {
   return nodes;
 }
 
-function getParagraphTexts(editor: Editor, start: number, end: number): string[] {
+function getParagraphTexts(
+  editor: Editor,
+  start: number,
+  end: number,
+): string[] {
   return getParagraphNodes(editor, start, end).map(Node.string);
 }
 
 function combineParagraphTexts(texts: string[]): string {
-  return texts.join('\n');
+  return texts.join("\n");
 }
 
 function findTextInParagraphs(texts: string[], selectedText: string) {
@@ -198,7 +231,11 @@ function findTextInParagraphs(texts: string[], selectedText: string) {
   return { start, end };
 }
 
-function getSlatePoint(editor: Editor, paragraphIndex: number, offset: number): Point {
+function getSlatePoint(
+  editor: Editor,
+  paragraphIndex: number,
+  offset: number,
+): Point {
   const path: Path = [paragraphIndex, 0];
   if (Node.has(editor, path) && Text.isText(Node.get(editor, path))) {
     const textNode = Node.get(editor, path) as Text;
@@ -212,7 +249,11 @@ function getSlatePoint(editor: Editor, paragraphIndex: number, offset: number): 
 function getSelectionText(editor: Editor, selection: BaseRange) {
   const startParagraphIndex = selection.anchor.path[0];
   const endParagraphIndex = selection.focus.path[0];
-  const texts = getParagraphTexts(editor, startParagraphIndex, endParagraphIndex);
+  const texts = getParagraphTexts(
+    editor,
+    startParagraphIndex,
+    endParagraphIndex,
+  );
   if (startParagraphIndex === endParagraphIndex) {
     const start = selection.anchor.offset;
     const end = selection.focus.offset;
@@ -220,13 +261,13 @@ function getSelectionText(editor: Editor, selection: BaseRange) {
     return {
       startParagraphIndex,
       endParagraphIndex,
-      selectedText: texts[0].slice(Math.min(start, end), Math.max(start, end))
+      selectedText: texts[0].slice(Math.min(start, end), Math.max(start, end)),
     };
   }
 
   return {
     startParagraphIndex,
     endParagraphIndex,
-    selectedText: combineParagraphTexts(texts)
+    selectedText: combineParagraphTexts(texts),
   };
 }

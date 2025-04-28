@@ -1,23 +1,30 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
 interface Position {
   x: number;
   y: number;
 }
 
-export function useDraggable(initialPosition: Position = { x: 100, y: 100 }, enabled: boolean = true) {
+export function useDraggable(
+  initialPosition: Position = { x: 100, y: 100 },
+  enabled = true,
+) {
   const [position, setPosition] = useState<Position>(initialPosition);
-  const dragRef = useRef<{ isDragging: boolean; startX: number; startY: number }>({
+  const dragRef = useRef<{
+    isDragging: boolean;
+    startX: number;
+    startY: number;
+  }>({
     isDragging: false,
     startX: 0,
-    startY: 0
+    startY: 0,
   });
 
   const handleDragStart = (e: React.MouseEvent<HTMLDivElement>) => {
     dragRef.current = {
       isDragging: true,
       startX: e.clientX - position.x,
-      startY: e.clientY - position.y
+      startY: e.clientY - position.y,
     };
   };
 
@@ -25,7 +32,7 @@ export function useDraggable(initialPosition: Position = { x: 100, y: 100 }, ena
     if (!dragRef.current.isDragging) return;
     setPosition({
       x: e.clientX - dragRef.current.startX,
-      y: e.clientY - dragRef.current.startY
+      y: e.clientY - dragRef.current.startY,
     });
   };
 
@@ -38,7 +45,7 @@ export function useDraggable(initialPosition: Position = { x: 100, y: 100 }, ena
       if (dragRef.current.isDragging) {
         setPosition({
           x: e.clientX - dragRef.current.startX,
-          y: e.clientY - dragRef.current.startY
+          y: e.clientY - dragRef.current.startY,
         });
       }
     };
@@ -48,13 +55,13 @@ export function useDraggable(initialPosition: Position = { x: 100, y: 100 }, ena
     };
 
     if (enabled) {
-      window.addEventListener('mousemove', onMouseMove);
-      window.addEventListener('mouseup', onMouseUp);
+      window.addEventListener("mousemove", onMouseMove);
+      window.addEventListener("mouseup", onMouseUp);
     }
 
     return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
     };
   }, [enabled]);
 
@@ -62,6 +69,6 @@ export function useDraggable(initialPosition: Position = { x: 100, y: 100 }, ena
     position,
     handleDragStart,
     handleDrag,
-    handleDragEnd
+    handleDragEnd,
   };
 }

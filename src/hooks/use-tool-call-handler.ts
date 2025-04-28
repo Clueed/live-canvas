@@ -1,9 +1,9 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect } from "react";
 
-import { type MultimodalLiveClient } from '@/lib/multimodal-live-client';
-import { createFunctionCallHandler } from '@/lib/tool-call-handlers';
-import { type ToolCall } from '@/types/multimodal-live-types';
-import { PlateEditor } from '@udecode/plate/react';
+import type { MultimodalLiveClient } from "@/lib/multimodal-live-client";
+import { createFunctionCallHandler } from "@/lib/tool-call-handlers";
+import type { ToolCall } from "@/types/multimodal-live-types";
+import type { PlateEditor } from "@udecode/plate/react";
 
 export interface EditorOperationResult<T = string> {
   success: boolean;
@@ -16,18 +16,25 @@ interface UseToolCallHandlerProps {
   editor: PlateEditor;
 }
 
-export function useToolCallHandler({ client, editor }: UseToolCallHandlerProps) {
-  const functionCallHandler = useCallback(createFunctionCallHandler(editor), [editor]);
+export function useToolCallHandler({
+  client,
+  editor,
+}: UseToolCallHandlerProps) {
+  const functionCallHandler = useCallback(createFunctionCallHandler(editor), [
+    editor,
+  ]);
 
   const onToolCallHandler = useCallback(
     (toolCall: ToolCall, argClient: MultimodalLiveClient) => {
-      console.log(`Received toolcall:`, toolCall);
+      console.log("Received toolcall:", toolCall);
 
-      const functionResponses = toolCall.functionCalls.map((fc) => functionCallHandler(fc));
+      const functionResponses = toolCall.functionCalls.map((fc) =>
+        functionCallHandler(fc),
+      );
 
       argClient.sendToolResponse({ functionResponses });
     },
-    [functionCallHandler]
+    [functionCallHandler],
   );
 
   useEffect(() => {
@@ -39,10 +46,10 @@ export function useToolCallHandler({ client, editor }: UseToolCallHandlerProps) 
       onToolCallHandler(toolCall, client);
     };
 
-    client.on('toolcall', onToolCall);
+    client.on("toolcall", onToolCall);
 
     return () => {
-      client.off('toolcall', onToolCall);
+      client.off("toolcall", onToolCall);
     };
   }, [client, onToolCallHandler]);
 }

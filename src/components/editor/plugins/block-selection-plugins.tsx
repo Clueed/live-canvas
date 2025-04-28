@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { BlockSelectionPlugin } from '@udecode/plate-selection/react';
+import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
 
-import { BlockSelection } from '@/components/plate-ui/block-selection';
+import { BlockSelection } from "@/components/plate-ui/block-selection";
 
 export const blockSelectionPlugins = [
   BlockSelectionPlugin.configure(({ editor }) => ({
@@ -10,14 +10,14 @@ export const blockSelectionPlugins = [
       enableContextMenu: true,
       isSelectable: (element, path) => {
         return (
-          !['code_line', 'column', 'td'].includes(element.type) &&
-          !editor.api.block({ above: true, at: path, match: { type: 'tr' } })
+          !["code_line", "column", "td"].includes(element.type) &&
+          !editor.api.block({ above: true, at: path, match: { type: "tr" } })
         );
       },
     },
     render: {
       belowRootNodes: (props) => {
-        if (!props.className?.includes('slate-selectable')) return null;
+        if (!props.className?.includes("slate-selectable")) return null;
 
         return <BlockSelection />;
       },

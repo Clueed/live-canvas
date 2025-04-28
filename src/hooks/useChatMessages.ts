@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from "react";
 
-import { MultimodalLiveClient } from '@/lib/multimodal-live-client';
-import { type StreamingLog } from '@/types/multimodal-live-types';
+import type { MultimodalLiveClient } from "@/lib/multimodal-live-client";
+import type { StreamingLog } from "@/types/multimodal-live-types";
 import {
   type ChatMessage,
   extractVoiceMessagesInfo,
@@ -11,8 +11,8 @@ import {
   processClientActionMessage,
   processClientContentMessage,
   processServerContentMessage,
-  processUnmatchedVoiceMessages
-} from '@/utils/chatMessageUtils';
+  processUnmatchedVoiceMessages,
+} from "@/utils/chatMessageUtils";
 
 interface UseChatMessagesProps {
   client: MultimodalLiveClient;
@@ -25,18 +25,18 @@ export function useChatMessages({ client, log, logs }: UseChatMessagesProps) {
 
   // Subscribe to logs and turn completion events
   useEffect(() => {
-    client.on('log', log);
+    client.on("log", log);
 
     // Direct listener for turn completion events
     const handleTurnComplete = () => {
       lastTurnCompleteRef.current = new Date();
     };
 
-    client.on('turncomplete', handleTurnComplete);
+    client.on("turncomplete", handleTurnComplete);
 
     return () => {
-      client.off('log', log);
-      client.off('turncomplete', handleTurnComplete);
+      client.off("log", log);
+      client.off("turncomplete", handleTurnComplete);
     };
   }, [client, log]);
 
@@ -56,7 +56,11 @@ export function useChatMessages({ client, log, logs }: UseChatMessagesProps) {
     // Process all messages
     logs.forEach((logEntry) => {
       // Process user messages
-      const userMessage = processClientContentMessage(logEntry, voiceMessagesInfo, processedMessageIds);
+      const userMessage = processClientContentMessage(
+        logEntry,
+        voiceMessagesInfo,
+        processedMessageIds,
+      );
       if (userMessage) {
         chatMessages.push(userMessage);
       }
@@ -66,24 +70,32 @@ export function useChatMessages({ client, log, logs }: UseChatMessagesProps) {
         logEntry,
         chatMessages,
         processedMessageIds,
-        lastTurnCompleteTime
+        lastTurnCompleteTime,
       );
       if (assistantMessage) {
         chatMessages.push(assistantMessage);
       }
 
       // Process client action messages
-      const actionMessage = processClientActionMessage(logEntry, processedMessageIds);
+      const actionMessage = processClientActionMessage(
+        logEntry,
+        processedMessageIds,
+      );
       if (actionMessage) {
         chatMessages.push(actionMessage);
       }
     });
 
     // Process unmatched voice messages
-    const unmatchedVoiceInfos = processUnmatchedVoiceMessages(voiceMessagesInfo);
+    const unmatchedVoiceInfos =
+      processUnmatchedVoiceMessages(voiceMessagesInfo);
 
     // Integrate all messages with correct order
-    return integrateMessages(chatMessages, unmatchedVoiceInfos, processedMessageIds);
+    return integrateMessages(
+      chatMessages,
+      unmatchedVoiceInfos,
+      processedMessageIds,
+    );
   }, [logs, lastTurnCompleteRef]);
 
   return { messages };
