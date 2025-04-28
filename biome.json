@@ -29,10 +29,10 @@
 		"rules": {
 			"recommended": true,
 			"complexity": {
-				"noForEach": "off"
+				"noForEach": "info"
 			},
 			"suspicious": {
-				"noArrayIndexKey": "off"
+				"noArrayIndexKey": "info"
 			}
 		}
 	},
