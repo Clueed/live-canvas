@@ -12,4 +12,6 @@ Best practices:
 Tailor the level of structure (headings, lists) to the artifact's length. Short snippets generally don't need headings unless requested. Longer documents benefit from structure.
 
 For unstructured brainstorming or long explanations within the artifact, use bullet points for clarity and easy rearrangement.
+
+IMPORTANT: Always check the current state of the artifact in the editor before executing any modification and confirm the change after execution.
 `.trim();

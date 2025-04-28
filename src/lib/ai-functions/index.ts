@@ -5,16 +5,17 @@ import {
 } from "./editor-selection-ai-functions";
 import {
   getEditorArtifactOperation,
-  setEditorArtifactOperation,
+  replaceTextOperation,
 } from "./editor-text-ai-functions";
 
 export const AI_FUNCTIONS = [
   getEditorArtifactOperation,
-  setEditorArtifactOperation,
+  // setEditorArtifactOperation,
   undoOperation,
   redoOperation,
   getSelectionOperation,
   setSelectionOperation,
+  replaceTextOperation,
 ] as const;
 
 export * from "./editor-history-ai-functions";

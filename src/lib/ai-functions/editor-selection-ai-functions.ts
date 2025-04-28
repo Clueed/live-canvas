@@ -1,15 +1,14 @@
 import { type Schema, SchemaType } from "@google/generative-ai";
 import type { PlateEditor } from "@udecode/plate/react";
 
-import {
-  type BaseRange,
-  type Editor,
-  Node,
-  type Path,
-  type Point,
-  Text,
-} from "slate";
+import type { BaseRange, Editor } from "slate";
 import { z } from "zod";
+import {
+  findTextInParagraphs,
+  getParagraphTexts,
+  getSelectionText,
+  getSlatePoint,
+} from "./editor-functions-helpers";
 import { defineAiFunction } from "./helpers";
 
 /**
@@ -132,100 +131,3 @@ Specify the visual selection in the editor. Use to communicate with the user abo
       }
     },
 });
-
-function getParagraphNodes(editor: Editor, start: number, end: number): Node[] {
-  const nodes: Node[] = [];
-  for (let i = start; i <= end; i++) {
-    const node = Node.get(editor, [i]);
-    if (!node) throw new Error(`Could not find node at index ${i}`);
-    nodes.push(node);
-  }
-
-  return nodes;
-}
-
-function getParagraphTexts(
-  editor: Editor,
-  start: number,
-  end: number,
-): string[] {
-  return getParagraphNodes(editor, start, end).map(Node.string);
-}
-
-function combineParagraphTexts(texts: string[]): string {
-  return texts.join("\n");
-}
-
-function findTextInParagraphs(texts: string[], selectedText: string) {
-  const combined = combineParagraphTexts(texts);
-  const startIndex = combined.indexOf(selectedText);
-  if (startIndex === -1) return null;
-  let acc = 0;
-  let start: { paragraph: number; offset: number } | null = null;
-  let end: { paragraph: number; offset: number } | null = null;
-  const endIndex = startIndex + selectedText.length;
-  for (let i = 0; i < texts.length; i++) {
-    const len = texts[i].length;
-    if (!start && startIndex < acc + len + (i > 0 ? 1 : 0)) {
-      start = { paragraph: i, offset: startIndex - acc };
-    }
-    if (start && !end && endIndex <= acc + len + (i > 0 ? 1 : 0)) {
-      end = { paragraph: i, offset: endIndex - acc };
-      break;
-    }
-    acc += len + 1;
-  }
-  if (!start || !end) return null;
-
-  return { start, end };
-}
-
-function getSlatePoint(
-  editor: Editor,
-  paragraphIndex: number,
-  offset: number,
-): Point {
-  const path: Path = [paragraphIndex, 0];
-  if (Node.has(editor, path) && Text.isText(Node.get(editor, path))) {
-    const textNode = Node.get(editor, path) as Text;
-
-    return { path, offset: Math.min(offset, textNode.text.length) };
-  }
-
-  return { path, offset: 0 };
-}
-
-function getSelectionText(editor: Editor, selection: BaseRange) {
-  const startParagraphIndex = selection.anchor.path[0];
-  const endParagraphIndex = selection.focus.path[0];
-  const texts = getParagraphTexts(
-    editor,
-    startParagraphIndex,
-    endParagraphIndex,
-  );
-  if (startParagraphIndex === endParagraphIndex) {
-    const start = selection.anchor.offset;
-    const end = selection.focus.offset;
-
-    return {
-      startParagraphIndex,
-      endParagraphIndex,
-      selectedText: texts[0].slice(Math.min(start, end), Math.max(start, end)),
-    };
-  }
-
-  return {
-    startParagraphIndex,
-    endParagraphIndex,
-    selectedText: combineParagraphTexts(texts),
-  };
-}
-
-export interface ReadableSelection {
-  /** The paragraph index at the selection start */
-  startParagraphIndex: number;
-  /** The paragraph index at the selection end */
-  endParagraphIndex: number;
-  /** The selected text content */
-  selectedText: string;
-}

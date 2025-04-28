@@ -1,4 +1,3 @@
-import { MarkdownPlugin } from "@udecode/plate-markdown";
 import type { PlateEditor } from "@udecode/plate/react";
 import { z } from "zod";
 import { defineAiFunction } from "./helpers";
@@ -10,8 +9,7 @@ export const undoOperation = defineAiFunction({
   declaration: {
     name: "undo_last_artifact_change",
     description: `
-Reverts the most recent modification made to the artifact in the editor, typically when the user explicitly asks to undo.
-Returns an operation result with success status, error message if failed, and current content after the undo operation.
+Reverts the most recent modification made to the artifact in the editor.
 `.trim(),
   },
   paramsSchema: z.object({}),
@@ -25,9 +23,6 @@ Returns an operation result with success status, error message if failed, and cu
     editor.tf.undo();
     return {
       success: true,
-      response: {
-        newArtifact: editor.getApi(MarkdownPlugin).markdown.serialize(),
-      },
     };
   },
 });
@@ -39,8 +34,7 @@ export const redoOperation = defineAiFunction({
   declaration: {
     name: "redo_last_artifact_undo",
     description: `
-Reapplies the last artifact change that was undone, typically when the user explicitly asks to redo.
-Returns an operation result with success status, error message if failed, and current content after the redo operation.
+Reapplies the last artifact change that was undone.
 `.trim(),
   },
   paramsSchema: z.object({}),
@@ -55,9 +49,6 @@ Returns an operation result with success status, error message if failed, and cu
     editor.tf.redo();
     return {
       success: true,
-      response: {
-        newArtifact: editor.getApi(MarkdownPlugin).markdown.serialize(),
-      },
     };
   },
 });
