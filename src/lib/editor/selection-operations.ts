@@ -4,6 +4,7 @@ import { PlateEditor } from '@udecode/plate/react';
 
 import { ReadableSelection } from './types';
 import { BaseRange, Editor, Node, Path, Point, Text } from 'slate';
+import { z } from 'zod';
 
 /**
  * Get editor selection operation
@@ -42,54 +43,14 @@ Returns a selection object with the following properties:
       }
 
       try {
-        // Get the starting element index (usually paragraph number)
-        const startParagraphIndex = selection.anchor.path[0];
-        const endParagraphIndex = selection.focus.path[0];
-
-        // Extract text content from the selection
-        let selectedText = '';
-
-        if (startParagraphIndex === endParagraphIndex) {
-          // Selection within the same paragraph
-          const node = Node.get(editor as unknown as Editor, [startParagraphIndex]);
-          const text = Node.string(node);
-          const start = selection.anchor.offset;
-          const end = selection.focus.offset;
-          selectedText = text.slice(Math.min(start, end), Math.max(start, end));
-        } else {
-          // Selection across multiple paragraphs - for simplicity, just get all text from each paragraph
-          const startNode = Node.get(editor as unknown as Editor, [startParagraphIndex]);
-          const endNode = Node.get(editor as unknown as Editor, [endParagraphIndex]);
-
-          // Get text from start paragraph
-          const startText = Node.string(startNode);
-          // Get text from end paragraph
-          const endText = Node.string(endNode);
-
-          // Include text from paragraphs in between (if any)
-          const paragraphs = [];
-          paragraphs.push(startText);
-
-          // Add paragraphs in between if there are any
-          for (let i = startParagraphIndex + 1; i < endParagraphIndex; i++) {
-            const node = Node.get(editor as unknown as Editor, [i]);
-            paragraphs.push(Node.string(node));
-          }
-
-          if (startParagraphIndex !== endParagraphIndex) {
-            paragraphs.push(endText);
-          }
-
-          selectedText = paragraphs.join('\n');
-        }
+        const { startParagraphIndex, endParagraphIndex, selectedText } = getSelectionText(
+          editor as unknown as Editor,
+          selection
+        );
 
         return {
           success: true,
-          selection: {
-            startParagraphIndex,
-            endParagraphIndex,
-            selectedText
-          }
+          selection: { startParagraphIndex, endParagraphIndex, selectedText }
         };
       } catch (error) {
         return { success: false, error: `Error creating readable selection: ${error}` };
@@ -127,6 +88,11 @@ Specify the visual selection in the editor. Use to communicate with the user abo
     }
   } satisfies FunctionDeclaration,
 
+  paramsSchema: z.object({
+    startParagraphIndex: z.number(),
+    endParagraphIndex: z.number(),
+    selectedText: z.string().min(1)
+  }),
   /**
    * Creates set selection operation function for the editor
    * @param editor PlateEditor instance
@@ -167,93 +133,17 @@ Specify the visual selection in the editor. Use to communicate with the user abo
           };
         }
 
-        // --- Find the text within the paragraph range ---
-        let combinedText = '';
-        const nodesInRange: Node[] = [];
-        for (let i = startParagraphIndex; i <= endParagraphIndex; i++) {
-          const node = Node.get(editorNode, [i]);
-          if (node) {
-            nodesInRange.push(node);
-            combinedText += Node.string(node) + '\n'; // Add newline to simulate paragraph breaks
-          } else {
-            return { success: false, error: `Could not find node at index ${i}` };
-          }
-        }
-        combinedText = combinedText.slice(0, -1); // Remove trailing newline
-
-        const startIndexInCombined = combinedText.indexOf(selectedText);
-
-        if (startIndexInCombined === -1) {
+        const texts = getParagraphTexts(editorNode, startParagraphIndex, endParagraphIndex);
+        const found = findTextInParagraphs(texts, selectedText);
+        if (!found) {
           return {
             success: false,
             error: `Could not find the text "${selectedText}" within paragraphs ${startParagraphIndex} to ${endParagraphIndex}`
           };
         }
-
-        // --- Calculate the precise Slate Path and Offset ---
-        let accumulatedLength = 0;
-        let startPoint: Point | null = null;
-        let endPoint: Point | null = null;
-
-        for (let i = 0; i < nodesInRange.length; i++) {
-          const node = nodesInRange[i];
-          const paragraphIndex = startParagraphIndex + i;
-          const nodeText = Node.string(node);
-          const nodeLength = nodeText.length;
-
-          // Calculate start point
-          if (!startPoint && startIndexInCombined < accumulatedLength + nodeLength) {
-            const offsetInNode = startIndexInCombined - accumulatedLength;
-            // Assuming text node is the first child at path [paragraphIndex, 0]
-            const path: Path = [paragraphIndex, 0];
-            // Validate path exists
-            if (Node.has(editorNode, path) && Text.isText(Node.get(editorNode, path))) {
-              startPoint = { path, offset: offsetInNode };
-            } else {
-              // Handle cases where paragraph might be empty or structure is different
-              console.warn(`Could not find text node at path ${path} for start point.`);
-              // Attempt to select the start of the paragraph as fallback
-              startPoint = { path: [paragraphIndex, 0], offset: 0 };
-            }
-          }
-
-          // Calculate end point
-          const endIndexInCombined = startIndexInCombined + selectedText.length;
-          if (startPoint && !endPoint && endIndexInCombined <= accumulatedLength + nodeLength + 1) {
-            // +1 for the newline we added
-            const offsetInNode = endIndexInCombined - accumulatedLength;
-            // Assuming text node is the first child at path [paragraphIndex, 0]
-            const path: Path = [paragraphIndex, 0];
-            // Validate path exists
-            if (Node.has(editorNode, path) && Text.isText(Node.get(editorNode, path))) {
-              // Clamp offset to the actual length of the text node
-              const textNode = Node.get(editorNode, path) as Text;
-              const actualOffset = Math.min(offsetInNode, textNode.text.length);
-              endPoint = { path, offset: actualOffset };
-            } else {
-              console.warn(`Could not find text node at path ${path} for end point.`);
-              // Attempt to select the end of the paragraph text as fallback
-              const textNode = Node.get(editorNode, [paragraphIndex, 0]) as Text;
-              endPoint = { path: [paragraphIndex, 0], offset: textNode?.text.length ?? 0 };
-            }
-          }
-
-          accumulatedLength += nodeLength + 1; // Account for the added newline
-
-          if (startPoint && endPoint) {
-            break; // Found both points
-          }
-        }
-
-        if (!startPoint || !endPoint) {
-          // This shouldn't happen if the text was found, but as a safeguard
-          return { success: false, error: 'Failed to calculate selection points.' };
-        }
-
-        const selectionRange: BaseRange = {
-          anchor: startPoint,
-          focus: endPoint
-        };
+        const anchor = getSlatePoint(editorNode, startParagraphIndex + found.start.paragraph, found.start.offset);
+        const focus = getSlatePoint(editorNode, startParagraphIndex + found.end.paragraph, found.end.offset);
+        const selectionRange: BaseRange = { anchor, focus };
 
         editor.tf.select(selectionRange);
 
@@ -264,3 +154,79 @@ Specify the visual selection in the editor. Use to communicate with the user abo
     };
   }
 };
+
+function getParagraphNodes(editor: Editor, start: number, end: number): Node[] {
+  const nodes: Node[] = [];
+  for (let i = start; i <= end; i++) {
+    const node = Node.get(editor, [i]);
+    if (!node) throw new Error(`Could not find node at index ${i}`);
+    nodes.push(node);
+  }
+
+  return nodes;
+}
+
+function getParagraphTexts(editor: Editor, start: number, end: number): string[] {
+  return getParagraphNodes(editor, start, end).map(Node.string);
+}
+
+function combineParagraphTexts(texts: string[]): string {
+  return texts.join('\n');
+}
+
+function findTextInParagraphs(texts: string[], selectedText: string) {
+  const combined = combineParagraphTexts(texts);
+  const startIndex = combined.indexOf(selectedText);
+  if (startIndex === -1) return null;
+  let acc = 0;
+  let start: { paragraph: number; offset: number } | null = null;
+  let end: { paragraph: number; offset: number } | null = null;
+  const endIndex = startIndex + selectedText.length;
+  for (let i = 0; i < texts.length; i++) {
+    const len = texts[i].length;
+    if (!start && startIndex < acc + len + (i > 0 ? 1 : 0)) {
+      start = { paragraph: i, offset: startIndex - acc };
+    }
+    if (start && !end && endIndex <= acc + len + (i > 0 ? 1 : 0)) {
+      end = { paragraph: i, offset: endIndex - acc };
+      break;
+    }
+    acc += len + 1;
+  }
+  if (!start || !end) return null;
+
+  return { start, end };
+}
+
+function getSlatePoint(editor: Editor, paragraphIndex: number, offset: number): Point {
+  const path: Path = [paragraphIndex, 0];
+  if (Node.has(editor, path) && Text.isText(Node.get(editor, path))) {
+    const textNode = Node.get(editor, path) as Text;
+
+    return { path, offset: Math.min(offset, textNode.text.length) };
+  }
+
+  return { path, offset: 0 };
+}
+
+function getSelectionText(editor: Editor, selection: BaseRange) {
+  const startParagraphIndex = selection.anchor.path[0];
+  const endParagraphIndex = selection.focus.path[0];
+  const texts = getParagraphTexts(editor, startParagraphIndex, endParagraphIndex);
+  if (startParagraphIndex === endParagraphIndex) {
+    const start = selection.anchor.offset;
+    const end = selection.focus.offset;
+
+    return {
+      startParagraphIndex,
+      endParagraphIndex,
+      selectedText: texts[0].slice(Math.min(start, end), Math.max(start, end))
+    };
+  }
+
+  return {
+    startParagraphIndex,
+    endParagraphIndex,
+    selectedText: combineParagraphTexts(texts)
+  };
+}
