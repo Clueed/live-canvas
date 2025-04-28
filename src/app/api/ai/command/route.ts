@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
 
           // Use line chunking for code blocks and tables, word chunking otherwise
           // Choose the appropriate chunking strategy based on content type
-          let match;
+          let match: RegExpExecArray | null;
 
           if (isInCodeBlock || isInTable || isInLink) {
             // Use line chunking for code blocks and tables

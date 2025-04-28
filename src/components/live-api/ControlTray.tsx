@@ -44,8 +44,8 @@ export type ControlTrayProps = {
 // --- Media Stream Button Component ---
 interface MediaStreamButtonProps {
   isStreaming: boolean;
-  start: () => Promise<any>;
-  stop: () => any;
+  start: () => Promise<void>;
+  stop: () => void | Promise<void>;
   onIcon: React.ElementType;
   offIcon: React.ElementType;
   tooltipOn: string;

@@ -16,8 +16,8 @@ import { type ZodSchema, ZodTypeDef } from "zod";
 
 export interface FunctionOperation {
   declaration: FunctionDeclaration;
-  create: (editor: PlateEditor) => (...args: any[]) => EditorOperationResult;
-  paramsSchema?: ZodSchema<any, any>;
+  create: (editor: PlateEditor) => (...args: unknown[]) => EditorOperationResult;
+  paramsSchema?: ZodSchema<unknown, unknown>;
 }
 
 export const TOOL_CALL_FUNCTIONS = [
