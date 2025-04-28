@@ -23,39 +23,27 @@ interface UseChatMessagesProps {
 export function useChatMessages({ client, log, logs }: UseChatMessagesProps) {
   const lastTurnCompleteRef = useRef<Date | null>(null);
 
-  // Subscribe to logs and turn completion events
   useEffect(() => {
     client.on("log", log);
-
-    // Direct listener for turn completion events
     const handleTurnComplete = () => {
       lastTurnCompleteRef.current = new Date();
     };
-
     client.on("turncomplete", handleTurnComplete);
-
     return () => {
       client.off("log", log);
       client.off("turncomplete", handleTurnComplete);
     };
   }, [client, log]);
 
-  // Derive messages from logs using useMemo instead of useEffect + useState
   const messages = useMemo(() => {
     if (!logs) {
       return [];
     }
-
     const processedMessageIds = new Set<string>();
     const chatMessages: ChatMessage[] = [];
     const lastTurnCompleteTime = lastTurnCompleteRef.current?.getTime() ?? 0;
-
-    // Extract voice message information
     const voiceMessagesInfo = extractVoiceMessagesInfo(logs);
-
-    // Process all messages
     logs.forEach((logEntry) => {
-      // Process user messages
       const userMessage = processClientContentMessage(
         logEntry,
         voiceMessagesInfo,
@@ -64,8 +52,6 @@ export function useChatMessages({ client, log, logs }: UseChatMessagesProps) {
       if (userMessage) {
         chatMessages.push(userMessage);
       }
-
-      // Process assistant messages
       const assistantMessage = processServerContentMessage(
         logEntry,
         chatMessages,
@@ -75,8 +61,6 @@ export function useChatMessages({ client, log, logs }: UseChatMessagesProps) {
       if (assistantMessage) {
         chatMessages.push(assistantMessage);
       }
-
-      // Process client action messages
       const actionMessage = processClientActionMessage(
         logEntry,
         processedMessageIds,
@@ -85,18 +69,14 @@ export function useChatMessages({ client, log, logs }: UseChatMessagesProps) {
         chatMessages.push(actionMessage);
       }
     });
-
-    // Process unmatched voice messages
     const unmatchedVoiceInfos =
       processUnmatchedVoiceMessages(voiceMessagesInfo);
-
-    // Integrate all messages with correct order
     return integrateMessages(
       chatMessages,
       unmatchedVoiceInfos,
       processedMessageIds,
     );
-  }, [logs, lastTurnCompleteRef]);
+  }, [logs]);
 
   return { messages };
 }
