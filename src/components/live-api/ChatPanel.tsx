@@ -7,7 +7,7 @@ import { useChatMessages } from "@/hooks/useChatMessages";
 import { useLoggerStore } from "@/lib/store-logger";
 import { cn } from "@/lib/utils";
 
-import { AudioLinesIcon, BotIcon, UserIcon } from "lucide-react";
+import { AudioLinesIcon } from "lucide-react";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -22,7 +22,8 @@ interface ChatPanelProps {
 }
 
 interface MessageProps {
-  message: ChatMessage;
+  role: "user" | "assistant";
+  children: React.ReactNode;
 }
 
 /**
@@ -44,7 +45,7 @@ export function ChatPanel({ className = "" }: ChatPanelProps) {
 
   // Scroll to bottom when messages update
   // biome-ignore lint/correctness/useExhaustiveDependencies: deps for events
-    useEffect(() => {
+  useEffect(() => {
     if (chatRef.current) {
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }
@@ -53,61 +54,35 @@ export function ChatPanel({ className = "" }: ChatPanelProps) {
   return (
     <div className={cn("flex-1 overflow-auto", className)} ref={chatRef}>
       {messages.length === 0 ? (
-        <div className="text-muted-foreground flex h-20 items-center justify-center text-sm">
+        <div className="text-base-11 flex h-20 items-center justify-center text-sm">
           {"No conversation messages yet."}
         </div>
       ) : (
         <div className="flex flex-col gap-4 p-3">
-          {messages.map((message) => {
-            if (message.role === "user") {
-              return <UserMessage key={message.id} message={message} />;
-            }
-            if (message.role === "assistant") {
-              return <AssistantMessage key={message.id} message={message} />;
-            }
-
-            return null;
-          })}
+          {messages.map((message) => (
+            <Message key={message.id} role={message.role}>
+              {message.content && message.content}
+              {message.isVoiceMessage && (
+                <div className="flex items-center gap-2">
+                  <AudioLinesIcon className="size-[2cap]" />
+                  <span className="sr-only">Voice message</span>
+                </div>
+              )}
+            </Message>
+          ))}
         </div>
       )}
     </div>
   );
 }
 
-function UserMessage({ message }: MessageProps) {
+function Message({ role, children }: MessageProps) {
   return (
-    <div key={message.id} className="flex justify-end gap-3">
-      <div className="bg-muted max-w-[80%] rounded-lg p-4">
-        {message.content && (
-          <div className="text-sm break-words whitespace-pre-wrap">
-            {message.content}
-          </div>
-        )}
-        {!message.content && message.isVoiceMessage && (
-          <div className="text-sm opacity-80">
-            <AudioLinesIcon className="h-4 w-20" />
-          </div>
-        )}
-      </div>
-      <div className="bg-muted flex h-7 w-7 items-center justify-center rounded-full">
-        <UserIcon className="text-muted-foreground h-4 w-4" />
-      </div>
-    </div>
-  );
-}
-
-function AssistantMessage({ message }: MessageProps) {
-  return (
-    <div key={message.id} className="flex justify-start gap-3">
-      <div className="bg-muted flex h-7 w-7 items-center justify-center rounded-full">
-        <BotIcon className="text-muted-foreground h-4 w-4" />
-      </div>
-      <div className="bg-primary text-primary-foreground max-w-[80%] rounded-lg p-4">
-        {message.content && (
-          <div className="text-sm break-words whitespace-pre-wrap">
-            {message.content}
-          </div>
-        )}
+    <div
+      className={cn("flex", role === "user" ? "justify-end" : "justify-start")}
+    >
+      <div className="bg-base-2 max-w-[80%] rounded-md p-2 text-xs break-words whitespace-pre-wrap">
+        {children}
       </div>
     </div>
   );
