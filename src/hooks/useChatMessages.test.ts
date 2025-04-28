@@ -6,16 +6,7 @@ import { EventEmitter } from "eventemitter3";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 type EventHandler = (...args: unknown[]) => void;
-class MockMultimodalLiveClient extends EventEmitter {
-  on: (event: string, handler: EventHandler) => this;
-  off: (event: string, handler: EventHandler) => this;
-
-  constructor() {
-    super();
-    this.on = vi.fn(super.on);
-    this.off = vi.fn(super.off);
-  }
-}
+class MockMultimodalLiveClient extends EventEmitter {}
 
 describe("useChatMessages", () => {
   let mockClient: MockMultimodalLiveClient;
@@ -24,6 +15,8 @@ describe("useChatMessages", () => {
 
   beforeEach(() => {
     mockClient = new MockMultimodalLiveClient();
+    vi.spyOn(mockClient, "on");
+    vi.spyOn(mockClient, "off");
     mockLog = vi.fn();
     mockLogs = [];
   });
@@ -31,7 +24,9 @@ describe("useChatMessages", () => {
   it("should initialize with empty messages", () => {
     const { result } = renderHook(() =>
       useChatMessages({
-        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
+        client: mockClient as unknown as Parameters<
+          typeof useChatMessages
+        >[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
@@ -43,7 +38,9 @@ describe("useChatMessages", () => {
   it("should register event listeners on mount", () => {
     renderHook(() =>
       useChatMessages({
-        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
+        client: mockClient as unknown as Parameters<
+          typeof useChatMessages
+        >[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
@@ -59,7 +56,9 @@ describe("useChatMessages", () => {
   it("should remove event listeners on unmount", () => {
     const { unmount } = renderHook(() =>
       useChatMessages({
-        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
+        client: mockClient as unknown as Parameters<
+          typeof useChatMessages
+        >[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
@@ -96,7 +95,9 @@ describe("useChatMessages", () => {
 
     const { result } = renderHook(() =>
       useChatMessages({
-        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
+        client: mockClient as unknown as Parameters<
+          typeof useChatMessages
+        >[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
@@ -131,7 +132,9 @@ describe("useChatMessages", () => {
 
     const { result } = renderHook(() =>
       useChatMessages({
-        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
+        client: mockClient as unknown as Parameters<
+          typeof useChatMessages
+        >[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
@@ -172,7 +175,9 @@ describe("useChatMessages", () => {
 
     const { result } = renderHook(() =>
       useChatMessages({
-        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
+        client: mockClient as unknown as Parameters<
+          typeof useChatMessages
+        >[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
@@ -199,7 +204,9 @@ describe("useChatMessages", () => {
 
     const { result } = renderHook(() =>
       useChatMessages({
-        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
+        client: mockClient as unknown as Parameters<
+          typeof useChatMessages
+        >[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
@@ -228,7 +235,9 @@ describe("useChatMessages", () => {
 
     const { result } = renderHook(() =>
       useChatMessages({
-        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
+        client: mockClient as unknown as Parameters<
+          typeof useChatMessages
+        >[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
@@ -256,7 +265,9 @@ describe("useChatMessages", () => {
 
     const { result } = renderHook(() =>
       useChatMessages({
-        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
+        client: mockClient as unknown as Parameters<
+          typeof useChatMessages
+        >[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
@@ -302,7 +313,9 @@ describe("useChatMessages", () => {
 
     const { result } = renderHook(() =>
       useChatMessages({
-        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
+        client: mockClient as unknown as Parameters<
+          typeof useChatMessages
+        >[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
@@ -316,13 +329,16 @@ describe("useChatMessages", () => {
 
   it("should create a new message after turn completion", () => {
     // Mock turn completion behavior
-    let turnCompleteHandler: () => void;
-    mockClient.on.mockImplementation((event: string, handler: (...args: unknown[]) => void) => {
+    let turnCompleteHandler: () => void = () => {};
+    (mockClient.on as (
+      event: string,
+      handler: (...args: unknown[]) => void,
+    ) => MockMultimodalLiveClient) = (event, handler) => {
       if (event === "turncomplete") {
         turnCompleteHandler = handler;
       }
       return mockClient;
-    });
+    };
 
     const firstAssistantMessage = {
       date: new Date(),
@@ -342,7 +358,9 @@ describe("useChatMessages", () => {
 
     const { result, rerender } = renderHook(() =>
       useChatMessages({
-        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
+        client: mockClient as unknown as Parameters<
+          typeof useChatMessages
+        >[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
@@ -442,7 +460,9 @@ describe("useChatMessages", () => {
 
     const { result } = renderHook(() =>
       useChatMessages({
-        client: mockClient as unknown as Parameters<typeof useChatMessages>[0]["client"],
+        client: mockClient as unknown as Parameters<
+          typeof useChatMessages
+        >[0]["client"],
         log: mockLog,
         logs: mockLogs,
       }),
