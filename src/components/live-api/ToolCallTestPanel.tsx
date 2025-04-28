@@ -33,9 +33,7 @@ export function ToolCallTestPanel({ editor }: ToolCallTestPanelProps) {
   const [resultText, setResultText] = useState("");
   const [showResult, setShowResult] = useState(false);
 
-  const functionCallHandler = useCallback(createFunctionCallHandler(editor), [
-    editor,
-  ]);
+  const functionCallHandler = createFunctionCallHandler(editor);
 
   const currentFunction = TOOL_CALL_FUNCTIONS.find(
     (func) => func.declaration.name === selectedFunction,

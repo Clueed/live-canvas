@@ -20,9 +20,7 @@ export function useToolCallHandler({
   client,
   editor,
 }: UseToolCallHandlerProps) {
-  const functionCallHandler = useCallback(createFunctionCallHandler(editor), [
-    editor,
-  ]);
+  const functionCallHandler = createFunctionCallHandler(editor);
 
   const onToolCallHandler = useCallback(
     (toolCall: ToolCall, argClient: MultimodalLiveClient) => {

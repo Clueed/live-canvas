@@ -58,7 +58,7 @@ export function LiveCanvasView() {
       },
       tools: [{ functionDeclarations: functionDeclarations }],
     });
-  }, [setConfig, functionDeclarations, SYSTEM_PROMPT]);
+  }, [setConfig, functionDeclarations]);
 
   useToolCallHandler({
     client,

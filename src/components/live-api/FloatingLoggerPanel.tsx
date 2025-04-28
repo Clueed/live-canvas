@@ -43,6 +43,7 @@ export function FloatingLoggerPanel({
     show,
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: deps used as event
   useEffect(() => {
     if (loggerRef.current) {
       const el = loggerRef.current;
