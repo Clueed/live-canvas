@@ -12,13 +12,11 @@ export const getSelectionOperation = {
   declaration: {
     name: 'get_editor_selection',
     description: `
-Retrieves the current selection range in the editor in a human-readable format.
+Retrieves the visual selection in the editor. Use to communicate with the user about intent.
 Returns a selection object with the following properties:
 - startParagraphIndex: The paragraph index at the start of the selection
 - endParagraphIndex: The paragraph index at the end of the selection
 - selectedText: The actual text content that is selected
-
-Use this when you need to know what text is currently selected by the user or the current cursor position.
 `.trim(),
     parameters: {
       type: SchemaType.OBJECT,
@@ -107,8 +105,7 @@ export const setSelectionOperation = {
   declaration: {
     name: 'set_editor_selection',
     description: `
-Sets the selection in the editor to span a specific range of paragraphs and select the specified text within that range.
-Use this to programmatically select a specific piece of text identified by its content and the paragraphs it spans.
+Specify the visual selection in the editor. Use to communicate with the user about intent.
 `.trim(),
     parameters: {
       type: SchemaType.OBJECT,
