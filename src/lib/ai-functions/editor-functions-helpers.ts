@@ -1,3 +1,4 @@
+import type { PlateEditor } from "@udecode/plate/react";
 import {
   type BaseRange,
   type Editor,
@@ -8,13 +9,14 @@ import {
 } from "slate";
 
 export function getParagraphNodes(
-  editor: Editor,
+  editor: PlateEditor,
   start: number,
   end: number,
 ): Node[] {
+  const slateEditor = editor as unknown as Editor;
   const nodes: Node[] = [];
   for (let i = start; i <= end; i++) {
-    const node = Node.get(editor, [i]);
+    const node = Node.get(slateEditor, [i]);
     if (!node) throw new Error(`Could not find node at index ${i}`);
     nodes.push(node);
   }
@@ -23,7 +25,7 @@ export function getParagraphNodes(
 }
 
 export function getParagraphTexts(
-  editor: Editor,
+  editor: PlateEditor,
   start: number,
   end: number,
 ): string[] {
@@ -101,13 +103,14 @@ export function findTextInParagraphs(texts: string[], selectedText: string) {
 }
 
 export function getSlatePoint(
-  editor: Editor,
+  editor: PlateEditor,
   paragraphIndex: number,
   offset: number,
 ): Point {
+  const slateEditor = editor as unknown as Editor;
   const path: Path = [paragraphIndex, 0];
-  if (Node.has(editor, path) && Text.isText(Node.get(editor, path))) {
-    const textNode = Node.get(editor, path) as Text;
+  if (Node.has(slateEditor, path) && Text.isText(Node.get(slateEditor, path))) {
+    const textNode = Node.get(slateEditor, path) as Text;
 
     return { path, offset: Math.min(offset, textNode.text.length) };
   }
@@ -115,7 +118,7 @@ export function getSlatePoint(
   return { path, offset: 0 };
 }
 
-export function getSelectionText(editor: Editor, selection: BaseRange) {
+export function getSelectionText(editor: PlateEditor, selection: BaseRange) {
   const startParagraphIndex = selection.anchor.path[0];
   const endParagraphIndex = selection.focus.path[0];
 

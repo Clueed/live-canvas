@@ -1,7 +1,7 @@
 import { type Schema, SchemaType } from "@google/generative-ai";
 import type { PlateEditor } from "@udecode/plate/react";
 
-import type { BaseRange, Editor } from "slate";
+import type { BaseRange } from "slate";
 import { z } from "zod";
 import {
   findTextInParagraphs,
@@ -28,7 +28,7 @@ Retrieves the visual selection in the editor. Use to communicate with the user a
     }
     try {
       const { startParagraphIndex, endParagraphIndex, selectedText } =
-        getSelectionText(editor as unknown as Editor, selection);
+        getSelectionText(editor, selection);
       return {
         success: true,
         startParagraphIndex,
@@ -83,12 +83,8 @@ Specify the visual selection in the editor. Use to communicate with the user abo
   create:
     (editor: PlateEditor) =>
     ({ startParagraphIndex, endParagraphIndex, selectedText }) => {
-      if (!selectedText || selectedText.trim() === "") {
-        return { success: false, error: "selectedText cannot be empty." };
-      }
       try {
-        const editorNode = editor as unknown as Editor;
-        const maxIndex = editorNode.children.length - 1;
+        const maxIndex = editor.children.length - 1;
         if (
           startParagraphIndex < 0 ||
           startParagraphIndex > maxIndex ||
@@ -102,7 +98,7 @@ Specify the visual selection in the editor. Use to communicate with the user abo
           };
         }
         const texts = getParagraphTexts(
-          editorNode,
+          editor,
           startParagraphIndex,
           endParagraphIndex,
         );
@@ -114,12 +110,12 @@ Specify the visual selection in the editor. Use to communicate with the user abo
           };
         }
         const anchor = getSlatePoint(
-          editorNode,
+          editor,
           startParagraphIndex + found.start.paragraph,
           found.start.offset,
         );
         const focus = getSlatePoint(
-          editorNode,
+          editor,
           startParagraphIndex + found.end.paragraph,
           found.end.offset,
         );
