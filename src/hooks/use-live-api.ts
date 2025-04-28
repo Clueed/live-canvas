@@ -81,7 +81,7 @@ export function useLiveAPI({
       // Execute the initialization
       initializeAudio();
     }
-  }, [audioStreamerRef]);
+  }, []);
 
   useEffect(() => {
     const onClose = () => {
@@ -107,19 +107,18 @@ export function useLiveAPI({
   }, [client]);
 
   const connect = useCallback(async () => {
-    console.log(config);
     if (!config) {
       throw new Error("config has not been set");
     }
     client.disconnect();
     await client.connect(config);
     setConnected(true);
-  }, [client, setConnected, config]);
+  }, [client, config]);
 
   const disconnect = useCallback(async () => {
     client.disconnect();
     setConnected(false);
-  }, [setConnected, client]);
+  }, [client]);
 
   return {
     client,
