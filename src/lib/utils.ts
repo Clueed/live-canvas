@@ -17,8 +17,14 @@ export const audioContext: (
   options?: GetAudioContextOptions,
 ) => Promise<AudioContext> = (() => {
   const didInteract = new Promise((resolve) => {
-    window.addEventListener("pointerdown", resolve, { once: true });
-    window.addEventListener("keydown", resolve, { once: true });
+    if (typeof window !== "undefined") {
+      window.addEventListener("pointerdown", resolve, { once: true });
+      window.addEventListener("keydown", resolve, { once: true });
+    } else {
+      // If not in a browser, resolve immediately or handle as appropriate for SSR
+      // For now, let's resolve, assuming audio context won't be used SSR.
+      resolve(undefined);
+    }
   });
 
   return async (options?: GetAudioContextOptions) => {
