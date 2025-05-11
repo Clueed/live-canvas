@@ -41,7 +41,11 @@ export type LiveConfig = {
   model: string;
   systemInstruction?: { parts: Part[] };
   generationConfig?: Partial<LiveGenerationConfig>;
-  tools?: Array<Tool | { googleSearch: Record<string, never> } | { codeExecution: Record<string, never> }>;
+  tools?: Array<
+    | Tool
+    | { googleSearch: Record<string, never> }
+    | { codeExecution: Record<string, never> }
+  >;
 };
 
 export type LiveGenerationConfig = GenerationConfig & {
@@ -152,7 +156,9 @@ export type StreamingLog = {
 // Type-Guards
 
 const prop = (a: unknown, prop: string, kind = "object") =>
-  typeof a === "object" && a !== null && typeof (a as Record<string, unknown>)[prop] === "object";
+  typeof a === "object" &&
+  a !== null &&
+  typeof (a as Record<string, unknown>)[prop] === "object";
 
 // outgoing messages
 export const isSetupMessage = (a: unknown): a is SetupMessage =>
@@ -181,7 +187,9 @@ export const isToolCallCancellationMessage = (
   a: unknown,
 ): a is ToolCallCancellationMessage =>
   prop(a, "toolCallCancellation") &&
-  isToolCallCancellation((a as { toolCallCancellation?: unknown }).toolCallCancellation);
+  isToolCallCancellation(
+    (a as { toolCallCancellation?: unknown }).toolCallCancellation,
+  );
 
 export const isModelTurn = (a: unknown): a is ModelTurn =>
   typeof (a as ModelTurn).modelTurn === "object";
@@ -242,4 +250,6 @@ export function isLiveFunctionResponse(
 export const isToolCallCancellation = (
   a: unknown,
 ): a is ToolCallCancellationMessage["toolCallCancellation"] =>
-  typeof a === "object" && a !== null && Array.isArray((a as { ids?: unknown }).ids);
+  typeof a === "object" &&
+  a !== null &&
+  Array.isArray((a as { ids?: unknown }).ids);

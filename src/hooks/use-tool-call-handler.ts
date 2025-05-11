@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from "react";
 
+import { AI_FUNCTIONS } from "@/lib/ai-functions";
 import type { MultimodalLiveClient } from "@/lib/multimodal-live-client";
 import { createFunctionCallHandler } from "@/lib/tool-call-handlers";
 import type { ToolCall } from "@/types/multimodal-live-types";
@@ -14,14 +15,14 @@ export function useToolCallHandler({
   client,
   editor,
 }: UseToolCallHandlerProps) {
-  const functionCallHandler = createFunctionCallHandler(editor);
+  const functionCallHandler = createFunctionCallHandler(editor, AI_FUNCTIONS);
 
   const onToolCallHandler = useCallback(
-    (toolCall: ToolCall, argClient: MultimodalLiveClient) => {
+    async (toolCall: ToolCall, argClient: MultimodalLiveClient) => {
       console.log("Received toolcall:", toolCall);
 
-      const functionResponses = toolCall.functionCalls.map((fc) =>
-        functionCallHandler(fc),
+      const functionResponses = await Promise.all(
+        toolCall.functionCalls.map((fc) => functionCallHandler(fc)),
       );
 
       argClient.sendToolResponse({ functionResponses });

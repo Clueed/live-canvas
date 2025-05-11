@@ -2,7 +2,7 @@ import { type Schema, SchemaType } from "@google/generative-ai";
 import { MarkdownPlugin } from "@udecode/plate-markdown";
 import { SuggestionPlugin } from "@udecode/plate-suggestion/react";
 import type { PlateEditor } from "@udecode/plate/react";
-import type { BaseRange, Editor } from "slate";
+import type { BaseRange } from "slate";
 import { z } from "zod";
 import {
   findTextInParagraphs,
@@ -51,7 +51,7 @@ Does *not* merge with existing text; always supplies a full artifact string.
   paramsSchema: z.object({
     text: z.string(),
   }),
-  create: (editor: PlateEditor) => (args) => {
+  create: (editor: PlateEditor) => async (args) => {
     const newMarkdown = editor
       .getApi(MarkdownPlugin)
       .markdown.deserialize(args.text);
@@ -112,17 +112,16 @@ Use this for targeted text replacements while preserving the rest of the documen
   }),
   create:
     (editor: PlateEditor) =>
-    ({
+    async ({
       startParagraphIndex,
       endParagraphIndex,
       textToReplace,
       replacementText,
     }) => {
       try {
-        const editorNode = editor as unknown as Editor;
-        const maxIndex = editorNode.children.length - 1;
+        const maxIndex = editor.children.length - 1;
 
-        console.log("children", editorNode.children);
+        console.log("children", editor.children);
 
         if (
           startParagraphIndex < 0 ||
@@ -139,7 +138,7 @@ Use this for targeted text replacements while preserving the rest of the documen
 
         // Get the raw text from paragraphs without markdown conversion
         const texts = getParagraphTexts(
-          editorNode,
+          editor,
           startParagraphIndex,
           endParagraphIndex,
         );
@@ -155,12 +154,12 @@ Use this for targeted text replacements while preserving the rest of the documen
 
         // Create selection range for the text to replace
         const anchor = getSlatePoint(
-          editorNode,
+          editor,
           startParagraphIndex + found.start.paragraph,
           found.start.offset,
         );
         const focus = getSlatePoint(
-          editorNode,
+          editor,
           startParagraphIndex + found.end.paragraph,
           found.end.offset,
         );

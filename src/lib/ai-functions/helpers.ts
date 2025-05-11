@@ -5,7 +5,7 @@ import { type ZodTypeAny, z } from "zod";
 export type AiFunctionDeclaration = FunctionDeclaration;
 
 export type AiFunctionResponse<
-  Response = unknown,
+  Response = unknown | undefined,
   Success extends boolean = true,
 > = Success extends true
   ? {
@@ -24,7 +24,9 @@ export type AiFunctionConfig<
   declaration: AiFunctionDeclaration;
   create: (
     editor: PlateEditor,
-  ) => (args: InferSchema<TSchema>) => AiFunctionResponse<TResult, Success>;
+  ) => (
+    args: InferSchema<TSchema>,
+  ) => OptionalPromise<AiFunctionResponse<TResult, Success>>;
   paramsSchema?: TSchema;
 };
 
@@ -36,7 +38,9 @@ export type AiFunction<
   declaration: AiFunctionDeclaration;
   create: (
     editor: PlateEditor,
-  ) => (args: InferSchema<TSchema>) => AiFunctionResponse<TResult, Success>;
+  ) => (
+    args: InferSchema<TSchema>,
+  ) => OptionalPromise<AiFunctionResponse<TResult, Success>>;
   paramsSchema: TSchema;
 };
 
@@ -57,3 +61,5 @@ export function defineAiFunction<
 type InferSchema<T extends ZodTypeAny | undefined> = T extends ZodTypeAny
   ? z.infer<T>
   : undefined;
+
+type OptionalPromise<T> = T | Promise<T>;

@@ -7,7 +7,7 @@ alwaysApply: false
 
 ## Introduction / Problem
 
-When tackling complex coding tasks, especially with AI assistance, a well-structured and actionable plan is crucial. This guideline outlines an iterative process to create such plans, ensuring they are both comprehensive and tailored to the specific codebase.
+When tackling complex coding tasks, especially with AI assistance, a well-structured and actionable plan is crucial. This guideline outlines an iterative process to create such plans, ensuring they are both comprehensive and tailored to the specific codebase. Effective planning is an **iterative and collaborative dialogue**, where the plan evolves with new insights and feedback.
 
 ## The Iterative Planning Process
 
@@ -15,8 +15,8 @@ Follow these phases to develop an effective task plan:
 
 ### 1. Phase 1: General Outline & Documentation Review
 
-*   **Understand the Goal:** Clearly define the objective of the plan based on the user's request.
-*   **Initial Draft:** Create a high-level outline of steps.
+*   **Understand the Goal:** Clearly define the objective of the plan based on the user\'s request. **Actively clarify the scope and desired outcomes with the user if any ambiguity exists.**
+*   **Initial Draft:** Create a high-level outline of steps. **Document any key assumptions made during this initial phase to ensure they can be validated.**
 *   **Consult Knowledge Sources:**
     *   Review relevant official documentation for tools or libraries involved.
     *   Incorporate general best practices.
@@ -28,6 +28,7 @@ Follow these phases to develop an effective task plan:
 *   **Thorough Codebase Analysis (Crucial):**
     *   Use available tools (`codebase_search`, `list_dir`, `read_file`, `grep_search`) to explore the project.
     *   Identify existing conventions, tools (e.g., package managers, linters, build systems, UI frameworks, specific database technologies, or server infrastructure), relevant file paths, and configurations.
+    *   **Prioritize identifying and reusing existing project-specific helper functions, components, or established patterns to ensure consistency and efficiency.**
     *   Understand how the new task fits into the existing architecture and patterns.
 *   **Tailor the Plan:**
     *   Replace general commands/steps with codebase-specific equivalents (e.g., use the project's designated package manager, update paths to match the project's directory structure, adapt to the project's chosen API style or database query language).
@@ -40,10 +41,15 @@ Follow these phases to develop an effective task plan:
 *   **Structure for Execution:**
     *   Organize the plan into a few (typically 1-5) key, high-level steps or phases.
     *   Each key step should be actionable and, where possible, independently executable and verifiable.
+    *   **Prioritize Dependency-Driven Task Sequencing:** Order steps based on their logical dependencies. 
+        *   Define prerequisite elements (data structures, helper functions, configuration, consumed lists/tools) *before* the steps that implement core logic relying on these prerequisites.
+        *   Implement core logic *after* prerequisites are defined.
+        *   Integrate the newly implemented component into the broader system (e.g., exporting it, adding to registries) *after* its core logic is complete.
 *   **Clarity and Conciseness:**
     *   Ensure each step is clearly described.
     *   Remove redundant information, focusing on actionable instructions.
     *   The overall plan should be easy to follow.
+*   **Incorporate Feedback:** **Recognize the plan as a living document. Actively solicit and integrate user/stakeholder feedback throughout the planning phases, especially after initial drafts or significant changes.**
 *   **Final Double-Check:**
     *   Verify all commands, file paths, and code snippets for accuracy within the context of the target project.
     *   Confirm the plan directly addresses the user's original request and incorporates all constraints.
@@ -91,10 +97,3 @@ The resulting plan would be written to `tmp/plan.md` and would follow this itera
         4.  **Frontend Rendering:** Apply `OnPush` change detection strategy to the `OrderSummary` Angular component and its children. Ensure large static assets for this flow are efficiently bundled and lazy-loaded if possible.
         5.  **Verification & Measurement:** Re-profile the "Order Submission Process" after all changes. Compare against baseline metrics and document the achieved performance improvement.
     *   **Final Review:** Confirm that the tools (`SpecificProfilerX`), language constructs (Django ORM, Angular specific_APIs), and database details (`PostgreSQL` indexing) are correctly referenced and that the steps are logical and address the identified bottlenecks.
-
-## Why This Process Is Effective
-
-*   **Relevance:** Ensures the plan is directly applicable to the user's environment.
-*   **Accuracy:** Reduces errors by grounding the plan in the specifics of the codebase.
-*   **Efficiency:** Provides a clear roadmap, facilitating smoother task execution with AI.
-*   **Standardization:** Writing plans to `tmp/plan.md` provides a consistent location for review and reference.

@@ -1,10 +1,13 @@
-import { AI_FUNCTIONS } from "@/lib/ai-functions";
+import type { AiFunctionList } from "@/lib/ai-functions";
 import type { LiveFunctionCall } from "@/types/multimodal-live-types";
 import type { PlateEditor } from "@udecode/plate/react";
 
-export function createFunctionCallHandler(editor: PlateEditor) {
-  return (fc: LiveFunctionCall) => {
-    const functionDeclaration = AI_FUNCTIONS.find(
+export function createFunctionCallHandler(
+  editor: PlateEditor,
+  functions: AiFunctionList,
+) {
+  return async (fc: LiveFunctionCall) => {
+    const functionDeclaration = functions.find(
       (f) => f.declaration.name === fc.name,
     );
 
@@ -28,7 +31,7 @@ export function createFunctionCallHandler(editor: PlateEditor) {
       };
     }
 
-    const response = functionCall(argsResult.data);
+    const response = await functionCall(argsResult.data);
 
     return {
       response: response,

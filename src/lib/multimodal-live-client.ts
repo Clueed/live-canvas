@@ -39,9 +39,9 @@ import type {
   Part,
 } from "@google/generative-ai";
 
-import { base64ToArrayBuffer, blobToJSON } from "./utils";
 import { EventEmitter } from "eventemitter3";
 import { difference } from "lodash";
+import { base64ToArrayBuffer, blobToJSON } from "./utils";
 
 /**
  * the events that this client will emit

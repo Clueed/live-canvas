@@ -13,7 +13,7 @@ Reverts the most recent modification made to the artifact in the editor.
 `.trim(),
   },
   paramsSchema: z.object({}),
-  create: (editor: PlateEditor) => () => {
+  create: (editor: PlateEditor) => async () => {
     if (editor.history.undos.length === 0) {
       return {
         success: false,
@@ -38,7 +38,7 @@ Reapplies the last artifact change that was undone.
 `.trim(),
   },
   paramsSchema: z.object({}),
-  create: (editor: PlateEditor) => () => {
+  create: (editor: PlateEditor) => async () => {
     if (editor.history.redos.length === 0) {
       return {
         success: false,

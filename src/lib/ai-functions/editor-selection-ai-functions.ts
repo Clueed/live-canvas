@@ -21,7 +21,7 @@ export const getSelectionOperation = defineAiFunction({
 Retrieves the visual selection in the editor. Use to communicate with the user about intent.
 `.trim(),
   },
-  create: (editor: PlateEditor) => () => {
+  create: (editor: PlateEditor) => async () => {
     const selection = editor.selection;
     if (!selection) {
       return { success: false, error: "No selection exists in the editor" };
@@ -82,7 +82,7 @@ Specify the visual selection in the editor. Use to communicate with the user abo
   }),
   create:
     (editor: PlateEditor) =>
-    ({ startParagraphIndex, endParagraphIndex, selectedText }) => {
+    async ({ startParagraphIndex, endParagraphIndex, selectedText }) => {
       try {
         const maxIndex = editor.children.length - 1;
         if (
