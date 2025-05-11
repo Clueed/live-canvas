@@ -1,9 +1,30 @@
-import { expect, test } from "@playwright/test";
+import { type Page, expect, test } from "@playwright/test";
 import {
   clickAtPath,
   getEditorHandle,
   setSelection,
 } from "@udecode/plate-playwright";
+
+/**
+ * Toggles the stream connection button (Connect/Disconnect).
+ * Assumes the button is identifiable by its accessible name which includes "Stream".
+ */
+async function toggleStreamConnection(page: Page) {
+  await page.getByRole("button", { name: /Stream/ }).click();
+}
+
+/**
+ * Types text into the message input area and sends it.
+ */
+async function sendTextMessage(page: Page, text: string) {
+  // Find the textarea using its aria-label
+  const textarea = page.getByRole("textbox", { name: "Message input" });
+  await textarea.fill(text);
+
+  // Find the send button by its accessible name and click it
+  const sendButton = page.getByRole("button", { name: "Send message" });
+  await sendButton.click();
+}
 
 test.describe("Canvas Input", () => {
   test("Pasting into the canvas editor", async ({ page }) => {

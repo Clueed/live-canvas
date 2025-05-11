@@ -10,8 +10,8 @@ import { cn } from "@/lib/utils";
 import type { Part } from "@google/generative-ai";
 import type { PlateEditor } from "@udecode/plate/react";
 
-import { ChatPanel } from "./ChatPanel";
 import { Send } from "lucide-react";
+import { ChatPanel } from "./ChatPanel";
 
 interface SidePanelProps {
   send: (parts: Part | Part[]) => void;
@@ -63,6 +63,7 @@ export default function SidePanel({ send, editor }: SidePanelProps) {
             onChange={(e) => setTextInput(e.target.value)}
             value={textInput}
             disabled={!connected}
+            aria-label="Message input"
           />
           <Button
             type="submit"
