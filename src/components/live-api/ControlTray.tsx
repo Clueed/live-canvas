@@ -1,13 +1,7 @@
 "use client";
 
 import type React from "react";
-import {
-  type ReactNode,
-  memo,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { type ReactNode, memo, useEffect, useRef, useState } from "react";
 
 import AudioPulse from "@/components/audio-pulse/AudioPulse";
 // Adjusted path
@@ -98,9 +92,9 @@ function ControlTrayComponent({
   isTestPanelOpen,
   isLoggerPanelOpen,
 }: ControlTrayProps) {
-  const [inVolume, setInVolume] = useState(0); // Input volume (mic)
+  const [inVolume, setInVolume] = useState(0);
   const [audioRecorder] = useState(() => new AudioRecorder());
-  const [muted, setMuted] = useState(false);
+  const [muted, setMuted] = useState(true);
   const connectButtonRef = useRef<HTMLButtonElement>(null);
 
   const {
@@ -108,7 +102,7 @@ function ControlTrayComponent({
     connect,
     disconnect,
     volume: outVolume,
-  } = useLiveAPIContext(); // Output volume (speaker)
+  } = useLiveAPIContext();
 
   // Focus connect button when disconnected
   useEffect(() => {
