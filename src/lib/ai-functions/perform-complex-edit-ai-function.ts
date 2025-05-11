@@ -15,8 +15,6 @@ import {
 } from "./editor-text-ai-functions";
 import { defineAiFunction } from "./helpers";
 
-// Define the list of functions available to the complex edit operation directly
-// to avoid circular dependencies with the main index file.
 const PERFORM_COMPLEX_EDIT_FUNCTIONS = [
   getEditorArtifactOperation,
   setEditorArtifactOperation,
@@ -68,18 +66,18 @@ export const performComplexEditOperation = defineAiFunction({
       );
 
       const model = genAI.getGenerativeModel({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-flash-preview-04-17",
         tools: [{ functionDeclarations: toolDeclarations }],
       });
 
       const chat = model.startChat({
-        history: [], // Start with an empty history for each complex edit
+        history: [],
       });
 
       console.log("Sending initial prompt to Gemini:", prompt);
       let result = await chat.sendMessage(prompt);
       let iterationCount = 0;
-      const MAX_ITERATIONS = 10; // Safeguard against infinite loops
+      const MAX_ITERATIONS = 10;
 
       while (iterationCount < MAX_ITERATIONS) {
         iterationCount++;
