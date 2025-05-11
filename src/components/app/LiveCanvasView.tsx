@@ -14,7 +14,6 @@ import { AI_FUNCTIONS } from "@/lib/ai-functions";
 import { SYSTEM_PROMPT } from "@/lib/prompts";
 import type { GenerativeContentBlob, Part } from "@google/generative-ai";
 
-// Renamed component from LiveCanvasLayout to LiveCanvasView
 export function LiveCanvasView() {
   const { client, setConfig } = useLiveAPIContext();
 

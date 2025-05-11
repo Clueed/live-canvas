@@ -4,7 +4,6 @@ import type React from "react";
 import { type ReactNode, memo, useEffect, useRef, useState } from "react";
 
 import AudioPulse from "@/components/audio-pulse/AudioPulse";
-// Adjusted path
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -13,15 +12,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useLiveAPIContext } from "@/contexts/LiveAPIContext";
-// Adjusted path
 import { AudioRecorder } from "@/lib/audio-recorder";
-// Adjusted path
 import { cn } from "@/lib/utils";
 import type { GenerativeContentBlob } from "@google/generative-ai";
 
 import { Beaker, ListFilter, Mic, MicOff, Pause, Play } from "lucide-react";
-
-// Adjusted path
 
 export type ControlTrayProps = {
   children?: ReactNode;
@@ -32,7 +27,6 @@ export type ControlTrayProps = {
   isLoggerPanelOpen: boolean;
 };
 
-// --- Media Stream Button Component ---
 interface MediaStreamButtonProps {
   isStreaming: boolean;
   start: () => Promise<void>;
@@ -83,7 +77,6 @@ const MediaStreamButton = memo(
   ),
 );
 
-// --- Main Control Tray Component ---
 function ControlTrayComponent({
   children,
   sendRealtimeInput,
@@ -104,14 +97,12 @@ function ControlTrayComponent({
     volume: outVolume,
   } = useLiveAPIContext();
 
-  // Focus connect button when disconnected
   useEffect(() => {
     if (!connected && connectButtonRef.current) {
       connectButtonRef.current.focus();
     }
   }, [connected]);
 
-  // Handle audio recording based on connection and mute state
   useEffect(() => {
     const onData = (base64: string) => {
       sendRealtimeInput([
@@ -126,11 +117,10 @@ function ControlTrayComponent({
       audioRecorder.on("data", onData).on("volume", setInVolume).start();
     } else {
       audioRecorder.stop();
-      setInVolume(0); // Reset volume when stopped/muted
+      setInVolume(0);
     }
 
     return () => {
-      // Added newline
       audioRecorder.off("data", onData).off("volume", setInVolume).stop();
     };
   }, [connected, muted, audioRecorder, sendRealtimeInput]);
@@ -219,11 +209,9 @@ function ControlTrayComponent({
           </Tooltip>
         </TooltipProvider>
 
-        {/* Placeholder for potential additional children controls */}
         {children}
       </nav>
 
-      {/* Right Aligned Connection Toggle */}
       <div className="flex items-center gap-2">
         <TooltipProvider delayDuration={100}>
           <Tooltip>
