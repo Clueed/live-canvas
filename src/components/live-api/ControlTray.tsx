@@ -1,7 +1,6 @@
 "use client";
 
-import type React from "react";
-import { type ReactNode, memo, useEffect, useRef, useState } from "react";
+import React, { type ReactNode, useEffect, useRef, useState } from "react";
 
 import AudioPulse from "@/components/audio-pulse/AudioPulse";
 import { Button } from "@/components/ui/button";
@@ -38,7 +37,7 @@ interface MediaStreamButtonProps {
   disabled?: boolean;
 }
 
-const MediaStreamButton = memo(
+const MediaStreamButton = React.memo(
   ({
     isStreaming,
     start,
@@ -243,4 +242,4 @@ function ControlTrayComponent({
   );
 }
 
-export default memo(ControlTrayComponent);
+export default ControlTrayComponent;
