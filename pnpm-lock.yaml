@@ -179,6 +179,9 @@ importers:
       '@udecode/plate-node-id':
         specifier: ^46.0.11
         version: 46.0.11(@udecode/plate@47.2.3(@types/react@19.1.2)(immer@10.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(scheduler@0.26.0)(slate-dom@0.112.2(slate@0.112.0))(slate@0.112.0)(use-sync-external-store@1.5.0(react@19.1.0)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@udecode/plate-playwright':
+        specifier: ^48.0.0
+        version: 48.0.0(@playwright/test@1.52.0)(@udecode/plate@47.2.3(@types/react@19.1.2)(immer@10.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(scheduler@0.26.0)(slate-dom@0.112.2(slate@0.112.0))(slate@0.112.0)(use-sync-external-store@1.5.0(react@19.1.0)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@udecode/plate-reset-node':
         specifier: ^44.0.0
         version: 44.0.0(@udecode/plate@47.2.3(@types/react@19.1.2)(immer@10.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(scheduler@0.26.0)(slate-dom@0.112.2(slate@0.112.0))(slate@0.112.0)(use-sync-external-store@1.5.0(react@19.1.0)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -245,6 +248,9 @@ importers:
       pdf-lib:
         specifier: ^1.17.1
         version: 1.17.1
+      playwright:
+        specifier: ^1.52.0
+        version: 1.52.0
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -2067,6 +2073,14 @@ packages:
     resolution: {integrity: sha512-nL5dioufXI7KtYR/FzTzQXo6SpsJvU2AyjOmmDRHNBrajG/g+s3DD0ipjK6Uegu+57m7TKi7m35o3VoFnB5QWw==}
     peerDependencies:
       '@udecode/plate': '>=44.0.0'
+      react: '>=18.0.0'
+      react-dom: '>=18.0.0'
+
+  '@udecode/plate-playwright@48.0.0':
+    resolution: {integrity: sha512-ypF9YBX4GfLzw3J8X7wrCjoB9QKL6zNOCmyzB8CfTY7i1/SvN0dTIV4EcKCSCsnIBe4DABv/2E5ldMOQy3X/xg==}
+    peerDependencies:
+      '@playwright/test': '>=1.42.1'
+      '@udecode/plate': '>=48.0.0'
       react: '>=18.0.0'
       react-dom: '>=18.0.0'
 
@@ -5524,6 +5538,13 @@ snapshots:
     dependencies:
       '@udecode/plate': 47.2.3(@types/react@19.1.2)(immer@10.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(scheduler@0.26.0)(slate-dom@0.112.2(slate@0.112.0))(slate@0.112.0)(use-sync-external-store@1.5.0(react@19.1.0))
       lodash: 4.17.21
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+
+  '@udecode/plate-playwright@48.0.0(@playwright/test@1.52.0)(@udecode/plate@47.2.3(@types/react@19.1.2)(immer@10.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(scheduler@0.26.0)(slate-dom@0.112.2(slate@0.112.0))(slate@0.112.0)(use-sync-external-store@1.5.0(react@19.1.0)))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      '@playwright/test': 1.52.0
+      '@udecode/plate': 47.2.3(@types/react@19.1.2)(immer@10.1.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(scheduler@0.26.0)(slate-dom@0.112.2(slate@0.112.0))(slate@0.112.0)(use-sync-external-store@1.5.0(react@19.1.0))
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 

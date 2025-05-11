@@ -40,6 +40,7 @@ import { ColumnItemPlugin, } from "@udecode/plate-layout/react";
 import {
   PlaceholderPlugin,
 } from "@udecode/plate-media/react";
+import { PlaywrightPlugin } from "@udecode/plate-playwright";
 import { SuggestionPlugin } from "@udecode/plate-suggestion/react";
 import {
   type CreatePlateEditorOptions,
@@ -129,6 +130,7 @@ export const useCreateEditor = (
         ...editorPlugins,
         FixedToolbarPlugin,
         // FloatingToolbarPlugin,
+        PlaywrightPlugin.configure({ enabled: process.env.NODE_ENV !== "production" }),
       ],
       value: [
         {
