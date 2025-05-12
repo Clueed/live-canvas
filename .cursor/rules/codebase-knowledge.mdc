@@ -8,6 +8,7 @@ alwaysApply: true
 - This project uses **pnpm** as the package manager.
 - The **zod** library is used for schema validation and type-safe data parsing.
 - **Biome** is used for linting and formatting the codebase.
+- Utility functions `tryCatchSync` and `tryCatchAsync` in `src/utils/try-catch.ts` are available for wrapping function calls in try-catch blocks.
 
 
 
