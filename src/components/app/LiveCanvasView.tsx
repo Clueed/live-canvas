@@ -10,7 +10,8 @@ import { FloatingTestPanel } from "@/components/live-api/FloatingTestPanel";
 import SidePanel from "@/components/live-api/SidePanel";
 import { useLiveAPIContext } from "@/contexts/LiveAPIContext";
 import { useToolCallHandler } from "@/hooks/use-tool-call-handler";
-import { AI_FUNCTIONS } from "@/lib/ai-functions";
+
+import { AI_FUNCTIONS } from "@/lib/ai-functions/helpers";
 import { SYSTEM_PROMPT } from "@/lib/prompts";
 import type { GenerativeContentBlob, Part } from "@google/generative-ai";
 
