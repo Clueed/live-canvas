@@ -9,6 +9,8 @@ alwaysApply: false
 
 When tackling complex coding tasks, especially with AI assistance, a well-structured and actionable plan is crucial. This guideline outlines an iterative process to create such plans, ensuring they are both comprehensive and tailored to the specific codebase. Effective planning is an **iterative and collaborative dialogue**, where the plan evolves with new insights and feedback.
 
+The core principle of this planning process is **incremental implementation through focused steps and placeholders**: each step should have a narrow scope, and any logic outside that scope is deferred using placeholder functions or stubs. This allows for flexibility and progressive detailing.
+
 ## The Iterative Planning Process
 
 Follow these phases to develop an effective task plan:
@@ -21,7 +23,7 @@ Follow these phases to develop an effective task plan:
     *   Review relevant official documentation for tools or libraries involved.
     *   Incorporate general best practices.
     *   Utilize any provided documentation or context (e.g., attached files, web search results).
-*   **Output:** A general plan that outlines the approach, possibly with placeholders for codebase-specific details.
+*   **Output:** A general plan that outlines the approach.
 
 ### 2. Phase 2: Codebase-Specific Customization & Deep Dive
 
@@ -38,62 +40,31 @@ Follow these phases to develop an effective task plan:
 
 ### 3. Phase 3: Refinement, Structuring & Final Review
 
-*   **Structure for Execution:**
-    *   Organize the plan into a few (typically 1-5) key, high-level steps or phases.
-    *   Each key step should be actionable and, where possible, independently executable and verifiable.
-    *   **Prioritize Dependency-Driven Task Sequencing:** Order steps based on their logical dependencies. 
-        *   Define prerequisite elements (data structures, helper functions, configuration, consumed lists/tools) *before* the steps that implement core logic relying on these prerequisites.
-        *   Implement core logic *after* prerequisites are defined.
-        *   Integrate the newly implemented component into the broader system (e.g., exporting it, adding to registries) *after* its core logic is complete.
+*   **Structure for Incremental Execution through Focused Steps:** This is the core of the planning structure.
+    *   Organize the plan into a sequence of steps, each with a **very narrow and specific goal**.
+    *   **Implement the Step's Core Logic:** Within each step, focus *only* on implementing the logic directly related to its narrow goal.
+    *   **Use Placeholders for External Dependencies:** Any functionality or data structure required by the current step but *outside* its narrow scope **must** be represented by a placeholder function or stub (e.g., `function getRelatedData() { /* TODO: Implement in a later step */ throw new Error("Not implemented"); }`, or a simple type definition like `type RelatedData = unknown;`). These placeholders are contracts for future implementation.
+    *   **Prioritize Dependency-Driven Sequencing:** Order steps based on their logical dependencies. A step that implements a placeholder used by a previous step should naturally follow it. The initial steps will likely define the higher-level structure and use more placeholders, while later steps will fill in these placeholder implementations.
+    *   **Integration Last:** Steps involving integration into the broader system (e.g., exporting functions, adding components to registries, updating main application logic) should come *after* the core logic and its dependent placeholders have been implemented.
 *   **Clarity and Conciseness:**
-    *   Ensure each step is clearly described.
-    *   Remove redundant information, focusing on actionable instructions.
-    *   The overall plan should be easy to follow.
+    *   Ensure each step clearly states its narrow goal.
+    *   The plan should clearly show the progression from high-level structure (with many placeholders) to detailed implementation (as placeholders are filled in).
+    *   Remove redundant information, focusing on actionable instructions for each step.
 *   **Incorporate Feedback:** **Recognize the plan as a living document. Actively solicit and integrate user/stakeholder feedback throughout the planning phases, especially after initial drafts or significant changes.**
 *   **Final Double-Check:**
     *   Verify all commands, file paths, and code snippets for accuracy within the context of the target project.
     *   Confirm the plan directly addresses the user's original request and incorporates all constraints.
-*   **Output:** A final, actionable checklist or plan, typically written to `tmp/plan.md`.
+*   **Output:** A final, actionable, incremental plan, typically written to `tmp/plan.md`.
 
 ## Key Characteristics of the Resulting Plan
 
-The final plan created by this process should exhibit:
+The final plan created by this process **must** exhibit:
 
-*   **Clear, Actionable Steps:** Each item should be a concrete action.
-*   **Defined Key Stages:** Broken down into 1-5 major, ideally independent, executable phases.
+*   **Narrowly Focused Steps:** Each step has a precise, limited objective.
+*   **Implicit Placeholder Usage:** Placeholders naturally arise for any logic outside a step's narrow scope, deferring complexity.
+*   **Incremental Build-up:** The solution is constructed progressively, with placeholders being implemented in subsequent, focused steps.
+*   **Defined Key Stages:** Broken down into logical steps reflecting this incremental build-up.
 *   **Codebase Specificity:** All instructions and examples are tailored to the project's actual environment and conventions discovered during Phase 2.
+*   **Dependency-Aware Sequencing:** Steps are ordered logically, allowing placeholders to be defined by one step and implemented by another.
 *   **Conciseness:** Provides necessary detail without being verbose.
 *   **Standard Location:** Stored in `tmp/plan.md` for easy access and review.
-
-## Example Scenario: Improve Application Performance in a Critical User Flow
-
-Task: Identify and remediate performance bottlenecks in a specified critical user flow of an application.
-
-The resulting plan would be written to `tmp/plan.md` and would follow this iterative development:
-
-1.  **Phase 1: General Outline & Documentation Review:**
-    *   **Goal Clarification:** Confirm the specific user flow (e.g., "Order Submission Process," "Dashboard Data Loading").
-    *   **Initial High-Level Steps:**
-        1.  Profile the identified user flow to establish baseline metrics and locate bottlenecks.
-        2.  Research optimization techniques relevant to the general technology stack (e.g., web app, database interactions, client-side rendering).
-        3.  Formulate potential remediation strategies based on common performance issues.
-    *   **Knowledge Sources:** Review documentation for general-purpose profiling tools, articles on performance optimization for web applications, common database optimization patterns, etc.
-
-2.  **Phase 2: Codebase-Specific Customization & Deep Dive:**
-    *   **Tools:** Discover the project utilizes `SpecificProfilerX` for backend profiling and browser developer tools for frontend analysis. Note the backend is `Python/Django` with `PostgreSQL` and the frontend uses `Angular`.
-    *   **Code Analysis:**
-        *   Trace the critical user flow through the codebase: identify specific Django views, models, database queries (e.g., `Product.objects.filter(...)`), Angular services, and components involved.
-        *   Examine existing caching layers (e.g., `Redis`), database indexes, and any known inefficient code paths or large data transfers related to this flow.
-    *   **Contextualize Strategies:** Based on findings:
-        *   If database queries are slow: Plan to analyze query execution plans for specific `PostgreSQL` queries and add/modify indexes.
-        *   If Python code is a bottleneck: Plan to refactor specific Django view logic or utility functions for efficiency.
-        *   If Angular frontend is slow: Plan to investigate change detection strategies, optimize component rendering, or reduce bundle sizes for specific modules.
-
-3.  **Phase 3: Refinement, Structuring & Final Review (Content for `tmp/plan.md`):**
-    *   **Key Actionable Steps (example derived from hypothetical Phase 2 findings):**
-        1.  **Profile & Baseline:** Using `SpecificProfilerX` and browser dev tools, profile the "Order Submission Process," focusing on the `submit_order` Django view and the `OrderReview` Angular component. Document current execution times for key operations.
-        2.  **Database Optimization:** Analyze and optimize the `PostgreSQL` query generated by `Order.create_order_items()`. Add a composite index to the `order_items` table on `(order_id, product_id)`.
-        3.  **Backend Logic Refactor:** Refactor the `calculate_order_discounts` function within the `submit_order` view to reduce redundant calculations.
-        4.  **Frontend Rendering:** Apply `OnPush` change detection strategy to the `OrderSummary` Angular component and its children. Ensure large static assets for this flow are efficiently bundled and lazy-loaded if possible.
-        5.  **Verification & Measurement:** Re-profile the "Order Submission Process" after all changes. Compare against baseline metrics and document the achieved performance improvement.
-    *   **Final Review:** Confirm that the tools (`SpecificProfilerX`), language constructs (Django ORM, Angular specific_APIs), and database details (`PostgreSQL` indexing) are correctly referenced and that the steps are logical and address the identified bottlenecks.
