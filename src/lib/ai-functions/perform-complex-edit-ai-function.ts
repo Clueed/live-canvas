@@ -1,7 +1,6 @@
 import { createFunctionCallHandler } from "@/lib/tool-call-handlers";
 import {
   type FunctionCall,
-  type FunctionResponsePart,
   GoogleGenerativeAI,
   SchemaType,
 } from "@google/generative-ai";
@@ -9,6 +8,7 @@ import { MarkdownPlugin } from "@udecode/plate-markdown";
 import type { PlateEditor } from "@udecode/plate/react";
 import { z } from "zod";
 import { COMPLEX_EDIT_SYSTEM_PROMPT } from "../prompts";
+import { completeTaskOperation } from "./complete-task-ai-function";
 import { redoOperation, undoOperation } from "./editor-history-ai-functions";
 import {
   getEditorArtifactOperation,
@@ -23,6 +23,7 @@ const PERFORM_COMPLEX_EDIT_FUNCTIONS = [
   replaceTextOperation,
   undoOperation,
   redoOperation,
+  completeTaskOperation,
 ] as const;
 
 export const performComplexEditOperation = defineAiFunction({
@@ -47,13 +48,8 @@ export const performComplexEditOperation = defineAiFunction({
   create: (editor: PlateEditor) => async (args) => {
     const { prompt: inputPrompt } = args;
     const md = editor.getApi(MarkdownPlugin).markdown.serialize();
-    const prompt = `
-# Instructions 
-${inputPrompt}
+    const prompt = createPrompt(inputPrompt, md);
 
-# Current artifact:
-${md}
-`.trim();
     console.log(`Executing perform_complex_edit with prompt: "${prompt}"`);
 
     const apiKey = process.env.NEXT_PUBLIC_GCP_API_KEY;
@@ -87,95 +83,58 @@ ${md}
 
       console.log("Sending initial prompt to Gemini:", prompt);
       let result = await chat.sendMessage(prompt);
+      let response = result.response;
       console.log(
-        "Received response from Gemini:",
-        JSON.stringify(result.response, null, 2),
+        "Received initial response from Gemini:",
+        JSON.stringify(response, null, 2),
       );
-      let iterationCount = 0;
-      const MAX_ITERATIONS = 10;
 
-      while (iterationCount < MAX_ITERATIONS) {
-        iterationCount++;
-        const response = result.response;
-        const calls: FunctionCall[] = [];
+      const calls: FunctionCall[] =
+        response.candidates?.[0]?.content?.parts?.flatMap((part) =>
+          part.functionCall ? [part.functionCall] : [],
+        ) ?? [];
 
-        if (response.candidates?.[0]?.content?.parts) {
-          for (const part of response.candidates[0].content.parts) {
-            if (part.functionCall) {
-              calls.push(part.functionCall);
-            }
-          }
-        }
+      console.log(
+        "Gemini Function Call(s):",
+        calls.map((call) => ({ name: call.name, args: call.args })),
+      );
 
-        if (calls.length > 0) {
-          console.log(
-            `Gemini Function Call(s) [Iteration ${iterationCount}]:`,
-            calls.map((call) => ({ name: call.name, args: call.args })),
-          );
-          const functionResponseParts: FunctionResponsePart[] = [];
+      const functionResponseParts = await Promise.all(
+        calls.map(async (call) => {
+          const { response: functionCallResponse } = await functionCallHandler({
+            ...call,
+            id: "dummy-id",
+          });
 
-          for (const call of calls) {
-            try {
-              const { response: functionCallResponse } =
-                await functionCallHandler({
-                  ...call,
-                  id: "dummy-id",
-                });
+          return {
+            functionResponse: {
+              name: call.name,
+              response: functionCallResponse,
+            },
+          };
+        }),
+      );
 
-              functionResponseParts.push({
-                functionResponse: {
-                  name: call.name,
-                  response: functionCallResponse,
-                },
-              });
-            } catch (e: unknown) {
-              console.error(`Error executing tool ${call.name}:`, e);
-              const errorMessage =
-                e instanceof Error ? e.message : "Unknown error";
-              functionResponseParts.push({
-                functionResponse: {
-                  name: call.name,
-                  response: {
-                    success: false,
-                    error: `Error executing tool ${call.name}: ${errorMessage}`,
-                  },
-                },
-              });
-            }
-          }
+      const hasErrors = functionResponseParts.some(
+        (part) => !part.functionResponse.response.success,
+      );
 
-          if (functionResponseParts.length > 0) {
-            console.log(
-              `Sending FunctionResponseParts to Gemini [Iteration ${iterationCount}]:`,
-              JSON.stringify(functionResponseParts, null, 2),
-            );
-            result = await chat.sendMessage(functionResponseParts);
-            console.log(
-              `Received response from Gemini [Iteration ${iterationCount}]:`,
-              JSON.stringify(result.response, null, 2),
-            );
-          } else {
-            // This case should ideally not happen if calls.length > 0
-            // but as a fallback, if no responses were generated, break.
-            console.log(
-              "No function responses generated despite calls, breaking.",
-            );
-            return { success: true, text: response.text() }; // Or handle as an error/unexpected state
-          }
-        } else {
-          // No function call, so we have a final text response
-          const finalText = response.text();
-          console.log("Gemini Final Response:", finalText);
-          return { success: true, text: finalText }; // Assuming AiFunctionResponse can handle this
-        }
+      if (hasErrors) {
+        console.log(
+          "Sending FunctionResponseParts back to Gemini:",
+          JSON.stringify(functionResponseParts, null, 2),
+        );
+        result = await chat.sendMessage(functionResponseParts);
+        response = result.response;
+        console.log(
+          "Received final response from Gemini:",
+          JSON.stringify(response, null, 2),
+        );
       }
-      if (iterationCount >= MAX_ITERATIONS) {
-        console.warn("Reached max iterations for perform_complex_edit.");
-        return {
-          success: false,
-          error: "Reached maximum iterations without a final text response.",
-        };
-      }
+
+      const finalText = response.text();
+      console.log("Gemini Final Text Response:", finalText);
+      return { success: true, text: finalText };
     } catch (error: unknown) {
       console.error("Error in performComplexEditOperation:", error);
       let errorMessage = "An unexpected error occurred during complex edit.";
@@ -194,10 +153,15 @@ ${md}
         error: errorMessage,
       };
     }
-
-    return {
-      success: false,
-      error: "This should never happen. Please report this bug.",
-    };
   },
 });
+
+const createPrompt = (inputPrompt: string, md: string) => {
+  return `
+# Instructions 
+${inputPrompt}
+
+# Current artifact:
+${md}
+`.trim();
+};

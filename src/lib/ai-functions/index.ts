@@ -1,3 +1,4 @@
+import { completeTaskOperation } from "./complete-task-ai-function";
 import { redoOperation, undoOperation } from "./editor-history-ai-functions";
 import {
   getSelectionOperation,
@@ -20,6 +21,7 @@ export const PERFORM_COMPLEX_EDIT_FUNCTIONS = [
   replaceTextOperation,
   undoOperation,
   redoOperation,
+  completeTaskOperation,
 ] as const;
 
 export const AI_FUNCTIONS = [
@@ -32,6 +34,7 @@ export const AI_FUNCTIONS = [
   performComplexEditOperation,
 ] as const;
 
+export * from "./complete-task-ai-function";
 export * from "./editor-history-ai-functions";
 export * from "./editor-selection-ai-functions";
 export * from "./editor-text-ai-functions";
