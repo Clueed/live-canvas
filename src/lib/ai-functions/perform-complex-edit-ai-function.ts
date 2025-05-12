@@ -5,8 +5,10 @@ import {
   GoogleGenerativeAI,
   SchemaType,
 } from "@google/generative-ai";
+import { MarkdownPlugin } from "@udecode/plate-markdown";
 import type { PlateEditor } from "@udecode/plate/react";
 import { z } from "zod";
+import { COMPLEX_EDIT_SYSTEM_PROMPT } from "../prompts";
 import { redoOperation, undoOperation } from "./editor-history-ai-functions";
 import {
   getEditorArtifactOperation,
@@ -29,10 +31,10 @@ export const performComplexEditOperation = defineAiFunction({
     description:
       "Performs complex editing tasks based on a user prompt by leveraging other available editor functions. It can understand the user's intent and orchestrate calls to other tools like text replacement, selection manipulation, or content retrieval to achieve the desired outcome. It manages a multi-turn conversation with the Gemini model to achieve this.",
     parameters: {
-      type: SchemaType.OBJECT, // Use the imported SchemaType enum
+      type: SchemaType.OBJECT,
       properties: {
         prompt: {
-          type: SchemaType.STRING, // Use the imported SchemaType enum
+          type: SchemaType.STRING,
           description: "User's instruction for the complex edit.",
         },
       },
@@ -43,7 +45,15 @@ export const performComplexEditOperation = defineAiFunction({
     prompt: z.string().min(1, "Prompt cannot be empty."),
   }),
   create: (editor: PlateEditor) => async (args) => {
-    const { prompt } = args;
+    const { prompt: inputPrompt } = args;
+    const md = editor.getApi(MarkdownPlugin).markdown.serialize();
+    const prompt = `
+# Instructions 
+${inputPrompt}
+
+# Current artifact:
+${md}
+`.trim();
     console.log(`Executing perform_complex_edit with prompt: "${prompt}"`);
 
     const apiKey = process.env.NEXT_PUBLIC_GCP_API_KEY;
@@ -68,6 +78,7 @@ export const performComplexEditOperation = defineAiFunction({
       const model = genAI.getGenerativeModel({
         model: "gemini-2.5-flash-preview-04-17",
         tools: [{ functionDeclarations: toolDeclarations }],
+        systemInstruction: COMPLEX_EDIT_SYSTEM_PROMPT,
       });
 
       const chat = model.startChat({
@@ -76,6 +87,10 @@ export const performComplexEditOperation = defineAiFunction({
 
       console.log("Sending initial prompt to Gemini:", prompt);
       let result = await chat.sendMessage(prompt);
+      console.log(
+        "Received response from Gemini:",
+        JSON.stringify(result.response, null, 2),
+      );
       let iterationCount = 0;
       const MAX_ITERATIONS = 10;
 
@@ -95,7 +110,7 @@ export const performComplexEditOperation = defineAiFunction({
         if (calls.length > 0) {
           console.log(
             `Gemini Function Call(s) [Iteration ${iterationCount}]:`,
-            calls.map((call) => call.name),
+            calls.map((call) => ({ name: call.name, args: call.args })),
           );
           const functionResponseParts: FunctionResponsePart[] = [];
 
@@ -135,6 +150,10 @@ export const performComplexEditOperation = defineAiFunction({
               JSON.stringify(functionResponseParts, null, 2),
             );
             result = await chat.sendMessage(functionResponseParts);
+            console.log(
+              `Received response from Gemini [Iteration ${iterationCount}]:`,
+              JSON.stringify(result.response, null, 2),
+            );
           } else {
             // This case should ideally not happen if calls.length > 0
             // but as a fallback, if no responses were generated, break.
