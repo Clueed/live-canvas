@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { AI_FUNCTIONS } from "@/lib/ai-functions";
+import { AI_FUNCTIONS } from "@/lib/ai-functions/helpers";
 import { createFunctionCallHandler } from "@/lib/tool-call-handlers";
 import { cn } from "@/lib/utils";
 import type { LiveFunctionCall } from "@/types/multimodal-live-types";

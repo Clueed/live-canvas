@@ -1,20 +1,34 @@
 import type { FunctionDeclaration } from "@google/generative-ai";
 import type { PlateEditor } from "@udecode/plate/react";
 import { type ZodTypeAny, z } from "zod";
+import { redoOperation, undoOperation } from "./editor-history-ai-functions";
+import {
+  getSelectionOperation,
+  setSelectionOperation,
+} from "./editor-selection-ai-functions";
+import {
+  getEditorArtifactOperation,
+  replaceTextOperation,
+} from "./editor-text-ai-functions";
+import { performComplexEditOperation } from "./perform-complex-edit-ai-function";
+
+export const AI_FUNCTIONS = [
+  getEditorArtifactOperation,
+  undoOperation,
+  redoOperation,
+  getSelectionOperation,
+  setSelectionOperation,
+  replaceTextOperation,
+  performComplexEditOperation,
+];
 
 export type AiFunctionDeclaration = FunctionDeclaration;
 
-export type AiFunctionResponse<
-  Response = unknown | undefined,
-  Success extends boolean = true,
-> = Success extends true
-  ? {
-      success: Success;
-    } & Response
-  : {
-      success: false;
-      error: string;
-    };
+export type AiFunctionResponse<Response = unknown | undefined> =
+  | ({
+      success: true;
+    } & Response)
+  | { success: false; error: string };
 
 export type AiFunctionConfig<
   TSchema extends ZodTypeAny,
@@ -26,7 +40,7 @@ export type AiFunctionConfig<
     editor: PlateEditor,
   ) => (
     args: InferSchema<TSchema>,
-  ) => OptionalPromise<AiFunctionResponse<TResult, Success>>;
+  ) => OptionalPromise<AiFunctionResponse<TResult>>;
   paramsSchema?: TSchema;
 };
 
@@ -40,7 +54,7 @@ export type AiFunction<
     editor: PlateEditor,
   ) => (
     args: InferSchema<TSchema>,
-  ) => OptionalPromise<AiFunctionResponse<TResult, Success>>;
+  ) => OptionalPromise<AiFunctionResponse<TResult>>;
   paramsSchema: TSchema;
 };
 
