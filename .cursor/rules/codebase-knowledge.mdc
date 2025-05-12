@@ -1,0 +1,13 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Codebase Knowledge
+
+- This project uses **pnpm** as the package manager.
+- The **zod** library is used for schema validation and type-safe data parsing.
+- **Biome** is used for linting and formatting the codebase.
+
+
+
