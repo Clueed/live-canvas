@@ -1,0 +1,31 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# General Refactoring Guidelines
+
+## Introduction / Problem
+
+This rule outlines core principles for refactoring code to improve its clarity, maintainability, testability, and overall quality. Applying these guidelines helps create simpler, more robust codebases.
+
+## Core Principles
+
+1.  **Simple, Composable Functions:** Break down complex logic into smaller, focused functions that are easier to understand, reuse, and test. Draw inspiration from functional programming.
+2.  **Single Responsibility Principle (SRP):** Each function, class, or module should have one well-defined purpose. If it does too much, split it.
+3.  **Don't Repeat Yourself (DRY):** Extract duplicated code into reusable functions or utilities to avoid redundancy and improve maintainability.
+4.  **Favor Pure Functions (where practical):** Aim for functions that produce the same output for the same input and have no side effects. They are easier to reason about and test.
+5.  **Favor Immutability:** Prefer creating new data structures over modifying existing ones to prevent side effects and simplify state management.
+6.  **Clear Naming:** Use descriptive names for variables, functions, classes, etc., that accurately reflect their purpose.
+7.  **Improve Abstraction:** Hide implementation details behind clear interfaces or function signatures.
+8.  **Enhance Testability:** Refactor with testing in mind. Smaller, focused units are easier to test in isolation.
+9.  **Increase Readability:** The primary goal is code that is easier for humans to understand.
+10. **Standardize Error Handling:** Use utility functions like `tryCatchSync`/`tryCatchAsync` (from `src/utils/try-catch.ts`) instead of raw `try...catch` blocks to ensure consistent error handling and reporting.
+
+## Common Pitfalls
+
+*   Creating "god objects" or functions that do too many things.
+*   Copy-pasting code instead of creating reusable abstractions.
+*   Using unclear or overly generic names.
+*   Ignoring testability during the refactoring process.
+*   Modifying data directly when immutability would be safer.
