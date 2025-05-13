@@ -23,10 +23,6 @@ const PERFORM_COMPLEX_EDIT_FUNCTIONS = [
   endTaskOperation,
 ];
 
-const model = genAI.getGenerativeModel({
-  model: "gemini-2.5-flash-preview-04-17",
-});
-
 const SYSTEM_PROMPT = `
 You are an advanced AI agent specialized **exclusively** in complex document structure and formatting transformations. You function as a dedicated tool invoked by a primary control agent. You have access to tools/functions to interact with the application's artifact editor.
 
@@ -47,6 +43,18 @@ You are an advanced AI agent specialized **exclusively** in complex document str
 
 **Focus:** Your sole function is high-quality document structure and formatting manipulation based on the primary agent's request, executed via a tool call to modify the artifact.
 `.trim();
+
+const model = genAI.getGenerativeModel({
+  model: "gemini-2.5-flash-preview-04-17",
+  systemInstruction: SYSTEM_PROMPT,
+  tools: [
+    {
+      functionDeclarations: PERFORM_COMPLEX_EDIT_FUNCTIONS.map(
+        (f) => f.declaration,
+      ),
+    },
+  ],
+});
 
 export const structuralAndFormattingEditsAiFunction = defineAiFunction({
   declaration: {
@@ -75,7 +83,6 @@ export const structuralAndFormattingEditsAiFunction = defineAiFunction({
       inputPrompt,
       model,
       aiFunctions: PERFORM_COMPLEX_EDIT_FUNCTIONS,
-      systemInstruction: SYSTEM_PROMPT,
     });
   },
 });

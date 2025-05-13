@@ -1,4 +1,5 @@
 import type { LiveFunctionCall } from "@/types/multimodal-live-types";
+import { tryCatchAsync } from "@/utils/try-catch";
 import type {
   GenerateContentResult,
   GenerativeModel,
@@ -20,7 +21,6 @@ interface GeminiAgentArgs<TSchema extends ZodTypeAny> {
   inputPrompt: string;
   model: GenerativeModel;
   aiFunctions: AiFunction<TSchema>[];
-  systemInstruction: string;
 }
 
 export const geminiAgent = async <TSchema extends ZodTypeAny>(
@@ -29,8 +29,6 @@ export const geminiAgent = async <TSchema extends ZodTypeAny>(
   const toolDeclarations = args.aiFunctions.map((tool) => tool.declaration);
   const chat = args.model.startChat({
     history: [],
-    tools: [{ functionDeclarations: toolDeclarations }],
-    systemInstruction: args.systemInstruction,
   });
 
   const md = args.editor.getApi(MarkdownPlugin).markdown.serialize();
@@ -49,12 +47,18 @@ export const geminiAgent = async <TSchema extends ZodTypeAny>(
   for (let i = 0; i < MAX_LOOPS; i++) {
     console.log(`[performComplexEdit] Loop ${i + 1}/${MAX_LOOPS}`);
     console.log("[performComplexEdit] Sending message to model:", message);
-    const result = await chat.sendMessage(message);
-    response = result;
+    const result = await tryCatchAsync(() => chat.sendMessage(message));
+
+    if (!result.success) {
+      return {
+        success: false,
+        error: `${result.error.name}: ${result.error.message}`,
+      };
+    }
+
+    const response = result.data;
+
     if (!response) {
-      console.error(
-        "[performComplexEdit] No response received from the model.",
-      );
       return {
         success: false,
         error: "No response received from the model.",
