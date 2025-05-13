@@ -1,10 +1,10 @@
-import type { AiFunctionList } from "@/lib/ai-functions";
 import type { LiveFunctionCall } from "@/types/multimodal-live-types";
 import type { PlateEditor } from "@udecode/plate/react";
+import type { AiFunction } from "./ai-functions/helpers";
 
 export function createFunctionCallHandler(
   editor: PlateEditor,
-  functions: AiFunctionList,
+  functions: AiFunction[],
 ) {
   return async (fc: LiveFunctionCall) => {
     const functionDeclaration = functions.find(

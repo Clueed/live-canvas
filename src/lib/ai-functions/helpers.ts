@@ -1,6 +1,8 @@
 import type { FunctionDeclaration } from "@google/generative-ai";
 import type { PlateEditor } from "@udecode/plate/react";
 import { type ZodTypeAny, z } from "zod";
+
+import { advancedCompositionAiFunction } from "./advanced-composition-ai-function";
 import { redoOperation, undoOperation } from "./editor-history-ai-functions";
 import {
   getSelectionOperation,
@@ -10,7 +12,7 @@ import {
   getEditorArtifactOperation,
   replaceTextOperation,
 } from "./editor-text-ai-functions";
-import { performComplexEditOperation } from "./perform-complex-edit-ai-function";
+import { structuralAndFormattingEditsAiFunction } from "./structural-and-formatting-edits";
 
 export const AI_FUNCTIONS = [
   getEditorArtifactOperation,
@@ -19,52 +21,45 @@ export const AI_FUNCTIONS = [
   getSelectionOperation,
   setSelectionOperation,
   replaceTextOperation,
-  performComplexEditOperation,
+  structuralAndFormattingEditsAiFunction,
+  advancedCompositionAiFunction,
 ];
 
 export type AiFunctionDeclaration = FunctionDeclaration;
 
-export type AiFunctionResponse<Response = unknown | undefined> =
-  | ({
-      success: true;
-    } & Response)
-  | { success: false; error: string };
+export type AiFunctionResponse<Response = Record<string, unknown>> = Promise<
+  {
+    success: boolean;
+    error?: string;
+  } & Response
+>;
 
-export type AiFunctionConfig<
+export interface AiFunctionConfig<
   TSchema extends ZodTypeAny,
-  TResult = unknown,
-  Success extends boolean = true,
-> = {
+  TResult = Record<string, unknown>,
+> {
   declaration: AiFunctionDeclaration;
   create: (
     editor: PlateEditor,
-  ) => (
-    args: InferSchema<TSchema>,
-  ) => OptionalPromise<AiFunctionResponse<TResult>>;
+  ) => (args: InferSchema<TSchema>) => AiFunctionResponse<TResult>;
   paramsSchema?: TSchema;
-};
+}
 
-export type AiFunction<
-  TSchema extends ZodTypeAny,
-  TResult = unknown,
-  Success extends boolean = true,
-> = {
+export interface AiFunction<
+  TSchema extends ZodTypeAny = ZodTypeAny,
+  TResult = Record<string, unknown>,
+> {
   declaration: AiFunctionDeclaration;
   create: (
     editor: PlateEditor,
-  ) => (
-    args: InferSchema<TSchema>,
-  ) => OptionalPromise<AiFunctionResponse<TResult>>;
+  ) => (args: InferSchema<TSchema>) => AiFunctionResponse<TResult>;
   paramsSchema: TSchema;
-};
+}
 
 export function defineAiFunction<
   TSchema extends ZodTypeAny,
-  TResult = unknown,
-  Success extends boolean = true,
->(
-  config: AiFunctionConfig<TSchema, TResult, Success>,
-): AiFunction<TSchema, TResult, Success> {
+  TResult = Record<string, unknown>,
+>(config: AiFunctionConfig<TSchema, TResult>): AiFunction<TSchema, TResult> {
   return {
     declaration: config.declaration,
     create: config.create,
@@ -75,5 +70,3 @@ export function defineAiFunction<
 type InferSchema<T extends ZodTypeAny | undefined> = T extends ZodTypeAny
   ? z.infer<T>
   : undefined;
-
-type OptionalPromise<T> = T | Promise<T>;

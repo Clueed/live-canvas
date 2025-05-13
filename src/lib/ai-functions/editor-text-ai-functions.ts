@@ -21,7 +21,7 @@ export const getEditorArtifactOperation = defineAiFunction({
 Fetches the current text of the artifact in the editor.
 `.trim(),
   },
-  create: (editor: PlateEditor) => () => {
+  create: (editor: PlateEditor) => async () => {
     return {
       success: true,
       artifact: editor.getApi(MarkdownPlugin).markdown.serialize(),
