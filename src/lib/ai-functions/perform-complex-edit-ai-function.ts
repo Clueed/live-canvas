@@ -9,7 +9,7 @@ import { MarkdownPlugin } from "@udecode/plate-markdown";
 import type { PlateEditor } from "@udecode/plate/react";
 import { z } from "zod";
 import { COMPLEX_EDIT_SYSTEM_PROMPT } from "../prompts";
-import { completeTaskOperation } from "./complete-task-ai-function";
+import { endTaskOperation } from "./complete-task-ai-function";
 import { redoOperation, undoOperation } from "./editor-history-ai-functions";
 import {
   getEditorArtifactOperation,
@@ -30,7 +30,7 @@ const PERFORM_COMPLEX_EDIT_FUNCTIONS = [
   replaceTextOperation,
   undoOperation,
   redoOperation,
-  completeTaskOperation,
+  endTaskOperation,
 ];
 const toolDeclarations = PERFORM_COMPLEX_EDIT_FUNCTIONS.map(
   (tool) => tool.declaration,
@@ -119,7 +119,7 @@ export const performComplexEditOperation = defineAiFunction({
       }
 
       const completeCall = functionCallResults.find(
-        (fc) => fc.functionCall.name === completeTaskOperation.declaration.name,
+        (fc) => fc.functionCall.name === endTaskOperation.declaration.name,
       );
       if (completeCall) {
         console.log(
@@ -153,7 +153,7 @@ const setCompleteCallToErrorsDueToOthers = (args: {
   functionCallResults: HandledFunctionCall[];
 }) => {
   const newFunctionCallResponses = args.functionCallResults.map((fc) => {
-    if (fc.functionCall.name === completeTaskOperation.declaration.name) {
+    if (fc.functionCall.name === endTaskOperation.declaration.name) {
       return {
         ...fc,
         response: { success: false, error: "Other functions failed." },
