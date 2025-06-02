@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
+import { GoogleGenerativeAI, Type } from "@google/genai";
 import type { PlateEditor } from "@udecode/plate/react";
 import { z } from "zod";
 import { endTaskOperation } from "./complete-task-ai-function";
@@ -62,10 +62,10 @@ export const structuralAndFormattingEditsAiFunction = defineAiFunction({
     description:
       "Modifies a document's overall structure, organization, layout, and formatting based on provided instructions. This function is ideal for tasks such as reordering sections or paragraphs, applying consistent formatting styles (e.g., headings, lists, indentation, citations based on supported standards), adjusting page layout elements, or reorganizing content for enhanced clarity and presentation, especially within large or complex documents. For instance, it can be employed to standardize the formatting of a multi-chapter report or re-sequence the main sections of a lengthy manuscript. This tool focuses on the structural and visual aspects of the document.\n\n**Limitations:** Does not perform linguistic refinement (e.g., summarizing, changing tone, correcting grammar) or generate new substantive content. Its ability to handle extremely complex or non-standard formatting (e.g., intricate table structures, specific niche style guides) may be limited.\n\n**When NOT to use:** Not suitable for minor text corrections, simple find-and-replace tasks, or requests focused on changing the meaning or language style of the content itself.",
     parameters: {
-      type: SchemaType.OBJECT,
+      type: Type.OBJECT,
       properties: {
         instructions: {
-          type: SchemaType.STRING,
+          type: Type.STRING,
           description:
             "Detailed natural language instructions specifying the desired structural and formatting changes. These instructions should clearly describe the target elements (e.g., 'Chapter 2', 'all bullet points', 'the bibliography section'), the desired actions (e.g., 'move after Chapter 5', 'format as APA style', 'apply consistent indentation', 'reorganize by date'), and any relevant constraints. The clarity and detail provided in the instructions directly impact the quality of the result. Example: 'Reorder the sections in Chapter 3 to be: Introduction, Methods, Results, Discussion. Ensure all level 1 headings use the 'Heading 1' style and level 2 headings use 'Heading 2'. Format the bibliography section according to APA 7th edition guidelines.'",
         },

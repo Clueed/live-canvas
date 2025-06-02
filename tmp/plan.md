@@ -15,7 +15,7 @@ This plan outlines the steps to create a new AI function, `performComplexEdit`, 
     *   `z` from `"zod"`.
     *   `defineAiFunction`, `AiFunction`, `AiFunctionResponse` from `"./helpers"`.
     *   The `PERFORM_COMPLEX_EDIT_TOOLS` array from `"./index"`.
-    *   Relevant types for function call handling (e.g., from `src/lib/tool-call-handlers` or `@google/generative-ai`).
+    *   Relevant types for function call handling (e.g., from `src/lib/tool-call-handlers` or `@google/genai`).
 
 ## 2. Define `performComplexEditOperation` Structure
 
@@ -75,7 +75,7 @@ This plan outlines the steps to create a new AI function, `performComplexEdit`, 
 
 ## 5. Refinements and API Key Management
 
-*   **Action:** Review and verify the exact structure for providing tools to the `@google/generative-ai` Node.js SDK (e.g., `tools: [{ functionDeclarations }]` in `GenerateContentRequest` or `StartChatParams`).
+*   **Action:** Review and verify the exact structure for providing tools to the `@google/genai` Node.js SDK (e.g., `tools: [{ functionDeclarations }]` in `GenerateContentRequest` or `StartChatParams`).
 *   **Action:** Confirm `process.env.NEXT_PUBLIC_GCP_API_KEY` is the correct and secure way to access the API key. For server-side operations, "public" keys are generally discouraged if they have broad permissions. Double-check if this key is intended for client-side or if a more secure server-side-only key should be used by this backend function.
 *   **Action:** Define a clear contract for what `performComplexEditOperation` returns as its `AiFunctionResponse`. If Gemini's final response is text, it could be `{ success: true, resultText: '...' }` or similar.
 

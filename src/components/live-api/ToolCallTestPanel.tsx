@@ -16,9 +16,9 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { AI_FUNCTIONS } from "@/lib/ai-functions/helpers";
-import type { LiveFunctionCall } from "@/lib/live-ai-client/multimodal-live-types";
 import { createFunctionCallHandler } from "@/lib/tool-call-handlers";
 import { cn } from "@/utils/cn";
+import type { FunctionCall } from "@google/genai";
 import type { PlateEditor } from "@udecode/plate/react";
 import { type ChangeEvent, type FocusEvent, useEffect, useState } from "react";
 
@@ -85,7 +85,7 @@ export function ToolCallTestPanel({ editor }: ToolCallTestPanelProps) {
   };
 
   const handleExecuteFunction = () => {
-    const functionCall: LiveFunctionCall = {
+    const functionCall: FunctionCall = {
       name: selectedFunction,
       args: { ...formValues }, // Args are now taken from formValues
       id: Date.now().toString(),

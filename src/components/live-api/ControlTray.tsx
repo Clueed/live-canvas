@@ -12,15 +12,15 @@ import {
 } from "@/components/ui/tooltip";
 import { useLiveAPIContext } from "@/contexts/LiveAPIContext";
 
-import type { GenerativeContentBlob } from "@google/generative-ai";
-
 import { AudioRecorder } from "@/lib/live-ai-client/audio-recorder";
 import { cn } from "@/utils/cn";
 import { Beaker, ListFilter, Mic, MicOff, Pause, Play } from "lucide-react";
 
 export type ControlTrayProps = {
   children?: ReactNode;
-  sendRealtimeInput: (chunks: GenerativeContentBlob[]) => void;
+  sendRealtimeInput: (
+    chunks: Array<{ mimeType: string; data: string }>,
+  ) => void;
   onToggleTestPanel: () => void;
   onToggleLoggerPanel: () => void;
   isTestPanelOpen: boolean;

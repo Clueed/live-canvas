@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 
-import type { Part } from "@google/generative-ai";
+import type { Part } from "@google/genai";
 
 // Simple string hashing function (djb2 algorithm)
 function hashString(str: string): string {

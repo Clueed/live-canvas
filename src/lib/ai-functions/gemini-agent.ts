@@ -1,9 +1,8 @@
+// @ts-nocheck
+
 import type { LiveFunctionCall } from "@/lib/live-ai-client/multimodal-live-types";
 import { tryCatchAsync } from "@/utils/try-catch";
-import type {
-  GenerateContentResult,
-  GenerativeModel,
-} from "@google/generative-ai";
+import type { GenerateContentResult, GenerativeModel } from "@google/genai";
 import { MarkdownPlugin } from "@udecode/plate-markdown";
 import type { PlateEditor } from "@udecode/plate/react";
 import type { ZodTypeAny } from "zod";

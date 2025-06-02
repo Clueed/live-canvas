@@ -1,13 +1,15 @@
 import { useCallback, useEffect } from "react";
 
 import { AI_FUNCTIONS } from "@/lib/ai-functions/helpers";
-import type { ToolCall } from "@/lib/live-ai-client/multimodal-live-types";
-import type { MultimodalLiveClient } from "@/lib/multimodal-live-client";
+
 import { createFunctionCallHandler } from "@/lib/tool-call-handlers";
+import type { LiveServerToolCall } from "@google/genai";
 import type { PlateEditor } from "@udecode/plate/react";
 
+import type { GenAILiveClient } from "@/lib/live-ai-client/multimodal-live-client";
+
 interface UseToolCallHandlerProps {
-  client: MultimodalLiveClient;
+  client: GenAILiveClient;
   editor: PlateEditor;
 }
 
@@ -18,8 +20,13 @@ export function useToolCallHandler({
   const functionCallHandler = createFunctionCallHandler(editor, AI_FUNCTIONS);
 
   const onToolCallHandler = useCallback(
-    async (toolCall: ToolCall, argClient: MultimodalLiveClient) => {
+    async (toolCall: LiveServerToolCall, argClient: GenAILiveClient) => {
       console.log("Received toolcall:", toolCall);
+
+      if (!toolCall.functionCalls || toolCall.functionCalls.length === 0) {
+        console.warn("Received tool call with no function calls");
+        return;
+      }
 
       const functionResponses = await Promise.all(
         toolCall.functionCalls.map((fc) => functionCallHandler(fc)),
@@ -35,7 +42,7 @@ export function useToolCallHandler({
       return;
     }
 
-    const onToolCall = (toolCall: ToolCall) => {
+    const onToolCall = (toolCall: LiveServerToolCall) => {
       onToolCallHandler(toolCall, client);
     };
 

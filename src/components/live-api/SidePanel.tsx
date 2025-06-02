@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useLiveAPIContext } from "@/contexts/LiveAPIContext";
 import { cn } from "@/utils/cn";
-import type { Part } from "@google/generative-ai";
+import type { Part } from "@google/genai";
 import type { PlateEditor } from "@udecode/plate/react";
 
 import { Send } from "lucide-react";

@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
+import { GoogleGenAI, Type } from "@google/genai";
 import type { PlateEditor } from "@udecode/plate/react";
 import { z } from "zod";
 import { endTaskOperation } from "./complete-task-ai-function";
@@ -14,7 +14,7 @@ const apiKey = process.env.NEXT_PUBLIC_GCP_API_KEY;
 if (!apiKey) {
   throw new Error("NEXT_PUBLIC_GCP_API_KEY is not defined.");
 }
-const genAI = new GoogleGenerativeAI(apiKey);
+const genAI = new GoogleGenAI({ apiKey });
 
 const PERFORM_COMPLEX_EDIT_FUNCTIONS = [
   getEditorArtifactOperation,
@@ -44,16 +44,18 @@ You are an advanced AI agent specialized **exclusively** in sophisticated lingui
 **Focus:** Your sole function is high-quality linguistic composition and textual content manipulation based on the primary agent's request, executed via a tool call to modify the artifact.
 `.trim();
 
-const model = genAI.getGenerativeModel({
+const model = genAI.models.generateContent({
   model: "gemini-2.5-flash-preview-04-17",
-  systemInstruction: SYSTEM_PROMPT,
-  tools: [
-    {
-      functionDeclarations: PERFORM_COMPLEX_EDIT_FUNCTIONS.map(
-        (f) => f.declaration,
-      ),
-    },
-  ],
+  config: {
+    systemInstruction: SYSTEM_PROMPT,
+    tools: [
+      {
+        functionDeclarations: PERFORM_COMPLEX_EDIT_FUNCTIONS.map(
+          (f) => f.declaration,
+        ),
+      },
+    ],
+  },
 });
 
 export const advancedCompositionAiFunction = defineAiFunction({
@@ -62,10 +64,10 @@ export const advancedCompositionAiFunction = defineAiFunction({
     description:
       "Performs sophisticated language editing, content refinement, and text generation tasks based on detailed instructions. Use this function to significantly improve phrasing and flow, rewrite sections for enhanced clarity or impact, adjust writing style or tone, summarize complex information into key points, expand on existing concepts with relevant details, or generate new text segments that are contextually appropriate. It excels at tasks requiring nuanced understanding of language and composition to achieve specific communicative goals. This function may handle complex requests requiring multiple refinement steps or interpretation of high-level objectives.\n\n**Limitations:** Primarily focuses on linguistic and substantive content manipulation. It is not designed for tasks centered on large-scale structural reorganization (e.g., reordering chapters) or purely formatting adjustments (e.g., applying specific citation styles or layout changes) – use dedicated tools for those purposes. Does not retrieve external real-time data unless supported by other integrated tools.\n\n**When NOT to use:** Not optimal for simple search/replace operations, basic spell checking, or tasks where the primary goal is changing the document's structure or layout rather than its textual content and expression.",
     parameters: {
-      type: SchemaType.OBJECT,
+      type: Type.OBJECT,
       properties: {
         instructions: {
-          type: SchemaType.STRING,
+          type: Type.STRING,
           description:
             "Clear and specific natural language instructions detailing the desired language enhancement, content modification, or text generation task. Should outline the objective (e.g., summarize, rewrite, expand, change tone, improve clarity), the target text or scope, and any specific constraints or stylistic requirements (e.g., 'summarize in 3 bullet points', 'rewrite for a non-technical audience', 'expand on the implications using analogies', 'adopt a persuasive tone'). Ambiguity in instructions may lead to interpretations that differ from the intended outcome. Example: 'Rewrite the introduction (first 3 paragraphs) to be more engaging for a general audience, clearly stating the main problem addressed. Aim for a concise and slightly informal tone.'",
         },

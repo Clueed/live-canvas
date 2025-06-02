@@ -43,5 +43,4 @@ export type ClientContentLog = {
   turnComplete: boolean;
 };
 
-export const isClientContentMessage = (a: unknown): a is ClientContentMessage =>
-  prop(a, "clientContent");
+export type AiToolCall = {}
