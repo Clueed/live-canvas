@@ -1,3 +1,4 @@
+import { create } from "zustand";
 /**
  * Copyright 2024 Google LLC
  *
@@ -13,8 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { StreamingLog } from "../types/multimodal-live-types";
-import { create } from "zustand";
+import type { StreamingLog } from "./multimodal-live-types";
 
 interface StoreLoggerState {
   maxLogs: number;

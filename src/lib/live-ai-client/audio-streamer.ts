@@ -20,17 +20,19 @@ import {
 } from "./audioworklet-registry";
 
 export class AudioStreamer {
-  public audioQueue: Float32Array[] = [];
-  private isPlaying = false;
   private sampleRate = 24000;
   private bufferSize = 7680;
-  private processingBuffer: Float32Array = new Float32Array(0);
-  private scheduledTime = 0;
-  public gainNode: GainNode;
-  public source: AudioBufferSourceNode;
+  // A queue of audio buffers to be played. Each buffer is a Float32Array.
+  private audioQueue: Float32Array[] = [];
+  private isPlaying = false;
+  // Indicates if the stream has finished playing, e.g., interrupted.
   private isStreamComplete = false;
   private checkInterval: number | null = null;
+  private scheduledTime = 0;
   private initialBufferTime = 0.1; //0.1 // 100ms initial buffer
+  // Web Audio API nodes. source => gain => destination
+  public gainNode: GainNode;
+  public source: AudioBufferSourceNode;
   private endOfQueueAudioSource: AudioBufferSourceNode | null = null;
 
   public onComplete = () => {};
@@ -42,7 +44,7 @@ export class AudioStreamer {
     this.addPCM16 = this.addPCM16.bind(this);
   }
 
-  async addWorklet<T extends (d: MessageEvent) => void>(
+  async addWorklet<T extends (d: unknown) => void>(
     workletName: string,
     workletSrc: string,
     handler: T,
@@ -52,17 +54,14 @@ export class AudioStreamer {
       // the worklet already exists on this context
       // add the new handler to it
       workletsRecord[workletName].handlers.push(handler);
-
       return Promise.resolve(this);
       //throw new Error(`Worklet ${workletName} already exists on context`);
     }
 
     if (!workletsRecord) {
       registeredWorklets.set(this.context, {});
-      workletsRecord = registeredWorklets.get(this.context);
-      if (!workletsRecord) {
-        throw new Error("Failed to initialize worklets record");
-      }
+      // biome-ignore lint/style/noNonNullAssertion: fix later from google example
+      workletsRecord = registeredWorklets.get(this.context)!;
     }
 
     // create new record to fill in as becomes available
@@ -78,7 +77,15 @@ export class AudioStreamer {
     return this;
   }
 
-  addPCM16(chunk: Uint8Array) {
+  /**
+   * Converts a Uint8Array of PCM16 audio data into a Float32Array.
+   * PCM16 is a common raw audio format, but the Web Audio API generally
+   * expects audio data as Float32Arrays with samples normalized between -1.0 and 1.0.
+   * This function handles that conversion.
+   * @param chunk The Uint8Array containing PCM16 audio data.
+   * @returns A Float32Array representing the converted audio data.
+   */
+  private _processPCM16Chunk(chunk: Uint8Array): Float32Array {
     const float32Array = new Float32Array(chunk.length / 2);
     const dataView = new DataView(chunk.buffer);
 
@@ -88,25 +95,28 @@ export class AudioStreamer {
         float32Array[i] = int16 / 32768;
       } catch (e) {
         console.error(e);
-        // console.log(
-        //   `dataView.length: ${dataView.byteLength},  i * 2: ${i * 2}`,
-        // );
       }
     }
+    return float32Array;
+  }
 
-    const newBuffer = new Float32Array(
-      this.processingBuffer.length + float32Array.length,
-    );
-    newBuffer.set(this.processingBuffer);
-    newBuffer.set(float32Array, this.processingBuffer.length);
-    this.processingBuffer = newBuffer;
-
-    while (this.processingBuffer.length >= this.bufferSize) {
-      const buffer = this.processingBuffer.slice(0, this.bufferSize);
+  addPCM16(chunk: Uint8Array) {
+    // Reset the stream complete flag when a new chunk is added.
+    this.isStreamComplete = false;
+    // Process the chunk into a Float32Array
+    let processingBuffer = this._processPCM16Chunk(chunk);
+    // Add the processed buffer to the queue if it's larger than the buffer size.
+    // This is to ensure that the buffer is not too large.
+    while (processingBuffer.length >= this.bufferSize) {
+      const buffer = processingBuffer.slice(0, this.bufferSize);
       this.audioQueue.push(buffer);
-      this.processingBuffer = this.processingBuffer.slice(this.bufferSize);
+      processingBuffer = processingBuffer.slice(this.bufferSize);
     }
-
+    // Add the remaining buffer to the queue if it's not empty.
+    if (processingBuffer.length > 0) {
+      this.audioQueue.push(processingBuffer);
+    }
+    // Start playing if not already playing.
     if (!this.isPlaying) {
       this.isPlaying = true;
       // Initialize scheduledTime only when we start playing
@@ -122,7 +132,6 @@ export class AudioStreamer {
       this.sampleRate,
     );
     audioBuffer.getChannelData(0).set(audioData);
-
     return audioBuffer;
   }
 
@@ -133,8 +142,8 @@ export class AudioStreamer {
       this.audioQueue.length > 0 &&
       this.scheduledTime < this.context.currentTime + SCHEDULE_AHEAD_TIME
     ) {
-      const audioData = this.audioQueue.shift();
-      if (!audioData) continue;
+      // biome-ignore lint/style/noNonNullAssertion: fix later from google example
+      const audioData = this.audioQueue.shift()!;
       const audioBuffer = this.createAudioBuffer(audioData);
       const source = this.context.createBufferSource();
 
@@ -173,19 +182,13 @@ export class AudioStreamer {
           }
         });
       }
-
-      // i added this trying to fix clicks
-      // this.gainNode.gain.setValueAtTime(0, 0);
-      // this.gainNode.gain.linearRampToValueAtTime(1, 1);
-
       // Ensure we never schedule in the past
       const startTime = Math.max(this.scheduledTime, this.context.currentTime);
       source.start(startTime);
-
       this.scheduledTime = startTime + audioBuffer.duration;
     }
 
-    if (this.audioQueue.length === 0 && this.processingBuffer.length === 0) {
+    if (this.audioQueue.length === 0) {
       if (this.isStreamComplete) {
         this.isPlaying = false;
         if (this.checkInterval) {
@@ -195,10 +198,7 @@ export class AudioStreamer {
       } else {
         if (!this.checkInterval) {
           this.checkInterval = window.setInterval(() => {
-            if (
-              this.audioQueue.length > 0 ||
-              this.processingBuffer.length >= this.bufferSize
-            ) {
+            if (this.audioQueue.length > 0) {
               this.scheduleNextBuffer();
             }
           }, 100) as unknown as number;
@@ -218,7 +218,6 @@ export class AudioStreamer {
     this.isPlaying = false;
     this.isStreamComplete = true;
     this.audioQueue = [];
-    this.processingBuffer = new Float32Array(0);
     this.scheduledTime = this.context.currentTime;
 
     if (this.checkInterval) {
@@ -249,15 +248,7 @@ export class AudioStreamer {
 
   complete() {
     this.isStreamComplete = true;
-    if (this.processingBuffer.length > 0) {
-      this.audioQueue.push(this.processingBuffer);
-      this.processingBuffer = new Float32Array(0);
-      if (this.isPlaying) {
-        this.scheduleNextBuffer();
-      }
-    } else {
-      this.onComplete();
-    }
+    this.onComplete();
   }
 }
 

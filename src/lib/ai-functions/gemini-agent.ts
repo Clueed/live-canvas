@@ -1,4 +1,4 @@
-import type { LiveFunctionCall } from "@/types/multimodal-live-types";
+import type { LiveFunctionCall } from "@/lib/live-ai-client/multimodal-live-types";
 import { tryCatchAsync } from "@/utils/try-catch";
 import type {
   GenerateContentResult,

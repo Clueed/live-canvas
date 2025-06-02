@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from "react";
 
 import { AI_FUNCTIONS } from "@/lib/ai-functions/helpers";
+import type { ToolCall } from "@/lib/live-ai-client/multimodal-live-types";
 import type { MultimodalLiveClient } from "@/lib/multimodal-live-client";
 import { createFunctionCallHandler } from "@/lib/tool-call-handlers";
-import type { ToolCall } from "@/types/multimodal-live-types";
 import type { PlateEditor } from "@udecode/plate/react";
 
 interface UseToolCallHandlerProps {

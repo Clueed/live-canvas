@@ -16,9 +16,9 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { AI_FUNCTIONS } from "@/lib/ai-functions/helpers";
+import type { LiveFunctionCall } from "@/lib/live-ai-client/multimodal-live-types";
 import { createFunctionCallHandler } from "@/lib/tool-call-handlers";
-import { cn } from "@/lib/utils";
-import type { LiveFunctionCall } from "@/types/multimodal-live-types";
+import { cn } from "@/utils/cn";
 import type { PlateEditor } from "@udecode/plate/react";
 import { type ChangeEvent, type FocusEvent, useEffect, useState } from "react";
 

@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createWorketFromSrc } from "./audioworklet-registry";
-import { audioContext } from "./utils";
+
 import AudioRecordingWorklet from "./worklets/audio-processing";
 import VolMeterWorket from "./worklets/vol-meter";
+
 import EventEmitter from "eventemitter3";
+import { createWorketFromSrc } from "./audioworklet-registry";
+import { audioContext } from "./utils";
 
 function arrayBufferToBase64(buffer: ArrayBuffer) {
   let binary = "";
@@ -26,7 +28,6 @@ function arrayBufferToBase64(buffer: ArrayBuffer) {
   for (let i = 0; i < len; i++) {
     binary += String.fromCharCode(bytes[i]);
   }
-
   return window.btoa(binary);
 }
 
@@ -50,37 +51,26 @@ export class AudioRecorder extends EventEmitter {
     }
 
     this.starting = new Promise((resolve, reject) => {
-      navigator.mediaDevices
-        .getUserMedia({ audio: true })
-        .then((stream) => {
-          this.stream = stream;
-
-          return audioContext({ sampleRate: this.sampleRate });
-        })
-        .then((audioCtx) => {
-          this.audioContext = audioCtx;
-          if (!this.stream) {
-            throw new Error("MediaStream not initialized");
-          }
+      (async () => {
+        try {
+          this.stream = await navigator.mediaDevices.getUserMedia({
+            audio: true,
+          });
+          this.audioContext = await audioContext({
+            sampleRate: this.sampleRate,
+          });
           this.source = this.audioContext.createMediaStreamSource(this.stream);
 
           const workletName = "audio-recorder-worklet";
           const src = createWorketFromSrc(workletName, AudioRecordingWorklet);
 
-          return this.audioContext.audioWorklet.addModule(src);
-        })
-        .then(() => {
-          if (!this.audioContext) {
-            throw new Error("Audio context not initialized");
-          }
-
-          const workletName = "audio-recorder-worklet";
+          await this.audioContext.audioWorklet.addModule(src);
           this.recordingWorklet = new AudioWorkletNode(
             this.audioContext,
             workletName,
           );
 
-          this.recordingWorklet.port.onmessage = (ev: MessageEvent) => {
+          this.recordingWorklet.port.onmessage = async (ev: MessageEvent) => {
             // worklet processes recording floats and messages converted buffer
             const arrayBuffer = ev.data.data.int16arrayBuffer;
 
@@ -89,21 +79,13 @@ export class AudioRecorder extends EventEmitter {
               this.emit("data", arrayBufferString);
             }
           };
-          this.source?.connect(this.recordingWorklet);
+          this.source.connect(this.recordingWorklet);
 
           // vu meter worklet
           const vuWorkletName = "vu-meter";
-
-          return this.audioContext.audioWorklet.addModule(
+          await this.audioContext.audioWorklet.addModule(
             createWorketFromSrc(vuWorkletName, VolMeterWorket),
           );
-        })
-        .then(() => {
-          if (!this.audioContext) {
-            throw new Error("Audio context not initialized");
-          }
-
-          const vuWorkletName = "vu-meter";
           this.vuWorklet = new AudioWorkletNode(
             this.audioContext,
             vuWorkletName,
@@ -112,22 +94,15 @@ export class AudioRecorder extends EventEmitter {
             this.emit("volume", ev.data.volume);
           };
 
-          this.source?.connect(this.vuWorklet);
+          this.source.connect(this.vuWorklet);
           this.recording = true;
           resolve();
           this.starting = null;
-
-          return null;
-        })
-        .catch((error) => {
+        } catch (error) {
           reject(error);
-          this.starting = null;
-
-          return null;
-        });
+        }
+      })();
     });
-
-    return this.starting;
   }
 
   stop() {
@@ -140,15 +115,10 @@ export class AudioRecorder extends EventEmitter {
       this.recordingWorklet = undefined;
       this.vuWorklet = undefined;
     };
-
     if (this.starting) {
-      return this.starting.then(handleStop).catch((error) => {
-        console.error("Error in start promise:", error);
-
-        return null;
-      });
+      this.starting.then(handleStop);
+      return;
     }
-
     handleStop();
   }
 }
