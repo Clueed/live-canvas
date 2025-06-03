@@ -14,16 +14,6 @@ const apiOptions: LiveClientOptions = {
 };
 
 export default function Page() {
-  if (!API_KEY) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <p className="text-red-500">
-          Error: NEXT_PUBLIC_GCP_API_KEY environment variable is not set.
-        </p>
-      </div>
-    );
-  }
-
   return (
     <LiveAPIProvider options={apiOptions}>
       <LiveCanvasView />
