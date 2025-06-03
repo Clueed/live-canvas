@@ -3,6 +3,12 @@ description:
 globs: 
 alwaysApply: true
 ---
+---
+title: Codebase Knowledge
+description: Generic knowledge for working in this codebase 
+glob: "**/*"
+alwaysApply: True
+---
 # Codebase Knowledge
 
 - This project uses **pnpm** as the package manager.
