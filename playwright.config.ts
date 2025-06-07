@@ -18,7 +18,7 @@ export default defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
-  retries: process.env.CI ? 2 : 1,
+  retries: process.env.CI ? 1 : 0,
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
@@ -79,7 +79,7 @@ export default defineConfig({
   webServer: {
     command: "pnpm dev", // Or your specific command to start the dev server
     url: "http://localhost:3000", // Must match your dev server URL and baseURL
-    reuseExistingServer: !process.env.CI, // Reuse if already running locally
+    reuseExistingServer: true, // Reuse if already running locally
     timeout: 120 * 1000, // Optional: Increase if your dev server takes time to start
   },
 });
