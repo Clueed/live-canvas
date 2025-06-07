@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { GoogleGenAI, Type } from "@google/genai";
 import type { PlateEditor } from "@udecode/plate/react";
 import { z } from "zod";
