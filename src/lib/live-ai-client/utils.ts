@@ -24,8 +24,13 @@ export const audioContext: (
   options?: GetAudioContextOptions,
 ) => Promise<AudioContext> = (() => {
   const didInteract = new Promise((res) => {
-    window.addEventListener("pointerdown", res, { once: true });
-    window.addEventListener("keydown", res, { once: true });
+    if (typeof window !== "undefined") {
+      window.addEventListener("pointerdown", res, { once: true });
+      window.addEventListener("keydown", res, { once: true });
+    } else {
+      // In SSR environment, resolve immediately
+      res(undefined);
+    }
   });
 
   return async (options?: GetAudioContextOptions) => {
@@ -70,5 +75,3 @@ export function base64ToArrayBuffer(base64: string) {
   }
   return bytes.buffer;
 }
-
-
