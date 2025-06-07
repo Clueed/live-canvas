@@ -13,7 +13,8 @@ import { useToolCallHandler } from "@/hooks/use-tool-call-handler";
 
 import { AI_FUNCTIONS } from "@/lib/ai-functions/helpers";
 import { SYSTEM_PROMPT } from "@/lib/prompts";
-import type { GenerativeContentBlob, Part } from "@google/generative-ai";
+import type { Part } from "@google/genai";
+import { Modality } from "@google/genai";
 
 export function LiveCanvasView() {
   const { client, setConfig } = useLiveAPIContext();
@@ -39,10 +40,7 @@ export function LiveCanvasView() {
 
   useEffect(() => {
     setConfig({
-      model: "models/gemini-2.0-flash-exp",
-      generationConfig: {
-        responseModalities: "text",
-      },
+      responseModalities: [Modality.TEXT],
       systemInstruction: {
         parts: [
           {
@@ -69,7 +67,7 @@ export function LiveCanvasView() {
   );
 
   const sendRealtimeInput = useCallback(
-    (chunks: GenerativeContentBlob[]) => {
+    (chunks: Array<{ mimeType: string; data: string }>) => {
       if (!client) return;
       client.sendRealtimeInput(chunks);
     },

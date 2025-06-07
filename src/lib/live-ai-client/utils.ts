@@ -1,11 +1,18 @@
-"use client";
-
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+/**
+ * Copyright 2024 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 export type GetAudioContextOptions = AudioContextOptions & {
   id?: string;
@@ -16,14 +23,13 @@ const map: Map<string, AudioContext> = new Map();
 export const audioContext: (
   options?: GetAudioContextOptions,
 ) => Promise<AudioContext> = (() => {
-  const didInteract = new Promise((resolve) => {
+  const didInteract = new Promise((res) => {
     if (typeof window !== "undefined") {
-      window.addEventListener("pointerdown", resolve, { once: true });
-      window.addEventListener("keydown", resolve, { once: true });
+      window.addEventListener("pointerdown", res, { once: true });
+      window.addEventListener("keydown", res, { once: true });
     } else {
-      // If not in a browser, resolve immediately or handle as appropriate for SSR
-      // For now, let's resolve, assuming audio context won't be used SSR.
-      resolve(undefined);
+      // In SSR environment, resolve immediately
+      res(undefined);
     }
   });
 
@@ -43,7 +49,6 @@ export const audioContext: (
       if (options?.id) {
         map.set(options.id, ctx);
       }
-
       return ctx;
     } catch (e) {
       await didInteract;
@@ -57,39 +62,16 @@ export const audioContext: (
       if (options?.id) {
         map.set(options.id, ctx);
       }
-
       return ctx;
     }
   };
 })();
 
-export const blobToJSON = (blob: Blob): Promise<unknown> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (reader.result) {
-        try {
-          const json = JSON.parse(reader.result as string);
-          resolve(json);
-        } catch (error) {
-          reject("Failed to parse JSON from blob");
-        }
-      } else {
-        reject("Failed to read blob content");
-      }
-    };
-    reader.onerror = () => {
-      reject("Error reading blob");
-    };
-    reader.readAsText(blob);
-  });
-
-export function base64ToArrayBuffer(base64: string): ArrayBuffer {
+export function base64ToArrayBuffer(base64: string) {
   const binaryString = atob(base64);
   const bytes = new Uint8Array(binaryString.length);
   for (let i = 0; i < binaryString.length; i++) {
     bytes[i] = binaryString.charCodeAt(i);
   }
-
   return bytes.buffer;
 }

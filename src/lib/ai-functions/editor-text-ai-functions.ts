@@ -1,4 +1,4 @@
-import { type Schema, SchemaType } from "@google/generative-ai";
+import { Type } from "@google/genai";
 import { MarkdownPlugin } from "@udecode/plate-markdown";
 import { SuggestionPlugin } from "@udecode/plate-suggestion/react";
 import type { PlateEditor } from "@udecode/plate/react";
@@ -38,12 +38,12 @@ Use this when you've generated or revised a complete draft and want to display i
 Does *not* merge with existing text; always supplies a full artifact string.
   `.trim(),
     parameters: {
-      type: SchemaType.OBJECT,
+      type: Type.OBJECT,
       properties: {
         text: {
-          type: SchemaType.STRING,
+          type: Type.STRING,
           description: "Complete artifact content.",
-        } satisfies Schema,
+        },
       },
       required: ["text"],
     },
@@ -74,27 +74,27 @@ Replaces specific text within a range of paragraphs in the editor.
 Use this for targeted text replacements while preserving the rest of the document.
 `.trim(),
     parameters: {
-      type: SchemaType.OBJECT,
+      type: Type.OBJECT,
       properties: {
         startParagraphIndex: {
-          type: SchemaType.NUMBER,
+          type: Type.NUMBER,
           description:
             "The 0-based index of the paragraph where the replacement should start.",
-        } satisfies Schema,
+        },
         endParagraphIndex: {
-          type: SchemaType.NUMBER,
+          type: Type.NUMBER,
           description:
             "The 0-based index of the paragraph where the replacement should end (inclusive).",
-        } satisfies Schema,
+        },
         textToReplace: {
-          type: SchemaType.STRING,
+          type: Type.STRING,
           description:
             "The exact text content that should be replaced within the specified paragraph range.",
-        } satisfies Schema,
+        },
         replacementText: {
-          type: SchemaType.STRING,
+          type: Type.STRING,
           description: "The new text to insert in place of the matched text.",
-        } satisfies Schema,
+        },
       },
       required: [
         "startParagraphIndex",

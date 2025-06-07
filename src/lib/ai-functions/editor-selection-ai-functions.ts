@@ -1,4 +1,4 @@
-import { type Schema, SchemaType } from "@google/generative-ai";
+import { Type } from "@google/genai";
 import type { PlateEditor } from "@udecode/plate/react";
 
 import type { BaseRange } from "slate";
@@ -54,23 +54,23 @@ export const setSelectionOperation = defineAiFunction({
 Specify the visual selection in the editor. Use to communicate with the user about intent.
 `.trim(),
     parameters: {
-      type: SchemaType.OBJECT,
+      type: Type.OBJECT,
       properties: {
         startParagraphIndex: {
-          type: SchemaType.NUMBER,
+          type: Type.NUMBER,
           description:
             "The 0-based index of the paragraph where the selection should start.",
-        } satisfies Schema,
+        },
         endParagraphIndex: {
-          type: SchemaType.NUMBER,
+          type: Type.NUMBER,
           description:
             "The 0-based index of the paragraph where the selection should end (inclusive).",
-        } satisfies Schema,
+        },
         selectedText: {
-          type: SchemaType.STRING,
+          type: Type.STRING,
           description:
             "The exact text content that should be selected within the specified paragraph range.",
-        } satisfies Schema,
+        },
       },
       required: ["startParagraphIndex", "endParagraphIndex", "selectedText"],
     },

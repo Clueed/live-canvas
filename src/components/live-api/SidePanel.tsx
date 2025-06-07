@@ -6,12 +6,11 @@ import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useLiveAPIContext } from "@/contexts/LiveAPIContext";
-import { cn } from "@/lib/utils";
-import type { Part } from "@google/generative-ai";
+import { cn } from "@/utils/cn";
+import type { Part } from "@google/genai";
 import type { PlateEditor } from "@udecode/plate/react";
 
 import { Send } from "lucide-react";
-import { ChatPanel } from "./ChatPanel";
 
 interface SidePanelProps {
   send: (parts: Part | Part[]) => void;
@@ -43,7 +42,7 @@ export default function SidePanel({ send, editor }: SidePanelProps) {
         <h2 className="text-lg font-semibold">NORI</h2>
       </header>
 
-      <ChatPanel />
+      {/* <ChatPanel /> */}
 
       <div
         className={cn(

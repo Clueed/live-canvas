@@ -1,8 +1,6 @@
-import type { FunctionDeclaration } from "@google/generative-ai";
+import type { FunctionDeclaration } from "@google/genai";
 import type { PlateEditor } from "@udecode/plate/react";
 import { type ZodTypeAny, z } from "zod";
-
-import { advancedCompositionAiFunction } from "./advanced-composition-ai-function";
 import { redoOperation, undoOperation } from "./editor-history-ai-functions";
 import {
   getSelectionOperation,
@@ -11,18 +9,19 @@ import {
 import {
   getEditorArtifactOperation,
   replaceTextOperation,
+  setEditorArtifactOperation,
 } from "./editor-text-ai-functions";
-import { structuralAndFormattingEditsAiFunction } from "./structural-and-formatting-edits";
 
 export const AI_FUNCTIONS = [
   getEditorArtifactOperation,
+  setEditorArtifactOperation,
   undoOperation,
   redoOperation,
   getSelectionOperation,
   setSelectionOperation,
   replaceTextOperation,
-  structuralAndFormattingEditsAiFunction,
-  advancedCompositionAiFunction,
+  // structuralAndFormattingEditsAiFunction,
+  // advancedCompositionAiFunction,
 ];
 
 export type AiFunctionDeclaration = FunctionDeclaration;

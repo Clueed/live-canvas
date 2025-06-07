@@ -13,79 +13,65 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { AudioStreamer } from "../lib/audio-streamer";
-import {
-  type MultimodalLiveAPIClientConnection,
-  MultimodalLiveClient,
-} from "../lib/multimodal-live-client";
-import { audioContext } from "../lib/utils";
-import VolMeterWorket from "../lib/worklets/vol-meter";
-import type { LiveConfig } from "../types/multimodal-live-types";
+import { AudioStreamer } from "@/lib/live-ai-client/audio-streamer";
+import { GenAILiveClient } from "@/lib/live-ai-client/multimodal-live-client";
+import type { LiveClientOptions } from "@/lib/live-ai-client/multimodal-live-types";
+import { audioContext } from "@/lib/live-ai-client/utils";
+import VolMeterWorket from "@/lib/live-ai-client/worklets/vol-meter";
+import type { LiveConnectConfig } from "@google/genai";
 
 export type UseLiveAPIResults = {
-  client: MultimodalLiveClient;
-  setConfig: (config: LiveConfig) => void;
-  config: LiveConfig;
+  client: GenAILiveClient;
+  setConfig: (config: LiveConnectConfig) => void;
+  config: LiveConnectConfig;
+  model: string;
+  setModel: (model: string) => void;
   connected: boolean;
   connect: () => Promise<void>;
   disconnect: () => Promise<void>;
   volume: number;
 };
 
-export function useLiveAPI({
-  url,
-  apiKey,
-}: MultimodalLiveAPIClientConnection): UseLiveAPIResults {
-  const client = useMemo(
-    () => new MultimodalLiveClient({ url, apiKey }),
-    [url, apiKey],
-  );
+export function useLiveAPI(options: LiveClientOptions): UseLiveAPIResults {
+  const client = useMemo(() => new GenAILiveClient(options), [options]);
   const audioStreamerRef = useRef<AudioStreamer | null>(null);
 
+  const [model, setModel] = useState<string>("models/gemini-2.0-flash-exp");
+  const [config, setConfig] = useState<LiveConnectConfig>({});
   const [connected, setConnected] = useState(false);
-  const [config, setConfig] = useState<LiveConfig>({
-    model: "models/gemini-2.0-flash-exp",
-  });
   const [volume, setVolume] = useState(0);
 
   // register audio for streaming server -> speakers
   useEffect(() => {
     if (!audioStreamerRef.current) {
-      // Create an initialization function to avoid nesting promises
-      const initializeAudio = async () => {
-        try {
-          const audioCtx = await audioContext({ id: "audio-out" });
-          audioStreamerRef.current = new AudioStreamer(audioCtx);
-
-          try {
-            await audioStreamerRef.current.addWorklet<(
-              ev: MessageEvent<{ volume: number }>
-            ) => void>(
-              "vumeter-out",
-              VolMeterWorket,
-              (ev) => {
-                setVolume(ev.data.volume);
-              },
-            );
+      audioContext({ id: "audio-out" }).then((audioCtx: AudioContext) => {
+        audioStreamerRef.current = new AudioStreamer(audioCtx);
+        audioStreamerRef.current
+          // biome-ignore lint/suspicious/noExplicitAny: fix later from google example
+          .addWorklet<any>("vumeter-out", VolMeterWorket, (ev: any) => {
+            setVolume(ev.data.volume);
+          })
+          .then(() => {
             // Successfully added worklet
-          } catch (error) {
-            console.error("Error adding worklet:", error);
-          }
-        } catch (error) {
-          console.error("Error initializing audio context:", error);
-        }
-      };
-
-      // Execute the initialization
-      initializeAudio();
+          });
+      });
     }
   }, []);
 
   useEffect(() => {
+    const onOpen = () => {
+      setConnected(true);
+    };
+
     const onClose = () => {
       setConnected(false);
+    };
+
+    const onError = (error: ErrorEvent) => {
+      console.error("error", error);
     };
 
     const stopAudioStreamer = () => audioStreamerRef.current?.stop();
@@ -94,15 +80,20 @@ export function useLiveAPI({
       audioStreamerRef.current?.addPCM16(new Uint8Array(data));
 
     client
+      .on("error", onError)
+      .on("open", onOpen)
       .on("close", onClose)
       .on("interrupted", stopAudioStreamer)
       .on("audio", onAudio);
 
     return () => {
       client
+        .off("error", onError)
+        .off("open", onOpen)
         .off("close", onClose)
         .off("interrupted", stopAudioStreamer)
-        .off("audio", onAudio);
+        .off("audio", onAudio)
+        .disconnect();
     };
   }, [client]);
 
@@ -111,9 +102,8 @@ export function useLiveAPI({
       throw new Error("config has not been set");
     }
     client.disconnect();
-    await client.connect(config);
-    setConnected(true);
-  }, [client, config]);
+    await client.connect(model, config);
+  }, [client, config, model]);
 
   const disconnect = useCallback(async () => {
     client.disconnect();
@@ -124,6 +114,8 @@ export function useLiveAPI({
     client,
     config,
     setConfig,
+    model,
+    setModel,
     connected,
     connect,
     disconnect,

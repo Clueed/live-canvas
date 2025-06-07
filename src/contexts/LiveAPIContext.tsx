@@ -14,28 +14,22 @@
  * limitations under the License.
  */
 
-import { createContext, type FC, type ReactNode, useContext } from "react";
-import { useLiveAPI, type UseLiveAPIResults } from "../hooks/use-live-api";
+import { type UseLiveAPIResults, useLiveAPI } from "@/hooks/use-live-api";
+import type { LiveClientOptions } from "@/lib/live-ai-client/multimodal-live-types";
+import { type FC, type ReactNode, createContext, useContext } from "react";
 
-// Define the context type
-export type LiveAPIContextType = UseLiveAPIResults;
-
-// Create the actual context instance
-const LiveAPIContext = createContext<LiveAPIContextType | undefined>(undefined);
+const LiveAPIContext = createContext<UseLiveAPIResults | undefined>(undefined);
 
 export type LiveAPIProviderProps = {
   children: ReactNode;
-  url?: string;
-  apiKey: string;
+  options: LiveClientOptions;
 };
 
 export const LiveAPIProvider: FC<LiveAPIProviderProps> = ({
-  url,
-  apiKey,
+  options,
   children,
 }) => {
-  // Pass canvasText to the useLiveAPI hook
-  const liveAPI = useLiveAPI({ url, apiKey });
+  const liveAPI = useLiveAPI(options);
 
   return (
     <LiveAPIContext.Provider value={liveAPI}>
@@ -49,6 +43,5 @@ export const useLiveAPIContext = () => {
   if (!context) {
     throw new Error("useLiveAPIContext must be used wihin a LiveAPIProvider");
   }
-
   return context;
 };

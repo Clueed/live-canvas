@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import { useLiveAPIContext } from "@/contexts/LiveAPIContext";
 import { useDraggable } from "@/lib/hooks/useDraggable";
-import { useLoggerStore } from "@/lib/store-logger";
+import { useLoggerStore } from "@/lib/live-ai-client/store-logger";
 
 import { Move, X } from "lucide-react";
 

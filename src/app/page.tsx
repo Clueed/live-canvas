@@ -2,24 +2,20 @@
 
 import { LiveCanvasView } from "@/components/app/LiveCanvasView";
 import { LiveAPIProvider } from "@/contexts/LiveAPIContext";
+import type { LiveClientOptions } from "@/lib/live-ai-client/multimodal-live-types";
 
-const apiKey = process.env.NEXT_PUBLIC_GCP_API_KEY;
-const host = "generativelanguage.googleapis.com";
-const uri = `wss://${host}/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent`;
+const API_KEY = process.env.NEXT_PUBLIC_GCP_API_KEY;
+if (typeof API_KEY !== "string") {
+  throw new Error("set REACT_APP_GEMINI_API_KEY in .env");
+}
+
+const apiOptions: LiveClientOptions = {
+  apiKey: API_KEY,
+};
 
 export default function Page() {
-  if (!apiKey) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <p className="text-red-500">
-          Error: NEXT_PUBLIC_GCP_API_KEY environment variable is not set.
-        </p>
-      </div>
-    );
-  }
-
   return (
-    <LiveAPIProvider url={uri} apiKey={apiKey}>
+    <LiveAPIProvider options={apiOptions}>
       <LiveCanvasView />
     </LiveAPIProvider>
   );
