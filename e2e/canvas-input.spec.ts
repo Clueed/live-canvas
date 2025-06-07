@@ -1,79 +1,10 @@
-import { type Page, expect, test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+import { clickAtPath, setSelection } from "@udecode/plate-playwright";
 import {
-  clickAtPath,
-  getEditorHandle,
-  setSelection,
-} from "@udecode/plate-playwright";
-
-// Extend Window interface to include platePlaywrightAdapter
-declare global {
-  interface Window {
-    platePlaywrightAdapter?: object;
-  }
-}
-
-/**
- * Waits for the Playwright adapter to be available and ready.
- * This helps avoid race conditions with the adapter not being loaded.
- */
-async function waitForPlaywrightAdapter(page: Page, timeout = 10000) {
-  await page.waitForFunction(
-    () => {
-      return (
-        window.platePlaywrightAdapter &&
-        typeof window.platePlaywrightAdapter === "object"
-      );
-    },
-    { timeout },
-  );
-}
-
-/**
- * Robust version of getEditorHandle that waits for adapter and retries on failure.
- */
-async function getEditorHandleWithRetry(page: Page, maxRetries = 3) {
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      // First wait for the adapter to be available
-      await waitForPlaywrightAdapter(page);
-
-      // Then get the editor handle
-      const editorHandle = await getEditorHandle(page);
-      return editorHandle;
-    } catch (error) {
-      if (attempt === maxRetries) {
-        throw new Error(
-          `Failed to get editor handle after ${maxRetries} attempts. Last error: ${error}`,
-        );
-      }
-
-      // Wait a bit before retrying
-      await page.waitForTimeout(1000 * attempt);
-    }
-  }
-  throw new Error("Unexpected error in getEditorHandleWithRetry");
-}
-
-/**
- * Toggles the stream connection button (Connect/Disconnect).
- * Assumes the button is identifiable by its accessible name which includes "Stream".
- */
-async function toggleStreamConnection(page: Page) {
-  await page.getByRole("button", { name: /Stream/ }).click();
-}
-
-/**
- * Types text into the message input area and sends it.
- */
-async function sendTextMessage(page: Page, text: string) {
-  // Find the textarea using its aria-label
-  const textarea = page.getByRole("textbox", { name: "Message input" });
-  await textarea.fill(text);
-
-  // Find the send button by its accessible name and click it
-  const sendButton = page.getByRole("button", { name: "Send message" });
-  await sendButton.click();
-}
+  getEditorHandleWithRetry,
+  sendTextMessage,
+  toggleStreamConnection,
+} from "./test-helpers";
 
 test.describe("Canvas Input", () => {
   test.beforeEach(async ({ page }) => {
@@ -149,5 +80,64 @@ The lingering chill of the Icelandic spring was finally, almost imperceptibly, b
     expect(markdownContentAfterPaste).toEqual(
       expect.stringContaining(pasteText),
     );
+  });
+
+  test("AI placeholder replacement in template email", async ({ page }) => {
+    const editorHandle = await getEditorHandleWithRetry(page);
+    await clickAtPath(page, editorHandle, [0]);
+
+    await setSelection(page, editorHandle, {
+      path: [0, 0],
+      offset: 0,
+    });
+
+    // Paste a template email with placeholder
+    const templateEmail = `Dear [name],
+
+I hope this message finds you well. I wanted to reach out to discuss an exciting opportunity that I believe would be perfect for your skillset and career goals.
+
+We have an opening for a Senior Software Engineer position at our company, and based on your background and experience, I think you would be an excellent fit for this role. The position involves working with cutting-edge technologies, leading technical initiatives, and collaborating with a talented team of engineers.
+
+The role offers competitive compensation, flexible working arrangements, and excellent growth opportunities. I would love to schedule a time to discuss this opportunity with you in more detail.
+
+Please let me know if you're interested and available for a brief conversation this week.
+
+Best regards,
+Sarah Johnson
+Senior Technical Recruiter`;
+
+    await page.keyboard.insertText(templateEmail);
+
+    // Connect to the stream to enable messaging
+    await toggleStreamConnection(page);
+
+    // Wait a moment for the connection to establish
+    await page.waitForTimeout(2000);
+
+    // Send AI prompt to replace the placeholder
+    await sendTextMessage(page, "Replace [name] with Peter.");
+
+    // Wait longer for AI response and potential content updates
+    await page.waitForTimeout(5000);
+
+    // Check if there are any AI response messages visible
+    const aiMessages = await page
+      .locator('[data-testid*="message"], [role="article"], .message')
+      .count();
+    console.log(`Found ${aiMessages} messages on page`);
+
+    const updatedContent = await editorHandle.evaluate((editor) =>
+      editor.getApi({ key: "markdown" }).markdown.serialize(),
+    );
+
+    console.log("Updated content:", updatedContent);
+
+    // Verify that the placeholder was replaced
+    expect(updatedContent).toContain("Dear Peter,");
+    expect(updatedContent).not.toContain("Dear [name],");
+
+    // Verify the rest of the email content is still there
+    expect(updatedContent).toContain("Senior Software Engineer position");
+    expect(updatedContent).toContain("Sarah Johnson");
   });
 });
