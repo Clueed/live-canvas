@@ -133,21 +133,49 @@ export const useCreateEditor = (
         PlaywrightPlugin.configure({ enabled: process.env.NODE_ENV !== "production" }),
       ],
       value: [
-        {
-          children: [{ text: "Playground" }],
-          type: "h1",
+  {
+    "children": [
+      {
+        "text": "Playground",
+        "suggestion": true,
+        "suggestion_duwfENJzMsdD8ZiiAOroa": {
+          "id": "duwfENJzMsdD8ZiiAOroa",
+          "createdAt": 1749459602431,
+          "type": "remove",
+          "userId": "user3"
+        }
+      },
+      {
+        "suggestion_duwfENJzMsdD8ZiiAOroa": {
+          "id": "duwfENJzMsdD8ZiiAOroa",
+          "createdAt": 1749459602431,
+          "type": "insert",
+          "userId": "user3"
         },
-        {
-          children: [
-            { text: "A rich-text editor with AI capabilities. Try the " },
-            { bold: true, text: "AI commands" },
-            { text: " or use " },
-            { kbd: true, text: "Cmd+J" },
-            { text: " to open the AI menu." },
-          ],
-          type: ParagraphPlugin.key,
-        },
-      ],
+        "suggestion": true,
+        "text": "aoe"
+      }
+    ],
+    "type": "h1",
+    "id": "9kTNbSzp67"
+  },
+  {
+    "children": [
+      {
+        "text": "A rich-text editor with AI capabilities. Try the "
+      },
+      {
+        "bold": true,
+        "text": "AI commands"
+      },
+      {
+        "text": " or use Cmd+J to open the AI menu."
+      }
+    ],
+    "type": "p",
+    "id": "6mgM_R9ijX"
+  }
+],
       ...options,
     },
     deps,

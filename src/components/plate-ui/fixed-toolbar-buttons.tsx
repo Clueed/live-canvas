@@ -1,13 +1,14 @@
 "use client";
 import { useEditorReadOnly } from "@udecode/plate/react";
+import {
+  ArrowUpToLineIcon,
+} from "lucide-react";
 import { CommentToolbarButton } from "./comment-toolbar-button";
 import { ExportToolbarButton } from "./export-toolbar-button";
 import { RedoToolbarButton, UndoToolbarButton } from "./history-toolbar-button";
 import { ImportToolbarButton } from "./import-toolbar-button";
+import { ModeDropdownMenu } from "./mode-dropdown-menu";
 import { ToolbarGroup } from "./toolbar";
-import {
-  ArrowUpToLineIcon,
-} from "lucide-react";
 
 export function FixedToolbarButtons() {
   const readOnly = useEditorReadOnly();
@@ -114,9 +115,9 @@ export function FixedToolbarButtons() {
         </ToolbarGroup> */}
       <CommentToolbarButton />
 
-      {/* <ToolbarGroup>
+      <ToolbarGroup>
         <ModeDropdownMenu />
-      </ToolbarGroup> */}
+      </ToolbarGroup>
     </div>
   );
 }

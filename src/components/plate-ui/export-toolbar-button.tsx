@@ -46,7 +46,6 @@ import { BaseKbdPlugin } from "@udecode/plate-kbd";
 import { BaseColumnItemPlugin, BaseColumnPlugin } from "@udecode/plate-layout";
 import { BaseLineHeightPlugin } from "@udecode/plate-line-height";
 import { BaseLinkPlugin } from "@udecode/plate-link";
-import { MarkdownPlugin } from "@udecode/plate-markdown";
 import {
   BaseEquationPlugin,
   BaseInlineEquationPlugin,
@@ -107,6 +106,7 @@ import { TableRowElementStatic } from "@/components/plate-ui/table-row-element-s
 import { TocElementStatic } from "@/components/plate-ui/toc-element-static";
 import { ToggleElementStatic } from "@/components/plate-ui/toggle-element-static";
 
+import { markdownPlugin } from "../editor/plugins/markdown-plugin";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -370,9 +370,11 @@ export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
   };
 
   const exportToMarkdown = async () => {
-    const md = editor.getApi(MarkdownPlugin).markdown.serialize();
-    const url = `data:text/markdown;charset=utf-8,${encodeURIComponent(md)}`;
-    await downloadFile(url, "plate.md");
+    // Use our custom suggestion-aware serialization
+    const md = editor.getApi(markdownPlugin).suggestion.serializeWithSuggestions();
+    console.log("🔥 Generated Markdown:", md);
+    // const url = `data:text/markdown;charset=utf-8,${encodeURIComponent(md)}`;
+    // await downloadFile(url, "plate.md");
   };
 
   return (
