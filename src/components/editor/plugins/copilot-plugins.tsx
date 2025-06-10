@@ -8,7 +8,7 @@ import { serializeMd, stripMarkdown } from "@udecode/plate-markdown";
 
 import { GhostText } from "@/components/plate-ui/ghost-text";
 
-import { markdownPlugin } from "./markdown-plugin";
+import { markdownPlugin } from "./markdown-plugin/markdown-plugin";
 
 export const copilotPlugins = [
   markdownPlugin,

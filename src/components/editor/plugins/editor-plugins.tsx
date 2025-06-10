@@ -18,7 +18,7 @@ import { cursorOverlayPlugin } from "./cursor-overlay-plugin";
 import { deletePlugins } from "./delete-plugins";
 import { dndPlugins } from "./dnd-plugins";
 import { exitBreakPlugin } from "./exit-break-plugin";
-import { markdownPlugin } from "./markdown-plugin";
+import { markdownPlugin } from "./markdown-plugin/markdown-plugin";
 import { resetBlockTypePlugin } from "./reset-block-type-plugin";
 import { skipMarkPlugin } from "./skip-mark-plugin";
 import { softBreakPlugin } from "./soft-break-plugin";

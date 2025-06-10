@@ -2,7 +2,7 @@
 
 import { AIChatPlugin, AIPlugin } from "@udecode/plate-ai/react";
 
-import { markdownPlugin } from "@/components/editor/plugins/markdown-plugin";
+import { markdownPlugin } from "@/components/editor/plugins/markdown-plugin/markdown-plugin";
 import { AILoadingBar } from "@/components/plate-ui/ai-loading-bar";
 import { AIMenu } from "@/components/plate-ui/ai-menu";
 
