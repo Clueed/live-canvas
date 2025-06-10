@@ -26,7 +26,7 @@ import { BaseLinkPlugin } from "@udecode/plate-link";
 import { BaseMentionPlugin } from "@udecode/plate-mention";
 import { usePlateEditor } from "@udecode/plate/react";
 
-import { markdownPlugin } from "@/components/editor/plugins/markdown-plugin";
+import { markdownPlugin } from "@/components/editor/plugins/markdown-plugin/markdown-plugin";
 import {
   TodoLiStatic,
   TodoMarkerStatic,

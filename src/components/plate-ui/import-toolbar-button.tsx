@@ -8,6 +8,7 @@ import { useEditorRef } from "@udecode/plate/react";
 import { ArrowUpToLineIcon } from "lucide-react";
 import { useFilePicker } from "use-file-picker";
 
+import { markdownPlugin } from "../editor/plugins/markdown-plugin/markdown-plugin";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -47,9 +48,11 @@ export function ImportToolbarButton({ children, ...props }: DropdownMenuProps) {
     onFilesSelected: async ({ plainFiles }) => {
       const text = await plainFiles[0].text();
 
-      const nodes = getFileNodes(text, "markdown");
+      const newMarkdown = editor
+        .getApi(markdownPlugin)
+        .suggestion.deserializeFromSuggestions(text);
 
-      editor.tf.insertNodes(nodes);
+      editor.tf.setValue(newMarkdown);
     },
   });
 

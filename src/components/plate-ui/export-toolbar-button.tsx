@@ -106,7 +106,7 @@ import { TableRowElementStatic } from "@/components/plate-ui/table-row-element-s
 import { TocElementStatic } from "@/components/plate-ui/toc-element-static";
 import { ToggleElementStatic } from "@/components/plate-ui/toggle-element-static";
 
-import { markdownPlugin } from "../editor/plugins/markdown-plugin";
+import { markdownPlugin } from "../editor/plugins/markdown-plugin/markdown-plugin";
 import {
   DropdownMenu,
   DropdownMenuContent,
