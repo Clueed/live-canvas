@@ -1,15 +1,21 @@
 {
     // Extension: Git
+    "npm.packageManager": "pnpm",
     "git.rebaseWhenSync": false,
     "git.autofetch": true,
     "git.enableSmartCommit": true,
-    "editor.defaultFormatter": "biomejs.biome",
+    // imports
+    "typescript.preferences.importModuleSpecifier": "non-relative",
+    "javascript.preferences.importModuleSpecifier": "non-relative",
+    // formatting
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
         "source.fixAll": "explicit",
         "source.organizeImports": "always"
     },
-    "npm.packageManager": "npm",
+    "editor.defaultFormatter": "biomejs.biome",
+    "javascript.updateImportsOnFileMove.enabled": "prompt",
+    "typescript.updateImportsOnFileMove.enabled": "prompt",
     "[typescript]": {
         "editor.defaultFormatter": "biomejs.biome"
     },
@@ -19,11 +25,6 @@
     "[css]": {
         "editor.defaultFormatter": "biomejs.biome"
     },
-    // JS
-    "javascript.updateImportsOnFileMove.enabled": "always",
-    // TS
-    "typescript.updateImportsOnFileMove.enabled": "always",
-    // JSON
     "[json]": {
         "editor.defaultFormatter": "biomejs.biome"
     },
