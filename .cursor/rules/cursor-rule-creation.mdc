@@ -187,7 +187,7 @@ Components should generally follow this order:
 'use client' // Only if browser APIs or hooks like useState/useEffect are needed
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { cn } from '@/lib/utils'; // Example internal utility
+import { cn } from '@/lib/utils/cn'; // Example internal utility
 import { type VariantProps, cva } from 'class-variance-authority';
 
 // Define props interface

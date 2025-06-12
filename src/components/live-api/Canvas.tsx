@@ -1,15 +1,14 @@
-import { Editor, EditorContainer } from "@/components/plate-ui/editor";
-import { Plate } from "@udecode/plate/react";
+import { Editor, EditorContainer } from "@/components/ui/editor";
 
+import { Plate, type PlateEditor } from "platejs/react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import type { useCreateEditor } from "../editor/use-create-editor";
 
 interface CanvasProps {
-  editor: ReturnType<typeof useCreateEditor>;
+  editor: PlateEditor;
 }
 
-const CanvasComponent = function CanvasComponent({ editor }: CanvasProps) {
+const CanvasComponent = ({ editor }: CanvasProps) => {
   return (
     <DndProvider backend={HTML5Backend}>
       <Plate editor={editor}>

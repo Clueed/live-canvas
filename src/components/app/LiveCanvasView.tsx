@@ -1,8 +1,5 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-
-import { useCreateEditor } from "@/components/editor/use-create-editor";
 import { Canvas } from "@/components/live-api/Canvas";
 import ControlTray from "@/components/live-api/ControlTray";
 import { FloatingLoggerPanel } from "@/components/live-api/FloatingLoggerPanel";
@@ -10,16 +7,18 @@ import { FloatingTestPanel } from "@/components/live-api/FloatingTestPanel";
 import SidePanel from "@/components/live-api/SidePanel";
 import { useLiveAPIContext } from "@/contexts/LiveAPIContext";
 import { useToolCallHandler } from "@/hooks/use-tool-call-handler";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { AI_FUNCTIONS } from "@/lib/ai-functions/helpers";
 import { SYSTEM_PROMPT } from "@/lib/prompts";
 import type { Part } from "@google/genai";
 import { Modality } from "@google/genai";
+import { usePlateEditor } from "@udecode/plate/react";
 
 export function LiveCanvasView() {
   const { client, setConfig } = useLiveAPIContext();
 
-  const editor = useCreateEditor();
+  const editor = usePlateEditor();
 
   const [showTestPanel, setShowTestPanel] = useState(false);
   const [showLoggerPanel, setShowLoggerPanel] = useState(false);

@@ -1,0 +1,6 @@
+ignoredBuiltDependencies:
+  - esbuild
+  - msgpackr-extract
+  - sharp
+onlyBuiltDependencies:
+  - '@biomejs/biome'
